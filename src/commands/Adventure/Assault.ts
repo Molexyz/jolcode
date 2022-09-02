@@ -23,6 +23,7 @@ export const data: SlashCommand["data"] = {
 
 
 export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandContext, userData?: UserData) => {
+
     if (userData.health <= 0) {
         ctx.client.database.redis.client.del(`jjba:rpg_cooldown_${userData.id}:assault`);
         return ctx.sendT("base:DEAD");
@@ -69,12 +70,13 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         ...NPC
     }
 
-    ctx.client.database.setCooldownCache("cooldown", userData.id);
+ 
     await ctx.defer();
     await ctx.followUp({
         content: `${NPC.dialogues?.assault ? Util.makeNPCString(NPC) + " " + NPC.dialogues.assault : `You assaulted ${Util.makeNPCString(NPC)}`}`,
     });
-    await Util.wait(3000);
+ ctx.client.database.setCooldownCache("cooldown", userData.id);
+   await Util.wait(3000);
     await ctx.client.database.redis.del(await ctx.client.database.getCooldownCache(userData.id));
     await ctx.client.database.redis.del(await ctx.client.database.getCooldownCache(userData.id));
 

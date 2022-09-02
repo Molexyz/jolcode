@@ -21,8 +21,7 @@ const client = new JolyneClient({
     shardCount: Cluster.data.TOTAL_SHARDS,
     intents: [
         Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.GUILD_MESSAGES
+        Intents.FLAGS.GUILD_MEMBERS
     ],
     makeCache: DJSLIGHT.Options.cacheWithLimits({
         ApplicationCommandManager: 0, // guild.commands
