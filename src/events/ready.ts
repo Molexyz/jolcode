@@ -13,7 +13,9 @@ export const execute: Event["execute"] = async (client: Client) => {
     client.user.setActivity({ name: "loading..."});
     
     const lastCommands = await client.database.redis.client.get("jolyne:commands");
-    const commandsData = client.commands.map((v) => v.data);
+    const lastPrivateCommands = await client.database.redis.client.get("jolyne:private_commands");
+    const commandsData = client.commands.filter(v => !v.isPrivate).map((v) => v.data);
+    const privateCommandsData = client.commands.filter(v => v.isPrivate).map((v) => v.data);
 
     if (JSON.stringify(commandsData) !== lastCommands) {
         client.log('Slash commands has changed. Loading...', 'cmd');
@@ -29,6 +31,16 @@ export const execute: Event["execute"] = async (client: Client) => {
         client.database.redis.client.set("jolyne:commands", JSON.stringify(commandsData));
         client.log('Slash commands are up to date & have been loaded.', 'cmd');    
     } else client.log('Slash commands are already up to date.', 'cmd');
+    if (JSON.stringify(privateCommandsData) !== lastPrivateCommands) {
+        client.log('Private slash commands has changed. Loading...', 'cmd');
+        await client._rest.put(Routes.applicationGuildCommands(client.user.id, process.env.PRIVATE_SERVER_ID), {
+            body: privateCommandsData
+        });
+        client.database.redis.client.set("jolyne:private_commands", JSON.stringify(privateCommandsData));
+        client.log('Private slash commands are up to date & have been loaded.', 'cmd');
+    } else client.log('Private slash commands are already up to date.', 'cmd');
+
+
 
     // Daily quests
     if (client.guilds.cache.random().shardId === 0) {

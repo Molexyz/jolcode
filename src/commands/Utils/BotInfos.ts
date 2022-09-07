@@ -171,7 +171,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 },
                 {
                     name: ctx.translate("infos:PLAYERS") + " (RPG)",
-                    value: localeNumber((await ctx.client.database.redis.client.keys("*jjba:user:*")).length),
+                    value: localeNumber((await ctx.client.database.redis.client.keys("*cachedUser*")).length),
                     inline: true
                 },
                 {

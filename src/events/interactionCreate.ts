@@ -17,6 +17,8 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
 
     const command = interaction.client.commands.get(interaction.commandName);
     if (!command) return;
+
+    if (command.isPrivate && !process.env.OWNER_IDS.split(',').includes(interaction.user.id)) return;
     LogWebhook.log(interaction.user, interaction.guild, command);
 
     if (command.cooldown && !isNaN(command.cooldown)) {
