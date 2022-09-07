@@ -69,7 +69,7 @@ export const execute: Event["execute"] = async (client: Client) => {
                     toSaveUSERS.push(user);
                     continue;
                 }*/
-                client.database.redis.del(`jjba:finishedQ:${user.id}`);
+                await client.database.redis.del(`jjba:finishedQ:${user.id}`);
                 user.daily.quests = Util.generateDailyQuests(user.level);
                 client.database.saveUserData(user);
 
