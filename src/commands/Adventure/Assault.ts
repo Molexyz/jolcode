@@ -12,7 +12,7 @@ export const category: SlashCommand["category"] = "adventure";
 export const cooldown: SlashCommand["cooldown"] = 3;
 export const rpgCooldown: SlashCommand["rpgCooldown"] = {
     base: 60000 * 5,
-    premium: 60000 * 2,
+    premium: 60000 * 5,
     emoji: Emojis['JolyneAhhhhh']
 
 }
@@ -66,6 +66,8 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     const luck = Util.getRandomInt(1, 10000);
     const NPC = rng.filter(l => (l.luck * 100) >= luck).sort((a, b) => a.luck - b.luck)[0].npc;
     NPC.health += Math.round(userData.max_health / 1.5);
+    NPC.max_health += Math.round(userData.max_health / 1.5);
+
     NPC.skill_points.perception += Math.round(userData.skill_points.perception / 3);
 
     let protectedNPC: NPC = {

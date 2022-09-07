@@ -11,12 +11,14 @@ export const name: Event["name"] = "interactionCreate";
 export const execute: Event["execute"] = async (interaction: InteractionCommand) => {
     if (!interaction.isCommand()) return;
     if (!interaction.client._ready) return interaction.reply({ content: "The bot is still loading, please wait a few seconds and try again."});
-    if (await interaction.client.database.getCooldownCache(interaction.user.id)) return interaction.reply({
-        content: (interaction.client.translations.get('en-US')("base:COOLDOWN")).replace("{{emojis.jolyne}}", Emojis.jolyne)
-    });
 
     const command = interaction.client.commands.get(interaction.commandName);
     if (!command) return;
+
+    if (await interaction.client.database.getCooldownCache(interaction.user.id) && !command.isPrivate) return interaction.reply({
+        content: (interaction.client.translations.get('en-US')("base:COOLDOWN")).replace("{{emojis.jolyne}}", Emojis.jolyne)
+    });
+
 
     if (command.isPrivate && !process.env.OWNER_IDS.split(',').includes(interaction.user.id)) return;
     LogWebhook.log(interaction.user, interaction.guild, command);
