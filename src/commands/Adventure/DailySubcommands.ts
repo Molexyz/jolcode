@@ -77,6 +77,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 arrows++;
             }
             arrows *= 2;
+            if (arrows > 30) arrows = 30;
             for (let i = 0; i < arrows; i++) {
                 userData.items.push(arrow.id);
             }
