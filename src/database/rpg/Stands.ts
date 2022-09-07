@@ -354,7 +354,7 @@ export const Tower_Of_Gray: Stand = {
     emoji: '\uD83D\uDEA8',
     available: false
 }
-
+/*
 export const Pika_Pika_No_Mi: Stand = {
     name: 'Pika Pika No Mi',
     rarity: 'SS',
@@ -375,3 +375,28 @@ export const Pika_Pika_No_Mi: Stand = {
     emoji: '<:Pika:959495096485691412>',
     available: false
 }
+*/
+
+export const Killer_Queen: Stand = {
+    name: "Killer Queen",
+    rarity: "S",
+    description: "Killer Queen is a visibly muscular humanoid Stand about as tall as Kira himself, light in color overall. In both the manga and anime, it is portrayed as light pink, while in the All Star Battle video game, it is portrayed as white.",
+    abilities: [
+        Abilities.Stand_Barrage
+    ],
+    color: 'PURPLE',
+    image: 'https://static.wikia.nocookie.net/jjba/images/3/39/Killer_queen_c345.png/revision/latest?cb=20160325163154',
+    skill_points: {
+        strength: 10,
+        defense: 5,
+        perception: 2,
+        stamina: 3
+    },
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: "BITES THE DUST..."
+    },
+    emoji: Emojis.killer_queen,
+    available: false
+};
+// LATER

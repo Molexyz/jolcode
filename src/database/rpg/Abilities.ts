@@ -1010,3 +1010,8 @@ export const Jewels_Of_Light: Ability = {
     dodgeable: false,
     stamina: 10
 }
+
+/*
+export const Coin_Bomb: Ability = {
+    name: 'Coin Bomb',
+*/
