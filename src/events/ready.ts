@@ -69,11 +69,12 @@ export const execute: Event["execute"] = async (client: Client) => {
                     toSaveUSERS.push(user);
                     continue;
                 }*/
-                await client.database.redis.del(`jjba:finishedQ:${user.id}`);
+                // await client.database.redis.del(`jjba:finishedQ:${user.id}`);
                 user.daily.quests = Util.generateDailyQuests(user.level);
                 client.database.saveUserData(user);
 
             }
+            client.database.redis.keys('*finishedQ*').then(r=>{ r.forEach(f=>client.database.redis.del(f))});
         }, null, true, 'Europe/Paris');
         setInterval(async () => {
             expireCooldownCache()
