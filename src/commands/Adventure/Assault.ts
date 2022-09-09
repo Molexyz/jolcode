@@ -69,8 +69,8 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     let protectedNPC: NPC = {
         ...NPC
     }
-    protectedNPC.health += Math.round(userData.max_health / 7.5);
-    protectedNPC.max_health += Math.round(userData.max_health / 7.5);
+    protectedNPC.health += Math.round(userData.max_health / 10.5);
+    protectedNPC.max_health += Math.round(userData.max_health / 10.5);
 
     protectedNPC.skill_points.perception += Math.round(userData.skill_points.perception / 4);
 
