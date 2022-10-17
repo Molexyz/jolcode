@@ -191,7 +191,7 @@ export const Deadly_Erasure: Ability = {
     name: 'Deadly Erasure',
     description: 'uses their right hand to erase space and jump one you and use the effect of surprise to erase you and make you discover where thing he erase go..',
     cooldown: 10,
-    damages: 35,
+    damages: 30,
     blockable: false,
     dodgeable: false,
     stamina: 100
@@ -481,7 +481,12 @@ export const Gun: Ability = {
                 turns[turns.length - 1].logs.push(`:gun::x: **${victimUsername}** is no longer stunned. :gun::x:`);
             }
         });
-        promises.push(func);
+        if (gameOptions.opponentNPC === caller.id) {
+            for (let i = 0; i < gameOptions[tsID].cd; i++) {
+                gameOptions.NPCAttack(true);
+            }
+            turns[turns.length - 1].logs.push(`:gun::x: **${victimUsername}** is no longer stunned. :gun::x:`);
+        } else promises.push(func);
     }
 }
 
@@ -567,7 +572,7 @@ export const Life_Shot: Ability = {
                 const dodges = Util.calcDodgeChances(before);
                 const dodgesNumerator = 90 + (!Util.isNPC(before) ? before.spb?.perception : before.skill_points.perception);
                 const dodgesPercent = Util.getRandomInt(0, Math.round(dodgesNumerator));
-                if (dodgesPercent < dodges) dodged = true;
+                if (dodgesPercent < dodges || dodges === 696969) dodged = true;
                 if (gameOptions.invincible) dodged = false;
                 switch (choosedMove) {
                     case "attack":
@@ -1011,7 +1016,300 @@ export const Jewels_Of_Light: Ability = {
     stamina: 10
 }
 
-/*
+
 export const Coin_Bomb: Ability = {
     name: 'Coin Bomb',
-*/
+    description: 'Throw a coin bomb at one of your opponents moves',
+    cooldown: 3,
+    damages: 15,
+    blockable: false,
+    dodgeable: false,
+    stamina: 10,
+}
+
+export const Bomb: Ability = {
+    name: 'Bomb',
+    description: 'Plant a bomb on your enemy, and a one turn delay, the bomb explodes',
+    cooldown: 5,
+    damages: 0,
+    blockable: false,
+    dodgeable: false,
+    stamina: 10,
+}
+
+export const Coin_Barrage: Ability = {
+    name: 'Coin Barrage',
+    description: 'Unleash a barrage of coins, that explode on impact',
+    cooldown: Stand_Barrage.cooldown,
+    damages: Stand_Barrage.damages,
+    blockable: Stand_Barrage.blockable,
+    dodgeable: Stand_Barrage.dodgeable,
+    stamina: Stand_Barrage.stamina,
+}
+
+export const Escape_Plan: Ability = {
+    name: 'Escape Plan',
+    description: 'Blast yourself off in an explosion. Dealing some damages to the enemy, and some damages to yourself, but their next hit will automatically miss',
+    cooldown: 0,
+    damages: 0,
+    blockable: false,
+    dodgeable: false,
+    stamina: 15,
+    trigger: (ctx: CommandInteractionContext, promises: Array<Function>, gameOptions: any, caller: UserData | NPC, victim: UserData | NPC, trns: number, turns: Turn[]) => {
+        const tsID = Util.generateID();
+        const victimUsername = Util.isNPC(victim) ? victim.name : ctx.client.users.cache.get(victim.id)?.username;
+        const callerUsername = Util.isNPC(caller) ? caller.name : ctx.client.users.cache.get(caller.id)?.username;
+        gameOptions[tsID] = {
+            cd: 2,
+        };
+        const damage = Math.round(Util.calcATKDMG(victim) / 3);
+        caller.health -= damage;
+
+        turns[turns.length - 1].logs.push(`🌬️ ${callerUsername} used ESCAPE PLAN and took some damages (-${damage} :heart:)`);
+        const oldVictim = Util.isNPC(victim) ? victim.skill_points.perception : victim.spb.perception
+        const oldCaller = Util.isNPC(caller) ? caller.skill_points.perception : caller.spb.perception
+
+        Util.isNPC(victim) ? victim.skill_points.perception = -696969 : victim.spb.perception = -696969
+        Util.isNPC(caller) ? caller.skill_points.perception = -696969 : caller.spb.perception = -696969
+        const callerHp = caller.health;
+
+
+        const func = (async () => {
+            if (gameOptions[tsID].cd === 0) return;
+            gameOptions[tsID].cd--;
+
+            if (gameOptions[tsID].cd === 0) {
+                if (caller.health !== callerHp) turns[turns.length - 1].logs.push(`:skull:${victimUsername} somehow dodged...`);
+                Util.isNPC(victim) ? victim.skill_points.perception = oldVictim : victim.spb.perception = oldVictim
+                Util.isNPC(caller) ? caller.skill_points.perception = oldCaller : caller.spb.perception = oldCaller
+                console.log('escape plan finished');
+            }
+        });
+        promises.push(func);
+
+    }
+
+}
+
+export const Assimilation: Ability = {
+    name: 'Assimilation',
+    description: 'Assimilate your enemy, dealing some damages, and stealing some of their health',
+    cooldown: 3,
+    damages: 0,
+    blockable: false,
+    dodgeable: false,
+    stamina: 10,
+    trigger: (ctx: CommandInteractionContext, promises: Array<Function>, gameOptions: any, caller: UserData | NPC, victim: UserData | NPC, trns: number, turns: Turn[]) => {
+        const victimUsername = Util.isNPC(victim) ? victim.name : ctx.client.users.cache.get(victim.id)?.username;
+        const tsID = Util.generateID();
+        gameOptions[tsID] = {
+            cd: 3,
+        };
+        turns[turns.length - 1].logs.push(`:yellow_circle:  **${victimUsername}** is stunned. :yellow_circle: `);
+        gameOptions.invincible = true;
+        turns[turns.length - 1].lastMove = "attack";
+
+        const func = (async () => {
+            if (gameOptions[tsID].cd === 0) return;
+            gameOptions[tsID].cd--;
+            gameOptions.trns--;
+            if (gameOptions[tsID].cd === 0) {
+                gameOptions.invincible = false;
+                gameOptions.trns--;
+                turns[turns.length - 1].logs.push(`:yellow_circle: **${victimUsername}** is no longer stunned. :yellow_circle: `);
+            }
+        });
+        if (gameOptions.opponentNPC === caller.id) {
+            for (let i = 0; i < gameOptions[tsID].cd; i++) {
+                gameOptions.NPCAttack(true);
+            }
+            turns[turns.length - 1].logs.push(`:yellow_circle: **${victimUsername}** is no longer stunned. :yellow_circle: `);
+        } else promises.push(func);
+    }
+
+}
+
+export const Sheer_Heart_Attack: Ability = {
+    name: 'Sheer Heart Attack',
+    description: "Makes a creature appear that can only be seen by you. It will stay on your opponent's shoulder and do damage for 5 turns. After the 5th turn, the creature will self-destruct. During these 5 turns, you can't use any of your stand's abilities",
+    cooldown: 10,
+    damages: 0,
+    blockable: false,
+    dodgeable: false,
+    stamina: 20,
+    trigger: (ctx: CommandInteractionContext, promises: Array<Function>, gameOptions: any, caller: UserData | NPC, victim: UserData | NPC, trns: number, turns: Turn[]) => {
+        const victimUsername = Util.isNPC(victim) ? victim.name : ctx.client.users.cache.get(victim.id)?.username;
+        const tsID = Util.generateID();
+        gameOptions[tsID] = {
+            cd: 5,
+        };
+        const damage = Math.round(Util.calcAbilityDMG(Stand_Barrage, caller) / 3);
+
+        turns[turns.length - 1].logs.push(`> <:sheer:1028643880473743390> SHEER HEART ATTACK: ON`);
+        turns[turns.length - 1].lastMove = "attack";
+        gameOptions.stopCooldown.push(caller.id);
+        gameOptions.cooldowns.forEach((c: any) => {
+            if (c.id === caller.id) c.cd += 1;
+        });
+
+        const func = (async () => {
+            if (gameOptions[tsID].cd === 0) return;
+            gameOptions[tsID].cd--;
+            victim.health -= damage;
+            turns[turns.length - 1].logs.push(`> <:sheer:1028643880473743390> SHEER HEART ATTACK: -${damage} HP`);
+
+            if (gameOptions[tsID].cd === 0) {
+                gameOptions.cooldowns.forEach((c: any) => {
+                    if (c.id === caller.id) c.cd -= 1;
+                });
+                gameOptions.stopCooldown.splice(gameOptions.stopCooldown.indexOf(caller.id), 1);
+                victim.health -= Math.round(damage * 3);
+                turns[turns.length - 1].logs.push(`> <:sheer:1028643880473743390> SHEER HEART ATTACK: AUTO-DESTRUCTION :explosion: (-${Math.round(damage * 3)} HP)`);
+            }
+            if (victim.health <= 0) {
+                victim.health = 0;
+                turns[turns.length - 1].logs.push(`> <:sheer:1028643880473743390> SHEER HEART ATTACK: JOB'S DONE.`);
+            }
+        });
+        promises.push(func);
+
+    }
+}
+
+
+export const Wall: Ability = {
+    name: 'Wall',
+    description: 'Reform the ground into a wall, guaranteeing their attack will miss.',
+    cooldown: 0,
+    damages: 0,
+    blockable: false,
+    dodgeable: false,
+    stamina: 15,
+    trigger: (ctx: CommandInteractionContext, promises: Array<Function>, gameOptions: any, caller: UserData | NPC, victim: UserData | NPC, trns: number, turns: Turn[]) => {
+        const tsID = Util.generateID();
+        const victimUsername = Util.isNPC(victim) ? victim.name : ctx.client.users.cache.get(victim.id)?.username;
+        const callerUsername = Util.isNPC(caller) ? caller.name : ctx.client.users.cache.get(caller.id)?.username;
+        gameOptions[tsID] = {
+            cd: 2,
+        };
+        const damage = Math.round(Util.calcATKDMG(victim) / 3);
+
+        turns[turns.length - 1].logs.push(`🧱 ${callerUsername} reformed the ground into a WALL. 🧱`);
+        const oldVictim = Util.isNPC(victim) ? victim.skill_points.perception : victim.spb.perception
+        const oldCaller = Util.isNPC(caller) ? caller.skill_points.perception : caller.spb.perception
+
+        Util.isNPC(victim) ? victim.skill_points.perception = -696969 : victim.spb.perception = -696969
+        Util.isNPC(caller) ? caller.skill_points.perception = -696969 : caller.spb.perception = -696969
+        const callerHp = caller.health;
+
+
+        const func = (async () => {
+            if (gameOptions[tsID].cd === 0) return;
+            gameOptions[tsID].cd--;
+
+            if (gameOptions[tsID].cd === 0) {
+                if (caller.health !== callerHp) turns[turns.length - 1].logs.push(`:skull:${victimUsername} somehow dodged...`);
+                Util.isNPC(victim) ? victim.skill_points.perception = oldVictim : victim.spb.perception = oldVictim
+                Util.isNPC(caller) ? caller.skill_points.perception = oldCaller : caller.spb.perception = oldCaller
+                        // @ts-ignore
+                console.log(victim.spb, caller.spb)
+            }
+        });
+        promises.push(func);
+
+    }
+
+}
+
+export const Bearing_Shot: Ability = {
+    name: 'Bearing Shot',
+    description: 'Through a bearing at incredibly high speeds and regenerates 9% of your hp (even if you miss).',
+    cooldown: 0,
+    damages: 25,
+    heal: '9%',
+    blockable: false,
+    dodgeable: true,
+    stamina: 15
+}
+
+
+export const YO_Angelo: Ability = {
+    name: 'YO Angelo',
+    description: 'secret ability. use it and SEE....',
+    cooldown: 0,
+    damages: 0,
+    blockable: false,
+    dodgeable: true,
+    stamina: 20,
+    trigger: (ctx: CommandInteractionContext, promises: Array<Function>, gameOptions: any, caller: UserData | NPC, victim: UserData | NPC, trns: number, turns: Turn[]) => {
+        const victimUsername = Util.isNPC(victim) ? victim.name : ctx.client.users.cache.get(victim.id)?.username;
+        const tsID = Util.generateID();
+        gameOptions[tsID] = {
+            cd: 4,
+        };
+        turns[turns.length - 1].logs.push(`🪨🪨🪨 YO ANGELO! ${victimUsername} has been transformed into a rock for 4 TURNS🪨🪨🪨 :joy: rip bozo. take this L 🪨🪨🪨`);
+
+        const func = (async () => {
+            if (gameOptions[tsID].cd === 0) return;
+            gameOptions[tsID].cd--;
+            gameOptions.trns--;
+            gameOptions.invincible = true;
+            if (gameOptions[tsID].cd === 0) {
+                gameOptions.invincible = false;
+                gameOptions.trns--;
+                turns[turns.length - 1].logs.push(`🪨🪨 **${victimUsername}** is back🪨🪨`);
+            }
+        });
+        if (gameOptions.opponentNPC === caller.id) {
+            for (let i = 0; i < gameOptions[tsID].cd; i++) {
+                gameOptions.NPCAttack(true);
+            }
+            turns[turns.length - 1].logs.push(`🪨🪨 :gun::x: **${victimUsername}** is back🪨🪨`);
+        } else promises.push(func);
+    }
+}
+
+export const Dino_Virus_Bite: Ability = {
+    name: 'Dino Virus Bite',
+    description: 'Bites your enemy, turning them into a dinosaur, and rendering their abilities useless for 2 turns.',
+    cooldown: 0,
+    damages: 15,
+    blockable: false,
+    dodgeable: false,
+    stamina: 15,
+    trigger: (ctx: CommandInteractionContext, promises: Array<Function>, gameOptions: any, caller: UserData | NPC, victim: UserData | NPC, trns: number, turns: Turn[]) => {
+        const victimUsername = Util.isNPC(victim) ? victim.name : ctx.client.users.cache.get(victim.id)?.username;
+        const victimStand = victim.stand;
+        const tsID = Util.generateID();
+        gameOptions[tsID] = {
+            cd: 7,
+        };
+
+        const func = (async () => {
+            if (gameOptions[tsID].cd === 0) return;
+            gameOptions[tsID].cd--;
+            if (gameOptions[tsID].cd === 0) {
+                turns[turns.length - 1].logs.push(`:x:${Emojis.scary_monsters} \`${victimUsername}\` is no longoarrrrrrr a dinosoarrrrr :sob:  :x:${Emojis.scary_monsters}`);
+                victim.stand = victimStand;
+            }
+        });
+
+        if (victimStand) {
+            turns[turns.length - 1].logs.push(`${Emojis.scary_monsters} \`${victimUsername}\` is now a DINOSAURRRRRRRRRRRRRRRRRR! ${Emojis.scary_monsters}`);
+            victim.stand = null;
+            promises.push(func);
+        } else {
+            turns[turns.length - 1].logs.push(`${victimUsername} doesn't have a stand.. you fool lol you just wasted your stamina. HOW CAN YOU BE SO DUMB MAN LMAO SMH CANT BE ME`);
+        }
+
+    },
+}
+
+export const Several_Minor_Scratches: Ability = {
+    ...Stand_Barrage,
+    name: "Several Minor Scratches",
+}
+/*
+export const Dino_Morph: Ability = {
+
+}*/

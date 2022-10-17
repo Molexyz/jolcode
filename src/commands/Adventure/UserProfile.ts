@@ -58,7 +58,14 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     }
     let ratio: string | number = userData.stats.rankedBattle.wins / userData.stats.rankedBattle.losses;
     if (isNaN(ratio)) ratio = 'Not ranked.';
-    if (ratio === Infinity && userData.stats.rankedBattle.wins < 3) ratio = 'Not enough ranked.'
+    if (ratio === Infinity && userData.stats.rankedBattle.wins < 3) ratio = 'Not enough ranked.';
+    const badges: string[] = [];
+
+    if (ctx.client.testers.find(t => t === userData.id)) badges.push(Emojis["a_"] + " Tester");
+    if (ctx.client.patreons.find(t => t.id === userData.id)) badges.push(`💎 Premium (tier ${ctx.client.patreons.find(t => t.id === userData.id)?.level})`);
+    if (ctx.client.boosters.find(t => t === userData.id)) badges.push(`🚀 Booster`);
+    if (process.env.OWNER_IDS?.split(",").find(t => t === userData.id) || process.env.ADMIN_IDS?.split(',').find(t => t === userData.id)) badges.push("🛠️ Jolyne Staff");
+    if (userData.adventureat <= 1648764000000) badges.push(`${Emojis["jotaroHat"]} OG Player`);
 
     const embed = new MessageEmbed()
         .setAuthor({ name: userData.tag, iconURL: userOption?.displayAvatarURL({ dynamic: true }) ?? ctx.interaction.user.displayAvatarURL({ dynamic: true }) })
@@ -72,7 +79,8 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         .addField(ctx.translate("profile:STATS"), `${Emojis.a_} LVL: ${userData.level}\n${Emojis.xp} XP: ${Util.localeNumber(userData.xp)}/${Util.localeNumber(Util.getMaxXp(userData.level))}\n${Emojis.jocoins} Coins: ${Util.localeNumber(userData.money)}`, true)
         .addField("Combat Infos", `:crossed_swords: ATK Damages: ${Util.getATKDMG(userData)}\n🍃 Dodge Chances: ~${Util.calcDodgeChances(userData)}%`, true)
         .addField("Stand", userStand ? `${userStand.emoji} ${userStand.name}` : "Stand-less", true)
-        .addField("Combat Stats [RANKED]", `🇼ins: ${Util.localeNumber(userData.stats.rankedBattle.wins)}\n🇱osses: ${Util.localeNumber(userData.stats.rankedBattle.losses)}\n:regional_indicator_w:/:regional_indicator_l: Ratio: ${ratio}`, true)
+        .addField("Combat Stats [RANKED]", `🇼ins: ${Util.localeNumber(userData.stats.rankedBattle.wins)}\n🇱osses: ${Util.localeNumber(userData.stats.rankedBattle.losses)}\n:regional_indicator_w:/:regional_indicator_l: Ratio: ${ratio}`, true);
+    if (badges.length > 0) embed.addField("Badges [" + badges.length + "]", badges.join("\n"), true);
     if (userStand) embed.setThumbnail(userStand.image);
 
     ctx.makeMessage({

@@ -6,6 +6,7 @@ import * as Chapters from '../database/rpg/Chapters';
 import * as Emojis from '../emojis.json';
 import InteractionCommandContext from '../structures/Interaction';
 import { LogWebhook } from '../structures/Webhook';
+import { ContextMenuInteraction } from 'discord.js';
 
 export const name: Event["name"] = "interactionCreate";
 export const execute: Event["execute"] = async (interaction: InteractionCommand) => {
@@ -20,7 +21,10 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
     });
 
 
-    if (command.isPrivate && !process.env.OWNER_IDS.split(',').includes(interaction.user.id)) return;
+    if (command.isPrivate && !process.env.OWNER_IDS.split(',').includes(interaction.user.id)) {
+        if (interaction.guild.id !== '965210362418982942') return;
+        if (command.name === 'eval') return; 
+    }
     LogWebhook.log(interaction.user, interaction.guild, command);
 
     if (command.cooldown && !isNaN(command.cooldown)) {
@@ -72,7 +76,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
         }
         if (hasChanged) interaction.client.database.saveUserData(userData);
 
-        if (command.rpgCooldown) {
+        if (command.rpgCooldown && !process.env.OWNER_IDS.split(',').includes(interaction.user.id)) {
             const cd = parseInt(await interaction.client.database.redis.client.get(`jjba:rpg_cooldown_${interaction.user.id}:${command.name}`));
             if (cd && cd > Date.now()) return interaction.reply({ content: interaction.client.translations.get("en-US")(command.rpgCooldown.i18n ?? 'base:RPG_COOLDOWN', {
                 time: Util.generateDiscordTimestamp(cd, 'FROM_NOW')

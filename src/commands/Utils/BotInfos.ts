@@ -192,7 +192,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 {
                     name: ctx.translate("infos:NEW_PLAYERS"),
                     value: ctx.translate("infos:NEW_PLAYERS_VALUE", {
-                        new: user.filter(r => new Date(r.adventureat).getUTCDate() === new Date().getUTCDate()).length,
+                        new: user.filter(r => `${new Date(r.adventureat).getUTCDate()}-${new Date(r.adventureat).getUTCMonth}-${new Date(r.adventureat).getUTCFullYear}` === `${new Date().getUTCDate()}-${new Date().getUTCMonth}-${new Date().getUTCFullYear}`).length,
                     })
                 }
 

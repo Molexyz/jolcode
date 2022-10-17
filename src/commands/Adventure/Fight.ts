@@ -12,6 +12,7 @@ import * as Quests from '../../database/rpg/Quests';
 import * as NPCs from '../../database/rpg/NPCs';
 import * as Stands from '../../database/rpg/Stands';
 import * as Emojis from '../../emojis.json';
+import { now } from 'moment-timezone';
 
 export const name: SlashCommand["name"] = "fight";
 export const category: SlashCommand["category"] = "adventure";
@@ -61,6 +62,12 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     if (updateUser) userData = await ctx.client.database.getUserData(userData.id);
     const lastChapterEnnemyQuest: Quest = userData.chapter_quests.filter(v => v.npc && v.npc.health !== 0).sort((a, b) => a.npc.max_health - b.npc.max_health)[0];
     const lastDailyEnnemyQuest: Quest = userData.daily.quests.filter(v => v.npc && v.npc.health !== 0)[0];
+
+    if (userData.health <= 0) return ctx.makeMessage({
+        content: "You are dead. Try again once you've regenerated your health.",
+        components: [],
+        embeds: []
+    });
 
     const selectMenuID = Util.generateID();
 
@@ -118,6 +125,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             if (lastChapterEnnemyQuest) return startBattle(lastChapterEnnemyQuest.npc, "chapter_quests");
             if (lastDailyEnnemyQuest) return startBattle(lastDailyEnnemyQuest.npc, "daily.quests");
         }
+        
     } else {
         const acceptID = Util.generateID();
         const declineID = Util.generateID();
@@ -206,10 +214,11 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         const functions: Array<Function> = []; // Game functions
         const gameOptions: any = {
             trns: 0,
+            stopCooldown: [],
             pushnow: () => pushTurn(),
             whosTurn: () => whosTurn(),
             opponentNPC: Util.isNPC(opponent) ? opponent.id : null,
-            NPCAttack: () => NPCAttack(),
+            NPCAttack: (skip?: boolean) => NPCAttack(skip),
             loadBaseEmbed: () => loadBaseEmbed(),
             defend: () => defend(),
             triggerAbility: (a: any, b: any, c: any, d: any) => triggerAbility(a,b,c,d),
@@ -331,7 +340,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             const dodges = Util.calcDodgeChances(before);
             const dodgesNumerator = 90 + (!Util.isNPC(before) ? before.spb?.perception : before.skill_points.perception);
             const dodgesPercent = Util.getRandomInt(0, Math.round(dodgesNumerator));
-            if (dodgesPercent < dodges) dodged = true;
+            if (dodgesPercent < dodges || Util.calcDodgeChances(povData) === 696969) dodged = true;
             if (gameOptions.invincible) dodged = false;
 
 
@@ -408,6 +417,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     lastDamage: turns[turns.length - 1].lastDamage
                 });
                 cooldowns.forEach(c => {
+                    if (gameOptions.stopCooldown.find((r: string) => r === c.id)) return
                     if (c.cooldown !== 0) c.cooldown--;
                 });
             }
@@ -435,16 +445,17 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             }
         }
 
-        async function NPCAttack() {
+        async function NPCAttack(skip?: boolean) {
             if (ended) return;
             if (opponent.health <= 0) return end();
-            await Util.wait(1200);
+            if (!skip) await Util.wait(1200);
             const NPC = whosTurn();
             if (!Util.isNPC(NPC)) return; //typeguard
             let possibleMoves: Array<string | Ability> = ["attack"];
             if (cooldowns.find(r => r.id === opponent.id && r.move === "defend")) {
                 if (cooldowns.find(r => r.id === opponent.id && r.move === "defend").cooldown === 0) possibleMoves.push("defend");
             } else possibleMoves.push("defend");
+            if (gameOptions.invincible) possibleMoves = ["attack"];
 
             
 
@@ -481,6 +492,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     turns[turns.length - 1].logs.push(input2);
                     break;
             }
+            if (skip) return;
             gameOptions.trns++;
             pushTurn();
             await loadBaseEmbed();

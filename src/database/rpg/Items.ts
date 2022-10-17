@@ -511,3 +511,20 @@ export const Broken_Arrow: Item = {
   usable: false,
   emoji: Emojis.mysterious_arrow,
 }
+
+export const Tonio_Special_Recipe: Item = {
+  id: 'tonio_special_recipe',
+  name: 'Tonio\'s Special Recipe',
+  description: 'A special recipe...',
+  type: 'consumable',
+  price: 13500,
+  tradable: false,
+  storable: false,
+  rarity: 'B',
+  usable: true,
+  benefits: {
+    health: 700,
+    stamina: 250
+  },
+  emoji: '🥣'
+}

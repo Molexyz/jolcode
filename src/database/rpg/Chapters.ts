@@ -231,15 +231,43 @@ export const C3_P4: Chapter = {
 export const C3_P5: Chapter = {
     id: 7,
     description: {
-        'fr-FR': "Après avoir battu Devo, vous racontez à Polanreff que vous devez rejoindre vos amis dans l'avion 'F6969'. Polnareff accepte de vous suivre et deviens maintenant un de vos compagnons. Vous vous rendez ensemble dans l'avion, et vous y trouvez vos compagnons. Le voyage se déroule bien, jusqu'à l'apparition d'une mouche invincible et qui esquive toutes les attaques. Vous vous rendez compte plus tard que cette mouche était enfaite un stand et tout les passagers sont morts, y compris les pilotes...",
-        'en-US': "After defeating Devo, you tell Polnareff that you must join your friends in the airplane 'F-6969'. Polnareff accepts to follow you and becomes your companion. You go together in the airplane, and you find your companions. The journey goes well, until the appearance of an invincible fly and who dodges every attacks. This fly was in fact a stand that killed all the passengers, including the pilots...",
-        'es-ES': "Después de derrotar Devo, te dices a Polnareff que debes unirte a tus amigos en el avión 'F-6969'. Polnareff acepta a seguirte y se convierte en tu compañero. Vas juntos en el avión, y encuentras tus compañeros. El viaje se desarrolla bien, hasta que aparece una mouche inmortal y que evita todos los ataques. Esta mouche fue en realidad un stand que mató a todos los pasajeros, incluyendo los pilotos...",
-        'de-DE': "Nachdem Sie Devo besiegt haben, sagt Polnareff, dass Sie Ihren Freunden in das Flugzeug 'F-6969' müssen. Polnareff akzeptiert, sich zu folgen und wird nun Ihr Begleiter. Sie gehen zusammen in das Flugzeug, und Sie finden Ihre Begleiter. Die Reise geht gut, bis die Erscheinung einer unvergleichlichen Mouche, die alle Angriffe ausweicht. Diese Mouche war ein Stand, der alle Passagiere tötete, einschließlich der Piloten...",
+        'en-US':"As you guys continue on your journey, beating a fake captain, and a monkey named Forever. You come to discover that Kakyoin is acting weird. It starts with him weirdly licking cherries. Soon after you learn it is an enemy stand user, with a flesh eating stand called Yellow Temperance",
+        'fr-FR':"En continuant votre voyage, en battant un faux capitaine, et un singe nommé Forever. Vous découvrez que Kakyoin se comporte bizarrement. Ça commence avec lui léchant étrangement des cerises. Bientôt après, vous apprenez qu'il s'agit d'un utilisateur de stand ennemi, avec un stand mangeur de chair appelé Yellow Temperance",
+        'es-ES':"Mientras continuas tu viaje, derrotando a un falso capitán, y un mono llamado Forever. Descubres que Kakyoin se comporta raro. Empieza con él lamiendo extrañamente cerezas. Pronto después, aprendes que es un usuario de stand enemigo, con un stand comedor de carne llamado Yellow Temperance",
+        'de-DE':"Als Sie und Ihre Freunde Ihre Reise fortsetzen, schlagen Sie einen falschen Kapitän und einen Affen namens Forever. Sie entdecken, dass Kakyoin seltsam handelt. Es beginnt mit ihm seltsam Kirschen zu lecken. Bald darauf lernen Sie, dass es sich um einen Feind-Stand-Benutzer handelt, mit einem Fleischfresser-Stand namens Yellow Temperance",
     },
     title: C3_P1.title,
     quests: [
+        Quests.Defeat(Util.AttributeChapterQuestToNPC(NPCs.Rubber_Soul, [Quests.Throw_Rubber_Soul_Body_To_The_Sea])),
         Quests.ClaimCoins(35_000),
-        Quests.Defeat(Util.AttributeChapterQuestToNPC(NPCs.Gray_Fly, [Quests.Drive_Airplane_To_Hongkong]))
+        Quests.UseLoot(5),
+        Quests.Assault(10)
+    ],
+    parent: C3_P1,
+    tips: {
+        'en-US': 'You may need the `/action` command in order to complete some of your quests',
+        'fr-FR': 'Tu peux avoir besoin de la commande `/action` pour compléter certaines de tes quêtes',
+        'es-ES': 'Puedes necesitar la `/action` para completar algunas de tus misiones',
+        'de-DE': 'Du kannst das `/action`-Kommando benutzen, um einige deiner Aufgaben zu erfüllen'
+    },
+}
+
+export const C3_P6: Chapter = {
+    id: 8,
+    description: {
+        'en-US': "After defeating Yellow Temperance, your group travels to India. Where you're attacked by a man named Hol Horse, and J. Geil's stand Hanged Man. You tried your best to help Avdol, but he sadly dies, by the stand Emperor. Now it is up to you to beat J. Geil, and his stand Hanged Man.",
+        'fr-FR': "Après avoir battu Yellow Temperance, votre groupe voyage en Inde. Là, vous êtes attaqué par un homme nommé Hol Horse, et son stand Hanged Man. Vous avez essayé de le sauver, mais il est mort, par le stand Emperor. Maintenant, c'est à vous de battre J. Geil, et son stand Hanged man.",
+        'es-ES': "Después de derrotar a Yellow Temperance, tu grupo viaja a India. Donde eres atacado por un hombre llamado Hol Horse, y el stand de J. Geil Hanged man. Intentas tu mejor esfuerzo para ayudar a Avdol, pero él muere, por el stand Emperor. Ahora es tu turno de derrotar a J. Geil, stand Hanged man.",
+        'de-DE': "Nachdem Sie Yellow Temperance besiegt haben, reisen Sie mit Ihrer Gruppe nach Indien. Wo Sie von einem Mann namens Hol Horse und J. Geils Stand Hanged man. Sie haben Ihr Bestes versucht, um Avdol zu helfen, aber er stirbt leider, durch den Stand Emperor. Jetzt ist es an Ihnen, J. Geil und seinen Stand Hanged Man"
+    },
+    title: C3_P1.title,
+    quests: [
+        Quests.Defeat(NPCs.Beggar),
+        Quests.Defeat(NPCs.Beggar),
+        Quests.Defeat(NPCs.Beggar),
+        Quests.Defeat(NPCs.Beggar),
+        Quests.Defeat(NPCs.Beggar),
+        //Quests.Defeat(NPCs.J_Geil),
     ],
     parent: C3_P1,
     tips: {

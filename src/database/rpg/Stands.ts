@@ -382,7 +382,10 @@ export const Killer_Queen: Stand = {
     rarity: "S",
     description: "Killer Queen is a visibly muscular humanoid Stand about as tall as Kira himself, light in color overall. In both the manga and anime, it is portrayed as light pink, while in the All Star Battle video game, it is portrayed as white.",
     abilities: [
-        Abilities.Stand_Barrage
+        Abilities.Coin_Barrage,
+        Abilities.Coin_Bomb,
+        Abilities.Escape_Plan,
+        Abilities.Sheer_Heart_Attack
     ],
     color: 'PURPLE',
     image: 'https://static.wikia.nocookie.net/jjba/images/3/39/Killer_queen_c345.png/revision/latest?cb=20160325163154',
@@ -397,6 +400,76 @@ export const Killer_Queen: Stand = {
         awaken_text: "BITES THE DUST..."
     },
     emoji: Emojis.killer_queen,
-    available: false
+    available: true
 };
 // LATER
+
+export const Yellow_Temperance: Stand = {
+    name: "Yellow Temperance",
+    rarity: "C",
+    description: "nn",
+    abilities: [
+        Abilities.Assimilation
+    ],
+    color: 'YELLOW',
+    image: '',
+    skill_points: {
+        strength: 0,
+        defense: 0,
+        perception: 0,
+        stamina: 0
+    },
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: "nn"
+    },
+    emoji: "Emojis.yellow_temperance",
+    available: false
+};
+
+export const Crazy_Diamond: Stand = {
+    name: "Crazy Diamond",
+    rarity: "S",
+    description: "Crazy Diamond is humanoid, with a powerful build and tall stature (about two heads above [Josuke](https://jojo.fandom.com/wiki/Josuke_Higashikata).",
+    abilities: [
+        Abilities.Stand_Barrage,
+        Abilities.Wall,
+        Abilities.Bearing_Shot,
+        Abilities.YO_Angelo
+    ],
+    color: 'BLUE',
+    image: 'https://static.wikia.nocookie.net/jjba/images/7/7a/Crazy_Diamond_Anime.Infobox.png/revision/latest?cb=20180622215654&path-prefix=fr',
+    skill_points: {
+        strength: 10,
+        defense: 10,
+        perception: 0,
+        stamina: 0
+    },
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: ":musical_note: CRAZY NOISY BIZARRE TOWN!!!! :musical_note: "
+    },
+    emoji: Emojis.crazy_diamond,
+    available: true
+};
+
+export const Scary_Monsters: Stand = {
+    name: "Scary Monsters",
+    rarity: "A",
+    description: "Scary Monsters is is the Stand of Dr. Ferdinand, featured in Steel Ball Run. It's a blue dinosaur ROARRRR ROARRRR",
+    abilities: [],
+    color: 'BLUE',
+    image: 'https://static.wikia.nocookie.net/jjba/images/6/62/Scary_Monsters.png/revision/latest?cb=20191119194159',
+    skill_points: {
+        strength: 10,
+        defense: 5,
+        perception: 0,
+        stamina: 0
+    },
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: "ROARRRR ROARRRR"
+    },
+    emoji: Emojis.scary_monsters,
+    available: false
+};

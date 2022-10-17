@@ -17,6 +17,34 @@ export const execute: Event["execute"] = async (client: Client) => {
     const commandsData = client.commands.filter(v => !v.isPrivate).map((v) => v.data);
     const privateCommandsData = client.commands.filter(v => v.isPrivate).map((v) => v.data);
 
+    // fetch patreons
+    const supportMembers = client.guilds.cache.get(process.env.SUPPORT_SERVER_ID)?.members.fetch();
+    const testerMembers = client.guilds.cache.get(process.env.TESTER_SERVER_ID)?.members.fetch();
+
+    if (testerMembers) {
+        const testers = (await testerMembers).filter(v => v.roles.cache.has(process.env.TESTER_ROLE_ID));
+        client.testers = testers.map(v => v.id);
+    }
+
+    if (supportMembers) {
+        const patreons = (await supportMembers).filter((m) => m.roles.cache.has(process.env.PATREON_ROLE_ID));
+        const patreonsArray: { id: string, level: number }[] = [];
+        const boosters = (await supportMembers).filter((m) => m.roles.cache.has(process.env.BOOSTER_ROLE_ID));
+        const boostersArray: string[] = boosters.map(v => v.id);
+        patreons.forEach((m) => {
+            if (m.roles.cache.has(process.env.PATREON_LEVEL_2_ROLE_ID)) patreonsArray.push({ id: m.id, level: 2 });
+            else if (m.roles.cache.has(process.env.PATREON_LEVEL_3_ROLE_ID)) patreonsArray.push({ id: m.id, level: 3 });
+            else if (m.roles.cache.has(process.env.PATREON_LEVEL_4_ROLE_ID)) patreonsArray.push({ id: m.id, level: 4 });
+            else patreonsArray.push({ id: m.id, level: 1 });
+        });
+        await client.database.redis.set("jolyne:patreons", JSON.stringify(patreonsArray));
+        client.patreons = patreonsArray;
+        client.boosters = boostersArray;
+        console.log(`[Patreons] Fetched ${patreons.size} patreons`, patreonsArray);
+        console.log(`[Boosters] Fetched ${boosters.size} boosters`, boostersArray);
+        // JSON.parse(await client.database.redis.get("jolyne:patreons"));
+    }
+
     if (JSON.stringify(commandsData) !== lastCommands) {
         client.log('Slash commands has changed. Loading...', 'cmd');
         if (process.env.TEST_MODE === "true") {

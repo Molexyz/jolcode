@@ -36,6 +36,13 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         "🍒",
         "🍑",
     ]
+    if (ctx.client.patreons.find(p => p.id === userData.id)) {
+        const tier = ctx.client.patreons.find(p => p.id === userData.id).level;
+        const randomFruit = Util.randomArray(fruits);
+        for (let i = 0; i < Util.getRandomInt(2+tier, 5+tier); i++) {
+            fruits.push(randomFruit);
+        }
+    }
     // const fruits = [Emojis['JolyneAhhhhh'], Emojis['a_'], "🍌", Emojis.diary, Emojis['complete_pizza'], "🍒", Emojis['jocoins']];
     let slotMachineFruits: string[] = Util.shuffle([...Util.shuffle([...Util.shuffle(fruits), ...Util.shuffle(fruits), ...Util.shuffle(fruits), ...Util.shuffle(fruits)])]); // Am I shuffling too much? Yes.
 

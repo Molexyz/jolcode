@@ -9,6 +9,7 @@ export const Tonio_Trussardis_Restaurant: Shop = {
         Items.Salad_Bowl,
         Items.Ramen_Bowl,
         Items.Pizza,
+        Items.Tonio_Special_Recipe
     ],
     emoji: Emojis.Tonio_Trussardi,
     color: 'ORANGE'

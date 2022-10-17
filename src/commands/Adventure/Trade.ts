@@ -126,7 +126,10 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 if (!Util.getItem(v)) return
                 return Util.getItem(v);
             }).filter(r => r && r.tradable);    
-            const authorUniqueItems: Item[] = [...new Set(authorItems)];    
+            let authorUniqueItems: Item[] = [...new Set(authorItems)];  
+            authorUniqueItems.sort((a, b) => ( ((b.rarity === 'S' || b.rarity === 'A') ? 1 : -1)  - ((a.rarity === 'S' || a.rarity === 'A') ? 1 : -1) ));
+            authorUniqueItems.length = 25;
+  
             return new MessageSelectMenu()
                 .setCustomId(authorItemsID)
                 .setPlaceholder(`${ctx.author.username}'s Items`)
@@ -146,7 +149,9 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 if (!Util.getItem(v)) return
                 return Util.getItem(v);
             }).filter(r => r && r.tradable);    
-            const userUniqueItems: Item[] = [...new Set(userItems)];    
+            let userUniqueItems: Item[] = [...new Set(userItems)];
+            userUniqueItems.sort((a, b) => ( ((b.rarity === 'S' || b.rarity === 'A') ? 1 : -1)  - ((a.rarity === 'S' || a.rarity === 'A') ? 1 : -1) ));
+            userUniqueItems.length = 25;
             return new MessageSelectMenu()
                 .setCustomId(userItemsID)
                 .setPlaceholder(`${user.username}'s Items`)
@@ -170,6 +175,14 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 case authorItemsID:
                     if (!i.isSelectMenu() || i.user.id !== ctx.author.id) return;
                     if (!userData.items.find(r => r === i.values[0])) return;
+
+                    /*
+
+                    if (Util.getItem(i.values[0]).type === 'disc' && (user_data.items.filter(r => Util.getItem(r).type === 'disc').length + authorOffers.filter(r => r.type === 'disc').length) >= Util.getStandDiscLimit(ctx, user_data.id)) {
+                        ctx.interaction.editReply({  content: 'This user has reached their stand disc limit.' });
+                        return;
+                    }*/
+
                     authorOffers.push(Util.getItem(i.values[0]));
                     Util.removeItem(userData.items, i.values[0]);
                     loadEmbed();
@@ -177,6 +190,14 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 case userItemsID:
                     if (!i.isSelectMenu() || i.user.id !== user.id) return;
                     if (!user_data.items.find(r => r === i.values[0])) return;
+
+                    /*
+                    if (Util.getItem(i.values[0]).type === 'disc' && (userData.items.filter(r => Util.getItem(r).type === 'disc').length + userOffers.filter(r => r.type === 'disc').length) >= Util.getStandDiscLimit(ctx, user_data.id)) {
+                        ctx.interaction.editReply({ content: 'This user has reached their stand disc limit.' });
+                        return;
+                    }
+                    */
+
                     userOffers.push(Util.getItem(i.values[0]));
                     Util.removeItem(user_data.items, i.values[0]);
                     loadEmbed();

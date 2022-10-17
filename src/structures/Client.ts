@@ -16,6 +16,9 @@ export default class Jolyne extends Client {
     database: database;
     translations: Map<any, Function>;
     cluster: Cluster.Client;
+    patreons: { id: string, level: number }[] = [];
+    boosters: string[] = [];
+    testers: string[] = [];
 
     constructor(options?: ClientOptions) {
       super(options);

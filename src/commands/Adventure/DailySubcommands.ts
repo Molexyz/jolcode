@@ -56,14 +56,26 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         });
         userData.money += rewards.money;
         userData.xp += rewards.xp;
-        if (await ctx.client.database.redis.client.get(`jjba:premium:${userData.id}`)) {
-            embed_description += "\n" + ctx.translate("daily:CLAIMED_EMBED_FOOTER", {
-                coins: Util.localeNumber(rewards.premium.money),
-                xp: Util.localeNumber(rewards.premium.xp)
+        if (ctx.client.patreons.find(r => r.id === userData.id)) {
+            const xpRewards = Math.round(rewards.xp * (ctx.client.patreons.find(r => r.id === userData.id).level / 7 + 0.25));
+            const moneyRewards = Math.round(rewards.money * (ctx.client.patreons.find(r => r.id === userData.id).level / 7 + 0.25));
+            embed_description += "\n" + ctx.translate("daily:CLAIMED_EMBED_DESCRIPTION_PREMIUM", {
+                coins: Util.localeNumber(moneyRewards),
+                xp: Util.localeNumber(xpRewards),
+                tier: ctx.client.patreons.find(r => r.id === userData.id).level
             });
-            userData.money += rewards.premium.money;
-            userData.xp += rewards.premium.xp;
+            userData.money += moneyRewards;
+            userData.xp += xpRewards;
         }
+        if (ctx.client.boosters.find(r => r === userData.id)) {
+            userData.money += 1000;
+            userData.xp += 1000;
+            embed_description += "\n" + ctx.translate("daily:CLAIMED_EMBED_DESCRIPTION_BOOSTER", {
+                coins: Util.localeNumber(1000),
+                xp: Util.localeNumber(1000)
+            });
+        }
+
         const embed = new MessageEmbed()
             .setAuthor({ name: ctx.interaction.user.tag, iconURL: ctx.interaction.user.displayAvatarURL({ dynamic: true }) })
             .setColor("#70926c")

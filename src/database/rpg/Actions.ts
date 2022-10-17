@@ -358,3 +358,55 @@ export const drive_airplane_to_hongkong = async (ctx: InteractionCommandContext,
 
 
 }
+
+export const throw_rubber_soul_body_to_the_sea = async (ctx: InteractionCommandContext, userData: UserData) => {
+    ctx.makeMessage({
+        content: 'https://thumbs.gfycat.com/JadedVainFlyinglemur-max-1mb.gif',
+        components: []
+    });
+    // validate quest
+    userData.chapter_quests.push(Quests.Get_A_Tram_And_Go_To_India);
+    for (let i = 0; i < userData.chapter_quests.length; i++) {
+        if (userData.chapter_quests[i].id === 'action:throw_rubber_soul_body_to_the_sea') {
+            userData.chapter_quests[i].completed = true;
+            break;
+        }
+    }
+    ctx.client.database.saveUserData(userData);
+
+
+    setTimeout(() => {
+        ctx.followUp({
+            content: 'Soul rubber took the L, bozo. You got a new quest btw check it NOW.'
+        });
+    }, 2000);
+
+
+
+}
+
+export const get_a_tram_and_go_to_india = async (ctx: InteractionCommandContext, userData: UserData) => {
+    if (userData.money < 50000) {
+        return ctx.makeMessage({
+            content: 'You dont have enough money to buy a tram ticket. You need atleast 50k. Yes it is very expensive sorry.',
+            components: []
+        });
+    }
+    userData.money -= 50000;
+    // vaidate quest
+    for (let i = 0; i < userData.chapter_quests.length; i++) {
+        if (userData.chapter_quests[i].id === "action:get_a_tram_and_go_to_india") {
+            userData.chapter_quests[i].completed = true;
+            break;
+        }
+    }
+    userData.chapter_quests.push(Quests.Wait_For_The_Tram_To_Arrive_In_India);
+    ctx.client.database.saveUserData(userData);
+    ctx.makeMessage({
+        content: "You bought a tram ticket and went to India (-50k coins). Use the `/chapter` command to see how long you have to wait.",
+        components: []
+    });
+
+
+    
+}

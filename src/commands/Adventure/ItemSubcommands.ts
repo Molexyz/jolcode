@@ -184,7 +184,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     for (let i = 0; i < quantity; i++) {
                         Util.removeItem(userData.items, item.id);
                     }
-                    await ctx.client.database.saveUserData(userData);
+                    await ctx.client.database.saveUserData(userData, 'sold 187');
                     ctx.makeMessage({ content: `${Util.makeNPCString(NPCs.Pucci)} You sold ${quantity} ${item.emoji} ${item.name} for **${Util.localeNumber(price)}** ${Emojis.jocoins}.` });
                 } else {
                     ctx.makeMessage({ content: `${Util.makeNPCString(NPCs.Pucci)} K.` });

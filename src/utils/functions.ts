@@ -7,6 +7,8 @@ import * as Quests from '../database/rpg/Quests';
 import * as NPCs from '../database/rpg/NPCs';
 import Canvas from 'canvas';
 import JolyneClient from '../structures/Client';
+import InteractionCommandContext from '../structures/Interaction';
+
 
 const bufferCache: {
     [key: string]: Buffer
@@ -176,6 +178,8 @@ export const generateID = (): string => [...Array(12)].map(() => (~~(Math.random
 
 export const calcDodgeChances = (data: UserData | NPC): number => {
     const perception = isNPC(data) ? data.skill_points.perception : data.spb.perception;
+    console.log(perception)
+    if (perception === -696969) return 696969;
     return Math.round(Math.round((data.level / 20) + (perception / 1.20)));
 };
 
@@ -448,4 +452,14 @@ export const forEveryQuests = (userData: UserData, filter: (q: Quest) => boolean
 
     }
     
+}
+
+export const getStandDiscLimit = (ctx: InteractionCommandContext, aid?: string): number => {
+    const id = aid ?? ctx.author.id;
+    const tier = ctx.client.patreons.find(p => p.id === id)?.level ?? 0;
+    if (tier === 0) return 5;
+    if (tier === 1) return 8;
+    if (tier === 2) return 15;
+    if (tier === 3) return 20;
+    else return Infinity;
 }

@@ -42,7 +42,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             console.error(e);
         }
     }).catch((err) => {
-        console.error(err);
+        console.error(err)
         err = err.toString();
         if (err.includes(client.token)) {
             err = err.replace(new RegExp(client.token, "gi"), `T0K3N`);
@@ -56,3 +56,5 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     }); 
 
 };
+
+

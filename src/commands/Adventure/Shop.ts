@@ -22,6 +22,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     const itemsArray = Object.values(Items);
     const fields: { value: string, name: string, inline?: boolean }[] = [];
     const goBackID = Util.generateID();
+    let menuID: string;
     const goBackBTN = new MessageButton()
         .setCustomId(goBackID)
         .setEmoji("◀️")
@@ -51,9 +52,10 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     continue;
                 }
             }
+            menuID = 'menu'+Util.generateID();
             components.push(new MessageButton()
             .setLabel(shop.name)
-            .setCustomId(Util.generateID())
+            .setCustomId(menuID)
             .setEmoji(shop.emoji)
             .setStyle("SECONDARY"))
             let content = '';
@@ -80,7 +82,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         const ItemsSelectMenu = new MessageSelectMenu()
         .setMaxValues(1)
         .setMinValues(1)
-        .setCustomId(shop.name)
+        .setCustomId(shop.name+ctx.interaction.createdAt)
         .setOptions(...shop.items.map((i) => {
             return {
                 label: i.name,
@@ -112,7 +114,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     }
     const filter = (i: MessageComponentInteraction) => {
         i.deferUpdate().catch(() => {}); // eslint-disable-line @typescript-eslint/no-empty-function
-        return i.user.id === userData.id
+        return (i.user.id === userData.id) && (i.customId === goBackID || i.customId.startsWith('menu') || shopsArray.some((s) => i.customId.includes(s.name)));
     };
     const collector = ctx.interaction.channel.createMessageComponentCollector({ filter });
     ctx.timeoutCollector(collector);
@@ -121,6 +123,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         // Anti-cheat
         const AntiCheatResult = await ctx.componentAntiCheat(i, userData);
         if (AntiCheatResult === true) return collector.stop();
+        userData = await ctx.client.database.getUserData(userData.id);
 
         ctx.timeoutCollector(collector);
         if (i.customId === goBackID) return menuMessage();
@@ -187,7 +190,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
 
             updShopMsg(currentShop);
         }
-        ctx.client.database.saveUserData(userData);
+        ctx.client.database.saveUserData(userData, 'shop 190');
     });
 
 };
