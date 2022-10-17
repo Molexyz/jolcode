@@ -251,7 +251,7 @@ export const C3_P5: Chapter = {
         'de-DE': 'Du kannst das `/action`-Kommando benutzen, um einige deiner Aufgaben zu erfüllen'
     },
 }
-
+/*
 export const C3_P6: Chapter = {
     id: 8,
     description: {
@@ -277,3 +277,4 @@ export const C3_P6: Chapter = {
         'de-DE': 'Du kannst das `/action`-Kommando benutzen, um einige deiner Aufgaben zu erfüllen'
     },
 }
+*/

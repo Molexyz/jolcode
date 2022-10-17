@@ -129,6 +129,10 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
 
                 userData.chapter++;
                 const currentChapter = getUserChapter();
+                ctx.followUp({
+                    content: "You can't do that atm"
+                })
+                return collector.stop()
                 if (!currentChapter || userData.chapter >= 9) { // This chapter was the last developed chapter
                     ctx.followUp({
                         content: "This chapter is currently the last, the developers are working hard to add more chapters.",
