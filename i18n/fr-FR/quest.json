@@ -62,5 +62,16 @@
     "DRIVE_AIRPLANE_TO_HONGKONG": {
         "TITLE": "Drive the airplane",
         "DESCRIPTION": "Drive the airplane immediately to Hong Kong"
+    },
+    "THROW_RUBBER_SOUL_BODY_TO_THE_SEA": {
+        "TITLE": "Throw rubber soul's body",
+        "DESCRIPTION": "Throw rubber soul's body to the sea"
+    },
+    "GET_A_TRAM_AND_GO_TO_INDIA": {
+        "TITLE": "Get a tram",
+        "DESCRIPTION": "Get a tram and go to India"
+    },
+    "WAIT_FOR_THE_TRAM_TO_ARRIVE_IN_INDIA": {
+        "DESCRIPTION": "Wait for the tram to arrive in India"
     }
 }
