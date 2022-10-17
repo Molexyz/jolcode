@@ -17,6 +17,10 @@ export const data: SlashCommand["data"] = {
 
 
 export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandContext, userData?: UserData, followUp?: boolean) => {
+    if (userData.chapter_quests.find(r => r.id === "action:drive_airplane_to_hongkong")) {
+        userData.chapter = 7;
+        ctx.client.database.saveUserData(userData)
+    }
     const nextChapterID = Util.generateID();
     const nextChapterBTN = new MessageButton()
         .setCustomId(nextChapterID)
