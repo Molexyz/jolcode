@@ -228,7 +228,7 @@ export const Get_A_Tram_And_Go_To_India: Quest = {
 
 export const Wait_For_The_Tram_To_Arrive_In_India: Quest = {
     id: "wait:wait_for_the_tram_to_arrive_in_india",
-    timeout: Date.now() + ((60000 * 60) / 2),
+    timeout: Date.now() + ((60000 * 60) * 2),
     i18n: "WAIT_FOR_THE_TRAM_TO_ARRIVE_IN_INDIA",
     emoji: "🚋",
     completed: false
