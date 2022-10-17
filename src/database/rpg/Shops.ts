@@ -5,11 +5,11 @@ import * as Items from './Items';
 export const Tonio_Trussardis_Restaurant: Shop = {
     name: 'Tonio Trussardi\'s Restaurant',
     items: [
+        Items.Tonio_Special_Recipe,
         Items.Spaghetti_Bowl,
         Items.Salad_Bowl,
         Items.Ramen_Bowl,
-        Items.Pizza,
-        Items.Tonio_Special_Recipe
+        Items.Pizza
     ],
     emoji: Emojis.Tonio_Trussardi,
     color: 'ORANGE'
