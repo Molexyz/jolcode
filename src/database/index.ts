@@ -20,7 +20,6 @@ export default class DatabaseHandler {
     }
 
     async saveUserData(userData: UserData, reason?: string): Promise<void> {
-        console.log(userData.id, reason, Util.localeNumber(userData.money));
         return new Promise(async (resolve) => {
             const oldData: UserData = await this.postgres.client.query(`SELECT * FROM users WHERE id = $1`, [userData.id]).then(r => r.rows[0] || null);
             if (!oldData) return resolve(null);
