@@ -130,6 +130,10 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 if (userData.chapter_quests.find(r=> r.id === 'action:drive_airplane_to_hongkong')) userData.chapter = 6;
 
                 userData.chapter++;
+                ctx.followUp({
+                    content: `This command has been disabled due to a huge bug. Try again later.`,
+                })
+                return collector.stop()
                 const currentChapter = getUserChapter();
                 if (!currentChapter || userData.chapter >= 9) { // This chapter was the last developed chapter
                     ctx.followUp({
