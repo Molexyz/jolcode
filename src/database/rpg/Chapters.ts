@@ -231,6 +231,21 @@ export const C3_P4: Chapter = {
 export const C3_P5: Chapter = {
     id: 7,
     description: {
+        'fr-FR': "Après avoir battu Devo, vous racontez à Polanreff que vous devez rejoindre vos amis dans l'avion 'F6969'. Polnareff accepte de vous suivre et deviens maintenant un de vos compagnons. Vous vous rendez ensemble dans l'avion, et vous y trouvez vos compagnons. Le voyage se déroule bien, jusqu'à l'apparition d'une mouche invincible et qui esquive toutes les attaques. Vous vous rendez compte plus tard que cette mouche était enfaite un stand et tout les passagers sont morts, y compris les pilotes...",
+        'en-US': "After defeating Devo, you tell Polnareff that you must join your friends in the airplane 'F-6969'. Polnareff accepts to follow you and becomes your companion. You go together in the airplane, and you find your companions. The journey goes well, until the appearance of an invincible fly and who dodges every attacks. This fly was in fact a stand that killed all the passengers, including the pilots...",
+        'es-ES': "Después de derrotar Devo, te dices a Polnareff que debes unirte a tus amigos en el avión 'F-6969'. Polnareff acepta a seguirte y se convierte en tu compañero. Vas juntos en el avión, y encuentras tus compañeros. El viaje se desarrolla bien, hasta que aparece una mouche inmortal y que evita todos los ataques. Esta mouche fue en realidad un stand que mató a todos los pasajeros, incluyendo los pilotos...",
+        'de-DE': "Nachdem Sie Devo besiegt haben, sagt Polnareff, dass Sie Ihren Freunden in das Flugzeug 'F-6969' müssen. Polnareff akzeptiert, sich zu folgen und wird nun Ihr Begleiter. Sie gehen zusammen in das Flugzeug, und Sie finden Ihre Begleiter. Die Reise geht gut, bis die Erscheinung einer unvergleichlichen Mouche, die alle Angriffe ausweicht. Diese Mouche war ein Stand, der alle Passagiere tötete, einschließlich der Piloten...",
+    },
+    title: C3_P1.title,
+    quests: [
+        Quests.ClaimCoins(35_000),
+        Quests.Defeat(Util.AttributeChapterQuestToNPC(NPCs.Gray_Fly, [Quests.Drive_Airplane_To_Hongkong]))
+    ],
+    parent: C3_P1
+}
+export const C3_P6: Chapter = {
+    id: 7,
+    description: {
         'en-US':"As you guys continue on your journey, beating a fake captain, and a monkey named Forever. You come to discover that Kakyoin is acting weird. It starts with him weirdly licking cherries. Soon after you learn it is an enemy stand user, with a flesh eating stand called Yellow Temperance",
         'fr-FR':"En continuant votre voyage, en battant un faux capitaine, et un singe nommé Forever. Vous découvrez que Kakyoin se comporte bizarrement. Ça commence avec lui léchant étrangement des cerises. Bientôt après, vous apprenez qu'il s'agit d'un utilisateur de stand ennemi, avec un stand mangeur de chair appelé Yellow Temperance",
         'es-ES':"Mientras continuas tu viaje, derrotando a un falso capitán, y un mono llamado Forever. Descubres que Kakyoin se comporta raro. Empieza con él lamiendo extrañamente cerezas. Pronto después, aprendes que es un usuario de stand enemigo, con un stand comedor de carne llamado Yellow Temperance",
