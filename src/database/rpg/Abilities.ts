@@ -1180,7 +1180,7 @@ export const Sheer_Heart_Attack: Ability = {
 export const Wall: Ability = {
     name: 'Wall',
     description: 'Reform the ground into a wall, guaranteeing their attack will miss.',
-    cooldown: 5,
+    cooldown: 6,
     damages: 0,
     blockable: false,
     dodgeable: false,
@@ -1224,7 +1224,7 @@ export const Wall: Ability = {
 export const Bearing_Shot: Ability = {
     name: 'Bearing Shot',
     description: 'Through a bearing at incredibly high speeds and regenerates 9% of your hp (even if you miss).',
-    cooldown: 5,
+    cooldown: 7,
     damages: 25,
     heal: '9%',
     blockable: false,
