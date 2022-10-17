@@ -244,7 +244,7 @@ export const C3_P5: Chapter = {
     parent: C3_P1
 }
 export const C3_P6: Chapter = {
-    id: 7,
+    id: 8,
     description: {
         'en-US':"As you guys continue on your journey, beating a fake captain, and a monkey named Forever. You come to discover that Kakyoin is acting weird. It starts with him weirdly licking cherries. Soon after you learn it is an enemy stand user, with a flesh eating stand called Yellow Temperance",
         'fr-FR':"En continuant votre voyage, en battant un faux capitaine, et un singe nommé Forever. Vous découvrez que Kakyoin se comporte bizarrement. Ça commence avec lui léchant étrangement des cerises. Bientôt après, vous apprenez qu'il s'agit d'un utilisateur de stand ennemi, avec un stand mangeur de chair appelé Yellow Temperance",
