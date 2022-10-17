@@ -1050,8 +1050,8 @@ export const Coin_Barrage: Ability = {
 export const Escape_Plan: Ability = {
     name: 'Escape Plan',
     description: 'Blast yourself off in an explosion. Dealing some damages to the enemy, and some damages to yourself, but their next hit will automatically miss',
-    cooldown: 0,
-    damages: 0,
+    cooldown: 7,
+    damages: 10,
     blockable: false,
     dodgeable: false,
     stamina: 15,
@@ -1180,7 +1180,7 @@ export const Sheer_Heart_Attack: Ability = {
 export const Wall: Ability = {
     name: 'Wall',
     description: 'Reform the ground into a wall, guaranteeing their attack will miss.',
-    cooldown: 0,
+    cooldown: 5,
     damages: 0,
     blockable: false,
     dodgeable: false,
@@ -1224,7 +1224,7 @@ export const Wall: Ability = {
 export const Bearing_Shot: Ability = {
     name: 'Bearing Shot',
     description: 'Through a bearing at incredibly high speeds and regenerates 9% of your hp (even if you miss).',
-    cooldown: 0,
+    cooldown: 5,
     damages: 25,
     heal: '9%',
     blockable: false,
@@ -1236,7 +1236,7 @@ export const Bearing_Shot: Ability = {
 export const YO_Angelo: Ability = {
     name: 'YO Angelo',
     description: 'secret ability. use it and SEE....',
-    cooldown: 0,
+    cooldown: 10,
     damages: 0,
     blockable: false,
     dodgeable: true,
