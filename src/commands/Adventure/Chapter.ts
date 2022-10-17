@@ -131,8 +131,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     return collector.stop();
                 }
 
-                if (userData.chapter_quests.find(r=> r.id === 'action:drive_airplane_to_hongkong')) userData.chapter = 6;
-
                 userData.chapter++;
                 /*
                 ctx.followUp({
