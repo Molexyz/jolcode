@@ -12,7 +12,7 @@ export const category: SlashCommand["category"] = "adventure";
 export const cooldown: SlashCommand["cooldown"] = 10;
 export const data: SlashCommand["data"] = {
     name: "casino",
-    description: "lootlocasinocasinocasinocasinocasinootlootloot",
+    description: "Spins the casino machine.",
     options: [{
         name: 'bet',
         description: 'The amount of your bet. To win, you must have at least 2 identical symbols',
@@ -22,10 +22,28 @@ export const data: SlashCommand["data"] = {
 };
 
 export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandContext, userData?: UserData) => {
-    return ctx.makeMessage({
-        content: 'Due to a huge bug, this command is currently unavailable. Please try again later.'
-    })
-    const fruits = [Emojis['JolyneAhhhhh'], Emojis['a_'], "🍌", Emojis.diary, Emojis['complete_pizza'], "🍒", Emojis['jocoins']];
+    // yo what the fuck was that, give me every fruits emoji
+    const fruits = [
+        "🍏",
+        "🍎",
+        "🍐",
+        "🍊",
+        "🍋",
+        "🍌",
+        "🍉",
+        "🍇",
+        "🍓",
+        "🍒",
+        "🍑",
+    ]
+    if (ctx.client.patreons.find(p => p.id === userData.id)) {
+        const tier = ctx.client.patreons.find(p => p.id === userData.id).level;
+        const randomFruit = Util.randomArray(fruits);
+        for (let i = 0; i < Util.getRandomInt(2+tier, 5+tier); i++) {
+            fruits.push(randomFruit);
+        }
+    }
+    // const fruits = [Emojis['JolyneAhhhhh'], Emojis['a_'], "🍌", Emojis.diary, Emojis['complete_pizza'], "🍒", Emojis['jocoins']];
     let slotMachineFruits: string[] = Util.shuffle([...Util.shuffle([...Util.shuffle(fruits), ...Util.shuffle(fruits), ...Util.shuffle(fruits), ...Util.shuffle(fruits)])]); // Am I shuffling too much? Yes.
 
     const betID = Util.generateID();
@@ -49,6 +67,9 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     
     let bet = ctx.interaction.options.getInteger('bet');
     if (bet < 0) bet = 1;
+    if (userData.money < bet) return ctx.makeMessage({
+        content: `You don't have enough money, BOZO!`,
+    })
     let left = Util.getRandomInt(2, 5);
 
     await ctx.sendT('casino:CONFIRM_MESSAGE', {
@@ -101,6 +122,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
 
         if (left === 0) {
             let followUpMSG: string;
+            userData = await ctx.client.database.getUserData(userData.id)
 
             if (slotMachineFruits[3] === slotMachineFruits[4] && slotMachineFruits[4] === slotMachineFruits[5]) { // JACKPOT
                 msg += "| : : **JACKPOT** : : |\n";
@@ -119,15 +141,15 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             }
             await ctx.client.database.delCooldownCache('casino', userData.id);
             ctx.client.database.saveUserData(userData);
-            followUpReply = await ctx.followUp({
-                content: followUpMSG,
-                fetchReply: true
-            });
-            ctx.makeMessage({
+            await ctx.makeMessage({
                 content: msg,
                 components: [
                     Util.actionRow([ pullAgainBTN ])
                 ]
+            });
+            followUpReply = await ctx.followUp({
+                content: followUpMSG,
+                fetchReply: true
             });
         } else {
             slotMachineFruits = slotMachineFruits.slice(3);

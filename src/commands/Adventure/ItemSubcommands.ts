@@ -138,6 +138,10 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             break;
         }
         case "sell": {
+            const userItems: Item[] = userData.items.map(v => {
+                if (!Util.getItem(v)) return
+                return Util.getItem(v);
+            });
             if (userItems.length === 0) return ctx.sendT("base:NO_ITEMS");
             const item = Util.getItem(ctx.interaction.options.getString("item").split("(")[0].trim());
             if (!item) return ctx.makeMessage({ content: "Please select a valid item" });
@@ -180,7 +184,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     for (let i = 0; i < quantity; i++) {
                         Util.removeItem(userData.items, item.id);
                     }
-                    await ctx.client.database.saveUserData(userData);
+                    await ctx.client.database.saveUserData(userData, 'sold 187');
                     ctx.makeMessage({ content: `${Util.makeNPCString(NPCs.Pucci)} You sold ${quantity} ${item.emoji} ${item.name} for **${Util.localeNumber(price)}** ${Emojis.jocoins}.` });
                 } else {
                     ctx.makeMessage({ content: `${Util.makeNPCString(NPCs.Pucci)} K.` });
@@ -204,7 +208,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             ctx.interaction.reply({
                 content: `You threw x${quantity} ${item.emoji} ${item.name}`,
             });
-            Util.removeItem(userData.items, item.id);
+            for (let i = 0; i < quantity; i ++) Util.removeItem(userData.items, item.id);
             await ctx.client.database.saveUserData(userData);
             break;    
         }
@@ -245,7 +249,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             } else {
                 ctx.client.database.setCooldownCache("cooldown", userData.id)
                 for (let i = 0; i < quantity; i ++) {
-                    console.log(quantity > 2 ? true : false, quantity-i);
                     const response = await item.use(ctx, userData, (quantity > 2 ? true : false), quantity-i);
                     if (response) Util.removeItem(userData.items, item.id);    
                     else break; // an error occured, so we stop
@@ -258,6 +261,10 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             break;    
         }
         case "list": {
+            const userItems: Item[] = userData.items.map(v => {
+                if (!Util.getItem(v)) return
+                return Util.getItem(v);
+            });
             const userUniqueItems: Item[] = [...new Set(userItems)];    
             let content: Array<any> = [[""]];
             for (let i = 0; i < userUniqueItems.length; i++) {
@@ -315,7 +322,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     
                 return collector.on("collect", async (i: MessageComponentInteraction) => {
                     ctx.timeoutCollector(collector);   
-                    await i.deferUpdate();
+                    i.deferUpdate().catch(() => { });
                     if (i.customId === ctx.interaction.id+":back" && currentPage !== 1) {
                         goToPage(currentPage-1);
                         currentPage--;

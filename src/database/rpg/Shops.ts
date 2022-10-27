@@ -5,10 +5,11 @@ import * as Items from './Items';
 export const Tonio_Trussardis_Restaurant: Shop = {
     name: 'Tonio Trussardi\'s Restaurant',
     items: [
+        Items.Tonio_Special_Recipe,
         Items.Spaghetti_Bowl,
         Items.Salad_Bowl,
         Items.Ramen_Bowl,
-        Items.Pizza,
+        Items.Pizza
     ],
     emoji: Emojis.Tonio_Trussardi,
     color: 'ORANGE'
@@ -26,11 +27,14 @@ export const Grocery_Store: Shop = {
     color: 'BLUE'
 }
 
+/*
 export const Black_Market: Shop = {
     name: 'Black Market',
     items: [
         Items["Mysterious_Arrow"],
+        Items.Skill_Points_Reset_Potion,
     ],
-    emoji: '🏷',
-    open_date: 3
+    emoji: '🃏',
+    color: 'NOT_QUITE_BLACK'
 }
+*/

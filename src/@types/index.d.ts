@@ -54,7 +54,7 @@ interface SlashCommand {
   /**
    * The category of the command.
    */
-  category: "adventure" | "utils" | "others";
+  category: "adventure" | "utils" | "others" | "owner";
   /**
    * The examples of the command.
    */
@@ -63,6 +63,10 @@ interface SlashCommand {
    * The data as SlashCommandBuilder.
    */
   data: DiscordSlashCommandsData;
+  /**
+   * If the command is private
+   */
+   isPrivate?: boolean;
   /**
    * This is the function that will be called when the command is executed.
    * @param Interaction The CommandInteraction object from the interactionCreate event.
@@ -689,6 +693,7 @@ interface Prize {
   xp?: number,
   money?: number,
   items?: Item[],
+  chapter_quests?: Quest[]
 }
 
 interface Turn {

@@ -35,7 +35,7 @@ export const Spaghetti_Bowl: Item = {
   emoji: "🍝",
   benefits: {
     health: 200,
-    stamina: 30,
+    stamina: 15,
   }
 };
 
@@ -52,7 +52,7 @@ export const Salad_Bowl: Item = {
   emoji: "🥗",
   benefits: {
     health: 50,
-    stamina: 50
+    stamina: 25
   }
 };
 
@@ -78,7 +78,7 @@ export const Mysterious_Arrow: Item = {
   description: "A mysterious arrow",
   rarity: 'A',
   type: "arrow",
-  price: 30000,
+  price: 35000,
   tradable: true,
   storable: true,
   usable: true,
@@ -159,7 +159,7 @@ export const Cola: Item = {
   usable: true,
   emoji: Emojis.cola,
   benefits: {
-    stamina: 35
+    stamina: 15
   }
 };
 
@@ -264,7 +264,7 @@ export const Burger: Item = {
   emoji: '🍔',
   benefits: {
     health: 70,
-    stamina: 15
+    stamina: 5
   }
 }
 
@@ -356,7 +356,7 @@ const UseBox = async (ctx: CommandInteractionContext, userData: UserData, box: s
           const item = Items[item_value as keyof typeof Items];
           if (item && !win_content.includes(item.name)) {
               win_content += `+ **${win.filter(r => r === item_value).length}** ${item.emoji} ${item.name}\n`;
-              userData.items.push(item_value);
+              for (let i = 0; i < win.filter(r => r === item_value).length; i ++) userData.items.push(item_value);
           }
       } else {
           let togive: string = item_value.startsWith("xp") ? "xp" : "coins";
@@ -458,7 +458,7 @@ export const Ramen_Bowl: Item = {
   emoji: '🍜',
   benefits: {
     health: 170,
-    stamina: 100
+    stamina: 25
   }
 }
 
@@ -474,3 +474,57 @@ export const Requiem_Arrow: Item = {
   emoji: Emojis.requiem_arrow
 }
 
+export const Skill_Points_Reset_Potion: Item = {
+  id: 'skill_points_reset_potion',
+  name: 'Skill Points reset potion',
+  description: 'resets your skill-points',
+  type: 'other',
+  price: 100000,
+  tradable: true,
+  storable: true,
+  usable: true,
+  emoji: Emojis.sp_potion,
+  use: async (ctx: CommandInteractionContext, userData: UserData, skip?: boolean, left?: number) => {
+    userData.skill_points = {
+      defense: 0,
+      strength: 0,
+      perception: 0,
+      stamina: 0
+    }
+    ctx.makeMessage({
+      content: 'Your skill-points have been reset.'
+    })
+    return true;
+  }
+
+}
+
+export const Broken_Arrow: Item = {
+  id: 'broken_arrow',
+  name: 'Broken Arrow',
+  description: 'A broken arrow that can be used to craft some mysterious arrows (OR REQUIEM ARROWS?!)',
+  type: 'arrow',
+  price: 5000,
+  tradable: true,
+  storable: true,
+  rarity: 'B',
+  usable: false,
+  emoji: Emojis.mysterious_arrow,
+}
+
+export const Tonio_Special_Recipe: Item = {
+  id: 'tonio_special_recipe',
+  name: 'Tonio\'s Special Recipe',
+  description: 'A special recipe...',
+  type: 'consumable',
+  price: 13500,
+  tradable: false,
+  storable: false,
+  rarity: 'B',
+  usable: true,
+  benefits: {
+    health: 700,
+    stamina: 250
+  },
+  emoji: '🥣'
+}

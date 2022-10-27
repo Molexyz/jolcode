@@ -51,13 +51,13 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         await ctx.sendT("skill-points:BASE_MESSAGE", {
             userData: userData,
             pointsLeft: pointsLeft,
-            components: [Util.actionRow([staminaButton, strengthButton, defenseButton, perceptionButton])]
+            components: [Util.actionRow([staminaButton, defenseButton, strengthButton, perceptionButton])]
         });
     }
     await updateMessage(userData);
     const filter = async (i: MessageComponentInteraction) => {
         i.deferUpdate().catch(() => {});
-        return i.user.id === ctx.interaction.user.id;// removing this cuz try it and you'll see what happens when you use this command 2 times || && i.message.interaction.id === ctx.interaction.id;
+        return (i.user.id === ctx.interaction.user.id) && (i.customId === perceptionID || i.customId === defenseID || i.customId === strengthID || i.customId === staminaID);// removing this cuz try it and you'll see what happens when you use this command 2 times || && i.message.interaction.id === ctx.interaction.id;
     }
     const collector = ctx.interaction.channel.createMessageComponentCollector({ filter });
     ctx.timeoutCollector(collector);
@@ -85,7 +85,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 break;
         }
         pointsLeft--;
-        await ctx.client.database.saveUserData(userData);
+        await ctx.client.database.saveUserData(userData, 'sp 88');
         await updateMessage(userData);
     });
 

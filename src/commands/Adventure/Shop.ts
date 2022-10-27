@@ -22,6 +22,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     const itemsArray = Object.values(Items);
     const fields: { value: string, name: string, inline?: boolean }[] = [];
     const goBackID = Util.generateID();
+    let menuID: string;
     const goBackBTN = new MessageButton()
         .setCustomId(goBackID)
         .setEmoji("◀️")
@@ -51,14 +52,15 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     continue;
                 }
             }
+            menuID = 'menu'+Util.generateID();
             components.push(new MessageButton()
             .setLabel(shop.name)
-            .setCustomId(Util.generateID())
+            .setCustomId(menuID)
             .setEmoji(shop.emoji)
             .setStyle("SECONDARY"))
             let content = '';
             for (const item of shop.items) {
-                content += `${item.emoji} **${item.name}**: ${Object.keys(item.benefits).map((v) => `\`${item.benefits[v as keyof typeof item.benefits]}\` ${v}`).join(', ')} | **${Util.localeNumber(item.price)}** ${Emojis.jocoins} ${item.storable ? '' : '- \`[NOT STORABLE]\`'}\n`;
+                content += `${item.emoji} **${item.name}**: ${item.benefits ? Object.keys(item.benefits).map((v) => `\`${item.benefits[v as keyof typeof item.benefits]}\` ${v}`).join(', ') : item.description} | **${Util.localeNumber(item.price)}** ${Emojis.jocoins} ${item.storable ? '' : '- \`[NOT STORABLE]\`'}\n`;
             }
             fields.push({
                 name: `${shop.emoji} ${shop.name}`,
@@ -80,7 +82,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         const ItemsSelectMenu = new MessageSelectMenu()
         .setMaxValues(1)
         .setMinValues(1)
-        .setCustomId(shop.name)
+        .setCustomId(shop.name+ctx.interaction.createdAt)
         .setOptions(...shop.items.map((i) => {
             return {
                 label: i.name,
@@ -91,7 +93,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
 
         let content = '';
         for (const item of shop.items) {
-            content += `${item.emoji} **${item.name}**: ${Object.keys(item.benefits).map((v) => `\`${item.benefits[v as keyof typeof item.benefits]}\` ${v}`).join(', ')} | **${Util.localeNumber(item.price)}** ${Emojis.jocoins} ${item.storable ? '' : '- \`[NOT STORABLE]\`'}\n`;
+            content += `${item.emoji} **${item.name}**: ${item.benefits ? Object.keys(item.benefits).map((v) => `\`${item.benefits[v as keyof typeof item.benefits]}\` ${v}`).join(', ') : item.description} | **${Util.localeNumber(item.price)}** ${Emojis.jocoins} ${item.storable ? '' : '- \`[NOT STORABLE]\`'}\n`;
         }
         ctx.makeMessage({
             embeds: [{
@@ -112,7 +114,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     }
     const filter = (i: MessageComponentInteraction) => {
         i.deferUpdate().catch(() => {}); // eslint-disable-line @typescript-eslint/no-empty-function
-        return i.user.id === userData.id
+        return (i.user.id === userData.id) && (i.customId === goBackID || i.customId.startsWith('menu') || shopsArray.some((s) => i.customId.includes(s.name)));
     };
     const collector = ctx.interaction.channel.createMessageComponentCollector({ filter });
     ctx.timeoutCollector(collector);
@@ -121,6 +123,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         // Anti-cheat
         const AntiCheatResult = await ctx.componentAntiCheat(i, userData);
         if (AntiCheatResult === true) return collector.stop();
+        userData = await ctx.client.database.getUserData(userData.id);
 
         ctx.timeoutCollector(collector);
         if (i.customId === goBackID) return menuMessage();
@@ -178,13 +181,16 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     })
     
                 } else { // not supported
-                    userData.money -= item.price;
+                    followUp({
+                        content: 'THIS ITEM IS NOT SUPPORTED OR AN ERROR OCCURED. PLEASE REPORT THIS IMMEDIATELY TO OUR DEVS.'
+                    })
+                    userData.money += item.price;
                 }
             }
 
             updShopMsg(currentShop);
         }
-        ctx.client.database.saveUserData(userData);
+        ctx.client.database.saveUserData(userData, 'shop 190');
     });
 
 };

@@ -17,6 +17,10 @@ export const data: SlashCommand["data"] = {
 
 
 export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandContext, userData?: UserData, followUp?: boolean) => {
+    if (userData.chapter_quests.find(r => r.id === "action:drive_airplane_to_hongkong")) {
+        userData.chapter = 7;
+        ctx.client.database.saveUserData(userData)
+    }
     const nextChapterID = Util.generateID();
     const nextChapterBTN = new MessageButton()
         .setCustomId(nextChapterID)
@@ -84,7 +88,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     status = `(${Util.localeNumber(count)}/${Util.localeNumber(max)}) **${perc}%**`
                     dftArray.push(quest.id); 
                 } else {
-                    console.log(quest.id);
+                    console.log(quest.id, ' NOT SUPPORTED I THINK');
                 }
             }
             fixedChapterContent.push({
@@ -128,8 +132,13 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 }
 
                 userData.chapter++;
+                /*
+                ctx.followUp({
+                    content: `This command has been disabled due to a huge bug. Try again later.`,
+                })
+                return collector.stop()*/
                 const currentChapter = getUserChapter();
-                if (!currentChapter || !Quests.adapt(userData, currentChapter)[userData.chapter as keyof typeof Quests.adapt]) { // This chapter was the last developed chapter
+                if (!currentChapter || userData.chapter >= 9) { // This chapter was the last developed chapter
                     ctx.followUp({
                         content: "This chapter is currently the last, the developers are working hard to add more chapters.",
                         ephemeral: true

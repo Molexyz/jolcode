@@ -19,7 +19,7 @@ export default class DatabaseHandler {
         this._client = client;
     }
 
-    async saveUserData(userData: UserData): Promise<void> {
+    async saveUserData(userData: UserData, reason?: string): Promise<void> {
         return new Promise(async (resolve) => {
             const oldData: UserData = await this.postgres.client.query(`SELECT * FROM users WHERE id = $1`, [userData.id]).then(r => r.rows[0] || null);
             if (!oldData) return resolve(null);
@@ -36,7 +36,6 @@ export default class DatabaseHandler {
                 const pushChanges = async () => {
                     if (key === "mails" && Util.isMailArray(oldValue) && Util.isMailArray(newValue)) {
                         if (oldValue.length < newValue.length) {
-                            console.log(oldValue, newValue);
                             const count: number = parseInt(await this.redis.client.get(`jjba:newUnreadMails:${userData.id}`)) || 0;
                             this.redis.client.set(`jjba:newUnreadMails:${userData.id}`, count + newValue.length - oldValue.length);
                         }
@@ -46,7 +45,6 @@ export default class DatabaseHandler {
                         query: `${key}=$${changes.length + 1}`,
                         value: newValue
                     });
-                    console.log(changes.length, Date.now(), 'a');
 
                 };
 
@@ -67,7 +65,6 @@ export default class DatabaseHandler {
             if (userData.stamina < 0) userData.stamina = 0;
 
             if (changes.length > 0) {
-                console.log("PNIK.")
                 if (changes.filter((r: any) => r.query.includes("language")).length > 0) this.languages.set(userData.id, userData.language);
                 if (changes.filter((r: any) => r.query.includes("money")).length > 0) {
                     if (userData.money > oldData.money) Util.forEveryQuests(userData, (q: Quest) => q.id.startsWith("cc") && (parseInt(q.id.split(":")[1]) > q.total), (quest: Quest) => {
@@ -156,7 +153,7 @@ export default class DatabaseHandler {
         return new Promise(async (resolve) => {
             await this.postgres.client.query(`DELETE FROM users WHERE id = $1`, [userId]);
             const keys = await this.redis.client.keys(`*${userId}*`);
-            for (const key of keys) await this.redis.client.del(key);
+            for (const key of keys.filter(r => !r.includes('reset'))) await this.redis.client.del(key);
             return resolve(keys.length);
         });
     }
@@ -207,7 +204,6 @@ export default class DatabaseHandler {
         });
     }
     fixStats(userData: UserData) {
-        console.log("SPB SPB")
         const stand: Stand["skill_points"] = userData.stand ? Util.getStand(userData.stand)?.skill_points : null;
         userData.spb = { strength: userData.skill_points.strength, stamina: userData.skill_points.stamina, perception: userData.skill_points.perception, defense: userData.skill_points.defense };
         if (stand) Object.keys(stand).filter(r => r!== "total").forEach(async (e: any) => {
@@ -241,8 +237,10 @@ export default class DatabaseHandler {
         userData.max_health = 100;
         userData.max_stamina = 60;
         userData.max_health += Math.round(((userData.level + health) * 10) + ((userData.level + health) * 6 / 100) * 100);
-        userData.max_stamina += Math.round((userData.level + stamina) + ((userData.level + stamina) * 5 / 100) * ((userData.level + stamina) * 30));
+        userData.max_stamina += Math.round((stamina * 2.25) + ((stamina * 2.25) * 5 / 100) * ((userData.level + stamina) * 30));
         userData.dodge_chances = Math.round(Math.round((userData.level / 2) + (perception / 1.15)));
+        if (userData.stamina > userData.max_stamina) userData.stamina = userData.max_stamina;
+        if (userData.health > userData.max_health) userData.health = userData.max_health;
     }
 
     // TODO: Finish this code
@@ -260,7 +258,7 @@ export default class DatabaseHandler {
         return await this.redis.client.get(`tempCache_${base}:${target}`).then(r => r || null);
     }    
 
-    async setCooldownCache(base: string, target: string, value: string | number = Infinity): Promise<string> {
+    async setCooldownCache(base: string, target: string, value: string | number = Date.now()): Promise<string> {
         return await this.redis.client.set(`tempCache_${base}:${target}`, value);
     }
     async delCooldownCache(base: string, target?: string): Promise<string | number> {

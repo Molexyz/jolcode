@@ -112,6 +112,18 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         }
         case "store": {
             if (!userData.stand) return ctx.sendT('base:NO_STAND');
+
+            /* -- FUTURE UPD
+            if (userData.items.filter(i => i.includes('disk')).length >= Util.getStandDiscLimit(ctx)) {
+                if (ctx.client.patreons.find(v => v.id === ctx.author.id)) {
+                    return ctx.sendT('base:STAND_DISK_LIMIT_PATREON', {
+                        limit: Util.getStandDiscLimit(ctx)
+                    });
+                } else return ctx.sendT('base:STAND_DISK_LIMIT', {
+                    limit: Util.getStandDiscLimit(ctx)
+                });
+            }*/
+            
             const stand = Util.getStand(userData.stand);
 
             await ctx.makeMessage({
@@ -148,6 +160,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             break;
         }        
         case "delete": {
+            if (userData.chapter === 1) return ctx.interaction.reply({ content: "You can't do that right now. Use that command once you complete the Chapter I (`/chapter`)"})
             if (!userData.stand) return ctx.sendT('base:NO_STAND');
             const stand = Util.getStand(userData.stand);
             const price = 1000;

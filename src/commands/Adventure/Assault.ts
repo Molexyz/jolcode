@@ -12,7 +12,7 @@ export const category: SlashCommand["category"] = "adventure";
 export const cooldown: SlashCommand["cooldown"] = 3;
 export const rpgCooldown: SlashCommand["rpgCooldown"] = {
     base: 60000 * 5,
-    premium: 60000 * 2,
+    premium: 60000 * 5,
     emoji: Emojis['JolyneAhhhhh']
 
 }
@@ -23,6 +23,7 @@ export const data: SlashCommand["data"] = {
 
 
 export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandContext, userData?: UserData) => {
+
     if (userData.health <= 0) {
         ctx.client.database.redis.client.del(`jjba:rpg_cooldown_${userData.id}:assault`);
         return ctx.sendT("base:DEAD");
@@ -37,16 +38,19 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         npc: NPCs.Dio,
         luck: 0.5
     }, {
+        npc: NPCs.Pucci,
+        luck: 1
+    }, {
         npc: NPCs.Police_Officer,
         luck: 20
     }, {
         npc: NPCs["Mysterious_Stand_User"],
         luck: 10
     }, {
-        npc: NPCs["Normal_Citizen"],
+        npc: Util.RandomNPC(userData.level, true),
         luck: 100
     }, {
-        npc: NPCs.Weak_Bandit,
+        npc: Util.RandomNPC(userData.level, true),
         luck: 60
     }, {
         npc: NPCs.Bandit_Boss,
@@ -65,14 +69,20 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     let protectedNPC: NPC = {
         ...NPC
     }
+    protectedNPC.health += Math.round(userData.max_health / 10.5);
+    protectedNPC.max_health += Math.round(userData.max_health / 10.5);
 
-    ctx.client.database.setCooldownCache("cooldown", userData.id);
+ 
     await ctx.defer();
     await ctx.followUp({
         content: `${NPC.dialogues?.assault ? Util.makeNPCString(NPC) + " " + NPC.dialogues.assault : `You assaulted ${Util.makeNPCString(NPC)}`}`,
     });
-    await Util.wait(3000);
-    await ctx.client.database.delCooldownCache("cooldown", userData.id);
+ ctx.client.database.setCooldownCache("cooldown", userData.id);
+   await Util.wait(3000);
+    await ctx.client.database.redis.del(await ctx.client.database.getCooldownCache(userData.id));
+    await ctx.client.database.redis.del(await ctx.client.database.getCooldownCache(userData.id));
+
+
     delete require.cache[require.resolve('../../database/rpg/NPCs')];
     await ctx.client.commands.get("fight").execute(ctx, userData, protectedNPC);
 };

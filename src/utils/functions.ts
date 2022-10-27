@@ -7,6 +7,8 @@ import * as Quests from '../database/rpg/Quests';
 import * as NPCs from '../database/rpg/NPCs';
 import Canvas from 'canvas';
 import JolyneClient from '../structures/Client';
+import InteractionCommandContext from '../structures/Interaction';
+
 
 const bufferCache: {
     [key: string]: Buffer
@@ -176,7 +178,9 @@ export const generateID = (): string => [...Array(12)].map(() => (~~(Math.random
 
 export const calcDodgeChances = (data: UserData | NPC): number => {
     const perception = isNPC(data) ? data.skill_points.perception : data.spb.perception;
-    return Math.round(Math.round((data.level / 2) + (perception / 1.15)));
+    console.log(perception)
+    if (perception === -696969) return 696969;
+    return Math.round(Math.round((data.level / 20) + (perception / 1.20)));
 };
 
 export const isNPC = function isNPC(crusader: NPC | UserData): crusader is NPC {
@@ -190,8 +194,8 @@ export const isItem = function isItem(item: any): item is Item {
 //     return Math.round(5 + Math.round((userData.spb.strength * 0.675) + ((Number(userData.level) * 1.50) + ((5 / 100) * 15)) / 2));
 
 export const calcATKDMG = (data: UserData | NPC): number => {
-    const strength = isNPC(data) ? data.skill_points.perception : data.spb.perception;
-    return Math.round(5 + Math.round((strength * 0.675) + ((Number(data.level) * 1.50) + ((5 / 100) * 15)) / 2));
+    const strength = isNPC(data) ? data.skill_points.strength : data.spb.strength;
+    return Math.round(5 + Math.round((strength * 0.252) + ((Number(data.level) * 1.50) + ((5 / 100) * 15)) / 2));
 };
 
 export const generateStandEmbed = function generateStandEmbed(stand: Stand, userData: UserData): MessageEmbed {
@@ -237,7 +241,11 @@ export const calcAbilityDMG = function calcAbilityDMG(ability: Ability, userData
     const diff = (ability.damages - userATKDMG) < 0 ? -(ability.damages - userATKDMG) : ability.damages - userATKDMG;
     const fixedDiff = (userATKDMG - diff) < 0 ? -(userATKDMG - diff) : userATKDMG - diff;
     return ability.damages + (fixedDiff * (userData.level + (userData.skill_points.strength / 2)));*/
-    return Math.round(ability.damages + ((userATKDMG / ability.damages) * (ability.damages * 2 + (userATKDMG / 4))) + (ability.damages / userATKDMG ) * (userData.level + (userData.skill_points.strength / 2)));
+    const dmg = Math.round(ability.damages * ((userATKDMG / ability.damages) * (ability.damages / 10)) + ability.damages + ((ability.damages / 10) * (ability.damages * 2 + (userATKDMG / 4))) + (ability.damages / userATKDMG ) * ((userData.level) + (userData.skill_points.strength / 2)));
+    // return dmg + Math.round((dmg / userData.level) + (((ability.damages / userData.level) * userATKDMG) * (userATKDMG / userData.level)))
+    // RECENT OLD: 
+    return Math.round((userATKDMG / 50) * dmg + ((ability.damages / userATKDMG) * ((userATKDMG / ability.damages) * 60)));
+    // OLD: Math.round(((ability.damages / 80) * dmg) + (dmg * 0.92));
 }
 
 export const randomFood = function getRandomFood(): Item {
@@ -304,6 +312,11 @@ export const isMail = function isMail(item: any): item is Mail {
 
 export const isMailArray = function isMailArray(item: any): item is Mail[] {
     return item instanceof Array && (item as Mail[]).every(i => isMail(i));
+}
+
+export const AttributeChapterQuestToNPC = function AttributeChapterQuestToNPC(npc: NPC, quests: Quest[]): NPC {
+    npc.fight_rewards.chapter_quests = quests;
+    return npc;
 }
 
 export const generateDiscordTimestamp = function generateDiscordTimestamp(date: Date | number, type: 'FROM_NOW' | 'DATE' | 'FULL_DATE'): string {
@@ -394,7 +407,7 @@ export const generateDailyQuests = (level: number): Quest[] => {
     quests.push(Quests.ClaimCoins(getRandomInt(1, level * 1000)));
 
     let max = level;
-    if (max > 10) max = 10;
+    if (max > 5) max = 5;
 
     if (RNG(50)) {
         quests.push(Quests.UseLoot(getRandomInt(1, max)));
@@ -402,7 +415,7 @@ export const generateDailyQuests = (level: number): Quest[] => {
     if (RNG(50)) {
         quests.push(Quests.Assault(getRandomInt(1, max)));
     }
-    if (RNG(50)) {
+    if (RNG(10)) {
         quests.push(Quests.LootCoins(getRandomInt(1, max * 250)));
     }
 
@@ -410,7 +423,7 @@ export const generateDailyQuests = (level: number): Quest[] => {
 }
 
 export const RNG = (percent: number): boolean => {
-    return getRandomInt(0, 100) < percent;
+    return getRandomInt(0, 100) + (getRandomInt(0, 100) / 100) < percent;
 }
 
 export const forEveryQuests = (userData: UserData, filter: (q: Quest) => boolean, callback: (quest: Quest) => void) => {
@@ -439,4 +452,14 @@ export const forEveryQuests = (userData: UserData, filter: (q: Quest) => boolean
 
     }
     
+}
+
+export const getStandDiscLimit = (ctx: InteractionCommandContext, aid?: string): number => {
+    const id = aid ?? ctx.author.id;
+    const tier = ctx.client.patreons.find(p => p.id === id)?.level ?? 0;
+    if (tier === 0) return 5;
+    if (tier === 1) return 8;
+    if (tier === 2) return 15;
+    if (tier === 3) return 20;
+    else return Infinity;
 }

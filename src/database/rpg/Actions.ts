@@ -251,7 +251,162 @@ export const remove_fleshbud_polnareff = async(ctx: InteractionCommandContext, u
         ctx.client.database.delCooldownCache("cooldown", userData.id);
         throw e;
     }
+}
 
-            
+export const drive_airplane_to_hongkong = async (ctx: InteractionCommandContext, userData: UserData) => {
+    await ctx.client.database.setCooldownCache("cooldown", userData.id);
+    const finishEmoji = '🔲';
+    let map = [
+        finishEmoji,finishEmoji,finishEmoji,finishEmoji,finishEmoji,finishEmoji,finishEmoji,finishEmoji,finishEmoji,finishEmoji 
+    ];
+    const crashEmoji = '🪰';
+    for (let i = 0; i < 18; i++) {
+        const howMuch = Util.getRandomInt(2, 4);
+        let map2 = [
+            '🟦', '🟦', '🟦', '🟦', '🟦', '🟦', '🟦', '🟦', '🟦', '🟦'
+        ];
+        for (let i = 0; i < howMuch; i++) {
+            map2[i] = crashEmoji;
+        }
+        Util.shuffle(map2);
+        for (const i of map2) map.push(i);
+    }
+    function splitEvery10Array(arr: string[]) {
+        const result: string[][] = [];
+        for (let i = 0; i < arr.length; i += 10) {
+            result.push(arr.slice(i, i + 10));
+        }
+        return result.map(v => v.join(''));
+    }
+    let planeDirection = map.length - 5;
+    map[planeDirection - 10] = '🟦'; // anti impossible
+    let oldEmoji = '🟦';
+
+    const backId = Util.generateID();
+    const centerId = Util.generateID();
+    const forwardId = Util.generateID();
+
+    const backBTN = new MessageButton()
+        .setCustomId(backId)
+        .setEmoji('⬅️')
+        .setStyle("SECONDARY");
+    const centerBTN = new MessageButton()
+        .setCustomId(centerId)
+        .setEmoji('⬆️')
+        .setStyle("PRIMARY");
+    const forwardBTN = new MessageButton()
+        .setCustomId(forwardId)
+        .setEmoji('➡️')
+        .setStyle("SECONDARY");
+    function makeMessage (): void {
+        map[planeDirection] = '✈️';
+        ctx.makeMessage({
+            components: [
+                Util.actionRow([backBTN, centerBTN, forwardBTN]),
+            ],
+            embeds: [{
+                title: '🌏 Hongkong',
+                description: splitEvery10Array(map).join('\n'),
+                footer: {
+                    text: "Drive the airplane to hongkong. Don't crash!"
+                }
+            }]
+        })
+    }
+    makeMessage();
+    const filter = async (i: MessageComponentInteraction) => {
+        i.deferUpdate().catch(() => {});
+        return (i.customId === backId || i.customId === centerId || i.customId === forwardId) && i.user.id === userData.id;
+    };
+    const collector = ctx.interaction.channel.createMessageComponentCollector({ filter, time: 150000 });
+    ctx.timeoutCollector(collector);
+
+    collector.on("collect", async (i: MessageComponentInteraction) => {
+        map[planeDirection] = oldEmoji;
+        if (i.customId === backId) {
+            planeDirection -= 1;
+        } else if (i.customId === forwardId) {
+            planeDirection += 1;
+        } else planeDirection -= 10;
+        if (map[planeDirection] === crashEmoji) {
+            collector.stop("crashed");
+            ctx.makeMessage({
+                content: '💥 YOURE SO BAD YOU CRASHED THE AIRPLANE!'
+            });
+        } else if (map[planeDirection] === finishEmoji) {
+            collector.stop("finished");
+            ctx.makeMessage({
+                content: 'You successfully landed in Hongkong!'
+            });
+            // validate quest
+            for (let i = 0; i < userData.chapter_quests.length; i++) {
+                if (userData.chapter_quests[i].id === 'action:drive_airplane_to_hongkong') {
+                    userData.chapter_quests[i].completed = true;
+                    break;
+                }
+            }
+            ctx.client.database.saveUserData(userData);
+        }
+        oldEmoji = map[planeDirection];
+        makeMessage()
+
+    });
+
+    collector.on('end', () => {
+        ctx.client.database.delCooldownCache("cooldown", userData.id);
+    });
+
+
+}
+
+export const throw_rubber_soul_body_to_the_sea = async (ctx: InteractionCommandContext, userData: UserData) => {
+    ctx.makeMessage({
+        content: 'https://thumbs.gfycat.com/JadedVainFlyinglemur-max-1mb.gif',
+        components: []
+    });
+    // validate quest
+    userData.chapter_quests.push(Quests.Get_A_Tram_And_Go_To_India);
+    for (let i = 0; i < userData.chapter_quests.length; i++) {
+        if (userData.chapter_quests[i].id === 'action:throw_rubber_soul_body_to_the_sea') {
+            userData.chapter_quests[i].completed = true;
+            break;
+        }
+    }
+    ctx.client.database.saveUserData(userData);
+
+
+    setTimeout(() => {
+        ctx.followUp({
+            content: 'Soul rubber took the L, bozo. You got a new quest btw check it NOW.'
+        });
+    }, 2000);
+
+
+
+}
+
+export const get_a_tram_and_go_to_india = async (ctx: InteractionCommandContext, userData: UserData) => {
+    if (userData.money < 50000) {
+        return ctx.makeMessage({
+            content: 'You dont have enough money to buy a tram ticket. You need atleast 50k. Yes it is very expensive sorry.',
+            components: []
+        });
+    }
+    userData.money -= 50000;
+    // vaidate quest
+    for (let i = 0; i < userData.chapter_quests.length; i++) {
+        if (userData.chapter_quests[i].id === "action:get_a_tram_and_go_to_india") {
+            userData.chapter_quests[i].completed = true;
+            break;
+        }
+    }
+    userData.chapter_quests.push(Quests.Wait_For_The_Tram_To_Arrive_In_India);
+    ctx.client.database.saveUserData(userData);
+    ctx.makeMessage({
+        content: "You bought a tram ticket and went to India (-50k coins). Use the `/chapter` command to see how long you have to wait.",
+        components: []
+    });
+
+
     
 }

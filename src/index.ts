@@ -14,16 +14,17 @@ import * as Util from './utils/functions';
 
 // Import types
 import type { SlashCommand, Event } from './@types';
+const intents = [
+    Intents.FLAGS.GUILDS,
+    Intents.FLAGS.GUILD_MEMBERS
+];
 
+if (process.env.DEV_MODE) intents.push(Intents.FLAGS.GUILD_MESSAGES);
 
 const client = new JolyneClient({
     shards: Cluster.data.SHARD_LIST,
     shardCount: Cluster.data.TOTAL_SHARDS,
-    intents: [
-        Intents.FLAGS.GUILDS,
-        Intents.FLAGS.GUILD_MEMBERS,
-        Intents.FLAGS.GUILD_MESSAGES
-    ],
+    intents,
     makeCache: DJSLIGHT.Options.cacheWithLimits({
         ApplicationCommandManager: 0, // guild.commands
         BaseGuildEmojiManager: 0, // guild.emojis

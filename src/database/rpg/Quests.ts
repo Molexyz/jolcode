@@ -164,7 +164,8 @@ export const adapt = function adaptQuest(userData: UserData, UserChapter: Chapte
         4: `**:trident: Chapter \`${Util.romanize(3)} - Part ${Util.romanize(2)}\`**: ${UserChapter.title[userData.language]}`,
         5: `**:trident: Chapter \`${Util.romanize(3)} - Part ${Util.romanize(3)}\`**: ${UserChapter.title[userData.language]}`,
         6: `**:trident: Chapter \`${Util.romanize(3)} - Part ${Util.romanize(4)}\`**: ${UserChapter.title[userData.language]}`,    
-        7: `**:trident: Chapter \`${Util.romanize(3)} - Part ${Util.romanize(5)}\`**: ${UserChapter.title[userData.language]}`,    
+        7: `**:trident: Chapter \`${Util.romanize(3)} - Part ${Util.romanize(5)}\`**: ${UserChapter.title[userData.language]}`,  
+        //8: `**:trident: Chapter \`${Util.romanize(3)} - Part ${Util.romanize(6)}\`**: ${UserChapter.title[userData.language]}`,  
     }
 
 }
@@ -201,5 +202,34 @@ export const Remove_Fleshbud_Polnareff: Quest = {
     id: "action:remove_fleshbud_polnareff",
     i18n: "REMOVE_FLESHBUD_POLNAREFF",
     emoji: "🐛",
+    completed: false
+}
+
+export const Drive_Airplane_To_Hongkong: Quest = {
+    id: "action:drive_airplane_to_hongkong",
+    i18n: "DRIVE_AIRPLANE_TO_HONGKONG",
+    emoji: "🛩",
+    completed: false
+}
+
+export const Throw_Rubber_Soul_Body_To_The_Sea: Quest = {
+    id: "action:throw_rubber_soul_body_to_the_sea",
+    i18n: "THROW_RUBBER_SOUL_BODY_TO_THE_SEA",
+    emoji: "🌊",
+    completed: false
+}
+
+export const Get_A_Tram_And_Go_To_India: Quest = {
+    id: "action:get_a_tram_and_go_to_india",
+    i18n: "GET_A_TRAM_AND_GO_TO_INDIA",
+    emoji: "🚋",
+    completed: false
+}
+
+export const Wait_For_The_Tram_To_Arrive_In_India: Quest = {
+    id: "wait:wait_for_the_tram_to_arrive_in_india",
+    timeout: Date.now() + ((60000 * 60) * 2),
+    i18n: "WAIT_FOR_THE_TRAM_TO_ARRIVE_IN_INDIA",
+    emoji: "🚋",
     completed: false
 }

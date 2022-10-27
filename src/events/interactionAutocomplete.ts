@@ -26,15 +26,22 @@ export const execute: Event["execute"] = async (interaction: InteractionAutocomp
         const userItems: Item[] = userData.items.map(v => {
             if (!Util.getItem(v)) return
             return Util.getItem(v);
-        }).filter(r => r && r.usable);
+        }).filter(r => r);
         const userUniqueItems: Item[] = [...new Set(userItems)];
-        const itemsFound = userUniqueItems.filter(item => item.name.toLowerCase().includes(currentInput.toLowerCase()) || item.description.toLowerCase().includes(currentInput.toLowerCase())).filter(r => r.usable);
-        interaction.respond(itemsFound.map(v => {
+        const itemsFound = userUniqueItems.filter(item => item.name.toLowerCase().includes(currentInput.toLowerCase()) || item.description.toLowerCase().includes(currentInput.toLowerCase()))
+        if (subCommand == 'use') {
+            interaction.respond(itemsFound.filter(r=>r.usable).map(v => {
+                return {
+                    name: v.name + ` (${userData.items.filter((r: string) => Util.getItem(r)?.name === v.name).length} left)`,
+                    value: v.id
+                }
+            }).slice(0, 25)); 
+        } else interaction.respond(itemsFound.map(v => {
             return {
                 name: v.name + ` (${userData.items.filter((r: string) => Util.getItem(r)?.name === v.name).length} left)`,
                 value: v.id
             }
-        }).slice(0, 25))  
+        }).slice(0, 25)); 
     }
 
 

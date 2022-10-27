@@ -56,7 +56,7 @@ export const The_World: Stand = {
         timestop_end_text: "Zero...",
     },
     emoji: Emojis.the_world,
-    available: false
+    available: true
 };
 
 export const The_World__Over_Heaven: Stand = {
@@ -85,7 +85,7 @@ export const The_World__Over_Heaven: Stand = {
 
     },
     emoji: Emojis.the_world,
-    available: true
+    available: false
 };
 
 export const Hierophant_Green: Stand = {
@@ -99,9 +99,9 @@ export const Hierophant_Green: Stand = {
     color: "#6AD398",
     image: "https://static.wikia.nocookie.net/jjba/images/c/c8/HierophantGreen.png/revision/latest/scale-to-width-down/350?cb=20140807094417",
     skill_points: {
-        strength: 10,
-        defense: 5,
-        perception: 5,
+        strength: 3,
+        defense: 1,
+        perception: 1,
         stamina: 0,
     },
     text: {
@@ -123,9 +123,9 @@ export const Aerosmith: Stand = {
     color: "#0981D1",
     image: "https://static.wikia.nocookie.net/jjba/images/6/66/Aerosmithcolor.png/revision/latest?cb=20180414181107&path-prefix=fr",
     skill_points: {
-        strength: 10,
-        defense: 5,
-        perception: 5,
+        strength: 1,
+        defense: 1,
+        perception: 3,
         stamina: 0,
     },
     text: {
@@ -147,7 +147,7 @@ export const The_Hand: Stand = {
     color: "#1d57e5",
     image: "https://static.wikia.nocookie.net/jjba/images/4/46/The_Hand_Anime.png/revision/latest?cb=20161217225524&path-prefix=fr",
     skill_points: {
-        strength: 15,
+        strength: 10,
         defense: 0,
         perception: 0,
         stamina: 0,
@@ -221,7 +221,7 @@ export const Magicians_Red: Stand = {
     color: "RED",
     image: "https://i.pinimg.com/736x/8a/cb/27/8acb27c4640370a8919e5fdc30d1d581.jpg",
     skill_points: {
-        strength: 8,
+        strength: 10,
         defense: 0,
         perception: 0,
         stamina: 0
@@ -309,7 +309,7 @@ export const Gold_Experience: Stand = {
 export const Purple_Haze: Stand = {
     name: "Purple Haze",
     rarity: "A",
-    description: 'A aa a a ',
+    description: "Purple Haze is a humanoid stand of height and and builds similar to Fugo's. Its face and body are patterned by horizontal lozenges of alternating shade, and armor pieces are present on its shoulders, elbows, and knees. It has spikes along its back.",
     abilities: [
         Abilities.Stand_Barrage,
         Abilities['Capsule_Shot'],
@@ -317,7 +317,149 @@ export const Purple_Haze: Stand = {
         Abilities['Poison_Gas']
     ],
     color: 'PURPLE',
-    image: Star_Platinum['image'],
+    image: 'https://cdn.discordapp.com/attachments/576020336902930434/986670882695041034/400px-Purple_Haze_Infobox_Manga.png',
+    skill_points: {
+        strength: 10,
+        defense: 0,
+        perception: 0,
+        stamina: 0
+    },
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: "POIIIIIIIISON GAS!"
+    },
+    emoji: Emojis['purple_haze'],
+    available: true
+};
+
+export const Tower_Of_Gray: Stand = {
+    name: "Tower of Gray",
+    rarity: "C",
+    description: "Stand of Gray Fly",
+    abilities: [
+        Abilities['Secondary_Jaw']
+    ],
+    color: '#808080',
+    image: '',
+    skill_points: {
+        strength: 0,
+        defense: 0,
+        perception: 0,
+        stamina: 0
+    },
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: "*tower of gray*"
+    },
+    emoji: '\uD83D\uDEA8',
+    available: false
+}
+/*
+export const Pika_Pika_No_Mi: Stand = {
+    name: 'Pika Pika No Mi',
+    rarity: 'SS',
+    description: 'Pika Pika No Mi (light fruit) is a devil fruit, currently owned by Kizaru (from the One Piece series).',
+    color: 'YELLOW',
+    abilities: [
+        Abilities.Light_Lunge,
+        Abilities['Light_Kick'],
+        Abilities['Mirror_Kick'],
+        Abilities['Jewels_Of_Light']
+    ],
+    image: 'https://cdn.discordapp.com/emojis/959495096485691412.png',
+    skill_points: Star_Platinum.skill_points,
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: "*LIGHTOOOO*"
+    },
+    emoji: '<:Pika:959495096485691412>',
+    available: false
+}
+*/
+
+export const Killer_Queen: Stand = {
+    name: "Killer Queen",
+    rarity: "S",
+    description: "Killer Queen is a visibly muscular humanoid Stand about as tall as Kira himself, light in color overall. In both the manga and anime, it is portrayed as light pink, while in the All Star Battle video game, it is portrayed as white.",
+    abilities: [
+        Abilities.Coin_Barrage,
+        Abilities.Coin_Bomb,
+        Abilities.Escape_Plan,
+        Abilities.Sheer_Heart_Attack
+    ],
+    color: 'PURPLE',
+    image: 'https://static.wikia.nocookie.net/jjba/images/3/39/Killer_queen_c345.png/revision/latest?cb=20160325163154',
+    skill_points: {
+        strength: 10,
+        defense: 5,
+        perception: 2,
+        stamina: 3
+    },
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: "BITES THE DUST..."
+    },
+    emoji: Emojis.killer_queen,
+    available: true
+};
+// LATER
+
+export const Yellow_Temperance: Stand = {
+    name: "Yellow Temperance",
+    rarity: "C",
+    description: "nn",
+    abilities: [
+        Abilities.Assimilation
+    ],
+    color: 'YELLOW',
+    image: '',
+    skill_points: {
+        strength: 0,
+        defense: 0,
+        perception: 0,
+        stamina: 0
+    },
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: "nn"
+    },
+    emoji: "Emojis.yellow_temperance",
+    available: false
+};
+
+export const Crazy_Diamond: Stand = {
+    name: "Crazy Diamond",
+    rarity: "S",
+    description: "Crazy Diamond is humanoid, with a powerful build and tall stature (about two heads above [Josuke](https://jojo.fandom.com/wiki/Josuke_Higashikata).",
+    abilities: [
+        Abilities.Stand_Barrage,
+        Abilities.Wall,
+        Abilities.Bearing_Shot,
+        Abilities.YO_Angelo
+    ],
+    color: 'BLUE',
+    image: 'https://static.wikia.nocookie.net/jjba/images/7/7a/Crazy_Diamond_Anime.Infobox.png/revision/latest?cb=20180622215654&path-prefix=fr',
+    skill_points: {
+        strength: 10,
+        defense: 10,
+        perception: 0,
+        stamina: 0
+    },
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: ":musical_note: CRAZY NOISY BIZARRE TOWN!!!! :musical_note: "
+    },
+    emoji: Emojis.crazy_diamond,
+    available: true
+};
+
+export const Scary_Monsters: Stand = {
+    name: "Scary Monsters",
+    rarity: "A",
+    description: "Scary Monsters is is the Stand of Dr. Ferdinand, featured in Steel Ball Run. It's a blue dinosaur ROARRRR ROARRRR",
+    abilities: [],
+    color: 'BLUE',
+    image: 'https://static.wikia.nocookie.net/jjba/images/6/62/Scary_Monsters.png/revision/latest?cb=20191119194159',
     skill_points: {
         strength: 10,
         defense: 5,
@@ -326,8 +468,8 @@ export const Purple_Haze: Stand = {
     },
     text: {
         awakening_text: "[awakening in you...]",
-        awaken_text: "POIIIIIIIISON GAS!"
+        awaken_text: "ROARRRR ROARRRR"
     },
-    emoji: Emojis['JolyneAhhhhh'],
+    emoji: Emojis.scary_monsters,
     available: false
 };

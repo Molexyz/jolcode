@@ -111,7 +111,8 @@ export const The_World_User: NPC = {
     fight_rewards: {
         xp: 4000,
         money: 1000
-    }
+    },
+    stand: Stands.The_World["name"]
 }
 
 export const Weak_Bandit: NPC = {
@@ -277,8 +278,8 @@ export const Jotaro: NPC = {
         stamina: 200
     },
     fight_rewards: {
-        xp: 100000,
-        money: 100000
+        xp: 1000000,
+        money: 1000000
     },
     stand: Stands.Star_Platinum["name"],
     dialogues: {
@@ -417,3 +418,93 @@ export const Pucci: NPC = {
     stand: Stands.Whitesnake["name"]
 }
 
+export const Gray_Fly: NPC = {
+    id: 'gray_fly',
+    name: 'Gray Fly',
+    emoji: '🪰',
+    level: 20,
+    health: 500,
+    max_health: 500,
+    stamina: 500,
+    skill_points: {
+        strength: 40,
+        defense: 30,
+        perception: 30,
+        stamina: 30
+    },
+    fight_rewards: {
+        xp: 25000,
+        money: 10000,
+    },
+    stand: Stands.Tower_Of_Gray["name"],
+    private: true
+}
+
+export const Rubber_Soul: NPC = {
+    id: 'rubber_soul',
+    name: 'Rubber Soul',
+    emoji: '<:rubs:1026095111974695036>',
+    level: 20,
+    health: 1000,
+    max_health: 1000,
+    stamina: 1000,
+    skill_points: {
+        strength: 40,
+        defense: 30,
+        perception: 30,
+        stamina: 30
+    },
+    fight_rewards: {
+        xp: 50000,
+        money: 20000,
+    },
+    stand: Stands.Yellow_Temperance["name"],
+    private: true
+}
+
+export const Beggar: NPC = {
+    id: 'beggar',
+    name: 'Beggar',
+    emoji: '👨‍🦯',
+    level: 20,
+    health: 200,
+    max_health: 200,
+    stamina: 200,
+    skill_points: {
+        strength: 40,
+        defense: 1,
+        perception: 1,
+        stamina: 1
+    },
+    fight_rewards: {
+        xp: 100,
+        money: 100
+    },
+    dialogues: {
+        assault: "Hey, you there!",
+        lose: "Why'd you do that?",
+        win: "Beware!"
+    }
+}
+
+/*
+export const J_Geil: NPC = {
+    id: 'j_geil',
+    name: 'J. Geil',
+    emoji: Emojis.J_Geil,
+    level: 200,
+    health: 5000,
+    max_health: 5000,
+    stamina: 5000,
+    skill_points: {
+        strength: 200,
+        defense: 200,
+        perception: 200,
+        stamina: 200
+    },
+    fight_rewards: {
+        xp: 1000000,
+        money: 1000000
+    },
+    stand: Stands.Star_Platinum["name"]
+}*/

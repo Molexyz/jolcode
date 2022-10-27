@@ -12,6 +12,7 @@ import * as Quests from '../../database/rpg/Quests';
 import * as NPCs from '../../database/rpg/NPCs';
 import * as Stands from '../../database/rpg/Stands';
 import * as Emojis from '../../emojis.json';
+import { now } from 'moment-timezone';
 
 export const name: SlashCommand["name"] = "fight";
 export const category: SlashCommand["category"] = "adventure";
@@ -52,16 +53,28 @@ export const data: SlashCommand["data"] = {
 
 
 
-export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandContext, userData: UserData, customNPC?: NPC) => {
+export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandContext, userData: UserData, customNPC?: NPC, updateUser?: boolean) => {
+    if (ctx.client._ready === false) return ctx.makeMessage({
+        content: 'The bot is going to restart soon.',
+        components: [],
+        embeds: []
+    });
+    if (updateUser) userData = await ctx.client.database.getUserData(userData.id);
     const lastChapterEnnemyQuest: Quest = userData.chapter_quests.filter(v => v.npc && v.npc.health !== 0).sort((a, b) => a.npc.max_health - b.npc.max_health)[0];
     const lastDailyEnnemyQuest: Quest = userData.daily.quests.filter(v => v.npc && v.npc.health !== 0)[0];
+
+    if (userData.health <= 0) return ctx.makeMessage({
+        content: "You are dead. Try again once you've regenerated your health.",
+        components: [],
+        embeds: []
+    });
 
     const selectMenuID = Util.generateID();
 
     const user = ctx.interaction.options.getUser("user");
     if (user && user.id === userData.id) return ctx.makeMessage({
         content: Emojis['jolyne']
-    })
+    });
 
     const filter = (i: MessageComponentInteraction) => {
         i.deferUpdate().catch(() => { });
@@ -70,7 +83,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     }
     const collector = ctx.interaction.channel.createMessageComponentCollector({ filter });
     if (customNPC) return startBattle(customNPC, 'custom')
-    const opponentData = await ctx.client.database.getUserData(user ? user.id : userData.id);
+    let opponentData = await ctx.client.database.getUserData(user ? user.id : userData.id);
 
     if (!user) {
         if (lastChapterEnnemyQuest && lastDailyEnnemyQuest) {
@@ -112,6 +125,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             if (lastChapterEnnemyQuest) return startBattle(lastChapterEnnemyQuest.npc, "chapter_quests");
             if (lastDailyEnnemyQuest) return startBattle(lastDailyEnnemyQuest.npc, "daily.quests");
         }
+        
     } else {
         const acceptID = Util.generateID();
         const declineID = Util.generateID();
@@ -167,6 +181,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         return collector.on('collect', callback);
     }
     async function startBattle(opponent: UserData | NPC, type: "chapter_quests" | "daily.quests" | "side_quests" | "ranked" | "friendly" | "custom") {
+        console.log(`${userData.tag} started a battle against ${opponent.id}`);
         let timeoutCollector: NodeJS.Timeout;
         if (type === "friendly") {
             opponent.health = opponent.max_health;
@@ -175,7 +190,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             ctx.client.database.setCooldownCache("battle", userData.id, `https://discord.com/channels/${ctx.interaction.guild.id}/${ctx.interaction.channel.id}/${ctx.interaction.id}`);
             ctx.client.database.setCooldownCache("battle", opponent.id, `https://discord.com/channels/${ctx.interaction.guild.id}/${ctx.interaction.channel.id}/${ctx.interaction.id}`);
         } else {
-            console.log("IN COMBATE")
             ctx.client.database.setCooldownCache("battle", userData.id, `https://discord.com/channels/${ctx.interaction.guild.id}/${ctx.interaction.channel.id}/${ctx.interaction.id}`);
         }
         if (Util.isNPC(opponent) && type !== "custom") {
@@ -189,6 +203,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         const nextID = Util.generateID();
         const homeID = Util.generateID();
         let ended = false;
+        let editedNPC = false;
 
         const cooldowns: Array<{
             id: string,
@@ -199,10 +214,11 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         const functions: Array<Function> = []; // Game functions
         const gameOptions: any = {
             trns: 0,
+            stopCooldown: [],
             pushnow: () => pushTurn(),
             whosTurn: () => whosTurn(),
             opponentNPC: Util.isNPC(opponent) ? opponent.id : null,
-            NPCAttack: () => NPCAttack(),
+            NPCAttack: (skip?: boolean) => NPCAttack(skip),
             loadBaseEmbed: () => loadBaseEmbed(),
             defend: () => defend(),
             triggerAbility: (a: any, b: any, c: any, d: any) => triggerAbility(a,b,c,d),
@@ -255,10 +271,11 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             .setEmoji("⚔️")
             .setStyle("PRIMARY");
         const forfeitBTN = new MessageButton()
-            .setCustomId(forfeitID)
-            .setLabel("Forfeit")
-            .setEmoji("🗡")
-            .setStyle("SECONDARY");
+        .setCustomId(forfeitID)
+        .setLabel("Forfeit")
+        .setEmoji("🗡")
+        .setDisabled(type === 'ranked' ? true : false)
+        .setStyle("SECONDARY");
         const NPCBTN = new MessageButton()
             .setCustomId('[@ny]')
             .setLabel('[Waiting for your turn...]')
@@ -299,7 +316,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             lastDamage: 0
         })
         loadBaseEmbed();
-        console.log("pflf")
         collector.on("collect", async (i: MessageComponentInteraction) => {
             if (i.customId === nextID) {
                 // ANTI-CHEAT, ANTI-DUPES, ANTI-BUG, ANTI-GLITCH
@@ -307,7 +323,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 if (AntiCheatResult === true) {
                     return collector.stop();
                 }
-                ctx.client.commands.get("fight").execute(ctx, userData);
+                ctx.client.commands.get("fight").execute(ctx, userData, null, true);
                 /*
                 const lastChapterEnnemyQuest: Quest = userData.chapter_quests.filter(v => v.npc && v.npc.health !== 0)[0];
                 const lastDailyEnnemyQuest: Quest = userData.daily.quests.filter(v => v.npc && v.npc.health !== 0)[0];
@@ -324,8 +340,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             const dodges = Util.calcDodgeChances(before);
             const dodgesNumerator = 90 + (!Util.isNPC(before) ? before.spb?.perception : before.skill_points.perception);
             const dodgesPercent = Util.getRandomInt(0, Math.round(dodgesNumerator));
-            console.log(dodgesPercent, dodges)
-            if (dodgesPercent < dodges) dodged = true;
+            if (dodgesPercent < dodges || Util.calcDodgeChances(povData) === 696969) dodged = true;
             if (gameOptions.invincible) dodged = false;
 
 
@@ -337,6 +352,17 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 case attackID:
                     const input = attack({ damages: Util.getATKDMG(povData), username: i.user?.username }, dodged, currentTurn);
                     output = input;
+                    break;
+                case forfeitID:
+                    collector.stop('forfeit');
+                    ended = true;
+                    if (!user) {
+                        ctx.client.database.delCooldownCache("battle", ctx.interaction.user.id);
+                        ctx.client.database.saveUserData(userData);    
+                    }
+                    ctx.interaction.followUp({
+                        content: `${Emojis.happyjolyne} **${i.user.tag}** was too afraid LMAO SMH`
+                    })
                     break;
                 case defendID:
                     output = defend();
@@ -361,7 +387,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                         break;
                     } else return;
             }
-            //console.log(await Promise.all(promises));
 
             if (output) currentTurn.logs.push(output);
             pushTurn();
@@ -392,6 +417,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     lastDamage: turns[turns.length - 1].lastDamage
                 });
                 cooldowns.forEach(c => {
+                    if (gameOptions.stopCooldown.find((r: string) => r === c.id)) return
                     if (c.cooldown !== 0) c.cooldown--;
                 });
             }
@@ -419,20 +445,22 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             }
         }
 
-        async function NPCAttack() {
+        async function NPCAttack(skip?: boolean) {
             if (ended) return;
-            await Util.wait(1200);
+            if (opponent.health <= 0) return end();
+            if (!skip) await Util.wait(1200);
             const NPC = whosTurn();
             if (!Util.isNPC(NPC)) return; //typeguard
             let possibleMoves: Array<string | Ability> = ["attack"];
             if (cooldowns.find(r => r.id === opponent.id && r.move === "defend")) {
                 if (cooldowns.find(r => r.id === opponent.id && r.move === "defend").cooldown === 0) possibleMoves.push("defend");
             } else possibleMoves.push("defend");
+            if (gameOptions.invincible) possibleMoves = ["attack"];
 
             
 
             
-            if (OpponentStand) {
+            if (opponent.stand) {
                 for (const ability of OpponentStand.abilities) {
                     if (cooldowns.find(r => r.id === NPC.id && r.move === ability.name)?.cooldown <= 0) {
                         possibleMoves.push(ability);
@@ -447,7 +475,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             const dodges = Util.calcDodgeChances(before);
             const dodgesNumerator = 90 + (!Util.isNPC(before) ? before.spb?.perception : before.skill_points.perception);
             const dodgesPercent = Util.getRandomInt(0, Math.round(dodgesNumerator));
-            console.log(dodgesPercent, dodges)
             if (dodgesPercent < dodges) dodged = true;
             if (gameOptions.invincible) dodged = false;
 
@@ -465,11 +492,13 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     turns[turns.length - 1].logs.push(input2);
                     break;
             }
+            if (skip) return;
             gameOptions.trns++;
             pushTurn();
             await loadBaseEmbed();
         }
         function triggerAbility(ability: Ability, user: UserData | NPC, dodged: boolean, turn: Turn) {
+            user.stamina -= ability.stamina;
             cooldowns.forEach(c => {
                 if (c.id === user.id && c.move === ability.name) {
                     c.cooldown = ability.cooldown;
@@ -535,7 +564,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 const toRemove = !user ? currentUser.health : Math.round(currentUser.max_health/6);
                 if (!turns[turns.length-1]) pushTurn();
                 if (!turns[turns.length-1].logs) turns[turns.length-1].logs = [];
-                turns[turns.length-1].logs.push(`${Emojis.timerIcon} \`TIMEOUT:\` **${currentUserUsername}** did not played in time: -${toRemove} hp.`);
+                turns[turns.length-1].logs.push(`${Emojis.timerIcon} \`TIMEOUT:\` **${currentUserUsername}** did not play in time: -${toRemove} hp.`);
                 if (turns[turns.length-1].logs.length > 5) pushTurn();
                 gameOptions.trns++;
                 removeHealthToLastGuy(toRemove);
@@ -544,7 +573,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
 
         }
         async function loadBaseEmbed(): Promise<boolean> {
-            console.log("plouf")
             timeoutClt();
             const povData = whosTurn();
             const components: MessageButton[] = [];
@@ -565,17 +593,13 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             }
             if (ended && Util.isNPC(opponent)) {
                 if (winner.id !== opponent.id && type !== 'custom') {
-                    /*
-                    let editedNPC = false;
                     getUserQuests().forEach(n => {
                         if (n.id === `defeat:${opponent.id}` && n.npc.health !== 0 && !editedNPC) {
-                            console.log('YEAH I DID IT 3')
-
                             n.npc.health = 0;
                             n.completed = true;
                             editedNPC = true;
                         }
-                    });*/
+                    });
                     if (userData.chapter_quests.filter(v => v.npc && v.npc.health !== 0).length !== 0 || userData.daily.quests.filter(v => v.npc && v.npc.health !== 0).length !== 0) {
                         components.push(nxtbtn);
                     }
@@ -593,7 +617,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             }
             if (fields.length > 24) fields = fields.slice(fields.length-24, fields.length);
             try {
-                console.log("plouf is")
 
                 await ctx.makeMessage({
                     content: content,
@@ -613,16 +636,15 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 });
     
             } catch(e) {
-                console.log("plouf errored")
 
                 ctx.followUp({
                     content: 'An error occured while loading the sandbox. Please try again. Contact us if the problem persists (https://jolyne.wtf/discord).',
                 });
                 collector.stop();
+                ended = true;
                 ctx.client.database.delCooldownCache("battle", ctx.interaction.user.id);
                 if (user) ctx.client.database.delCooldownCache("battle", user.id);
             }
-            console.log("plouf nex")
 
 
             if (opponent.id === povData.id && Util.isNPC(opponent) && !ended) await NPCAttack(); 
@@ -689,6 +711,17 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             }
         }
         async function end() {
+            console.log(`${userData.tag} ended battle against ${opponent.id}`)
+            if (opponent.id !== userData.id && !Util.isNPC(opponent)) {
+                let oldOpp = opponent;
+                opponent = await ctx.client.database.getUserData(opponent.id);
+                opponent.stamina = oldOpp.stamina;
+                opponent.health = oldOpp.health;
+            }
+            let oldUser = userData;
+            userData = await ctx.client.database.getUserData(userData.id);
+            userData.stamina = oldUser.stamina;
+            userData.health = oldUser.health;
             ended = true;
             const end = await loadBaseEmbed();
             if (end || user) {
@@ -726,6 +759,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             // NPC
             if (Util.isNPC(loser) && Util.isNPC(opponent)) {
                 if (type !== "custom") {
+                    /*
                     let editedNPC = false;
                     getUserQuests().forEach(n => {
                         if (n.id === `defeat:${opponent.id}` && n.npc.health !== 0 && !editedNPC) {
@@ -734,7 +768,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                             n.completed = true;
                             editedNPC = true;
                         }
-                    });
+                    });*/
                 }
                 const rewardsArr: string[] = [];
                 Object.keys(opponent.fight_rewards).map((r) => {
@@ -745,7 +779,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                         // @ts-expect-error 
                         userData[r as keyof typeof userData] += reward;
                         rewardsArr.push(`${emoji} +${Util.localeNumber(reward)} ${r.replace("money", "coins")}`);
-                    } else {
+                    } else if (reward instanceof Array && !Util.isQuestArray(reward)) {
                         for (const rewardItem of reward) {
                             userData.items.push(rewardItem.id);
                         }
@@ -753,6 +787,11 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                         for (const item of uniqueItems) {
                             const itemCount = reward.filter(r => r.id === item.id).length;
                             rewardsArr.push(`+${itemCount} ${item.name} ${item.emoji}`);
+                        }
+                    } else if (Util.isQuestArray(reward)) {
+                        for (const quest of reward) {
+                            rewardsArr.push(`:scroll: \`${quest['id']}\``);
+                            userData.chapter_quests.push(quest);
                         }
                     }    
                 });
@@ -766,7 +805,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     content: `:skull: **${winnerUsername}** has defeated **${loserUsername}**...`,
                 });
                 if (type !== "custom") {
-                    let editedNPC = false;
                     getUserQuests().forEach(n => {
                         if (n.id === `defeat:${opponent.id}` && n.npc.health !== 0 && !editedNPC) {
                             n.npc.health = opponent.max_health;

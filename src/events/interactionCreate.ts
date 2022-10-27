@@ -6,17 +6,25 @@ import * as Chapters from '../database/rpg/Chapters';
 import * as Emojis from '../emojis.json';
 import InteractionCommandContext from '../structures/Interaction';
 import { LogWebhook } from '../structures/Webhook';
+import { ContextMenuInteraction } from 'discord.js';
 
 export const name: Event["name"] = "interactionCreate";
 export const execute: Event["execute"] = async (interaction: InteractionCommand) => {
     if (!interaction.isCommand()) return;
     if (!interaction.client._ready) return interaction.reply({ content: "The bot is still loading, please wait a few seconds and try again."});
-    if (await interaction.client.database.getCooldownCache(interaction.user.id)) return interaction.reply({
-        content: (interaction.client.translations.get('en-US')("base:COOLDOWN")).replace("{{emojis.jolyne}}", Emojis.jolyne)
-    });
 
     const command = interaction.client.commands.get(interaction.commandName);
     if (!command) return;
+
+    if (await interaction.client.database.getCooldownCache(interaction.user.id) && !command.isPrivate) return interaction.reply({
+        content: (interaction.client.translations.get('en-US')("base:COOLDOWN")).replace("{{emojis.jolyne}}", Emojis.jolyne)
+    });
+
+
+    if (command.isPrivate && !process.env.OWNER_IDS.split(',').includes(interaction.user.id)) {
+        if (interaction.guild.id !== '965210362418982942') return;
+        if (command.name === 'eval') return; 
+    }
     LogWebhook.log(interaction.user, interaction.guild, command);
 
     if (command.cooldown && !isNaN(command.cooldown)) {
@@ -41,7 +49,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
 
         // Quests checker
         let hasChanged: boolean = false;
-        for (let i = 0; i < userData.chapter_quests.length; i++) {
+        if (userData) for (let i = 0; i < userData.chapter_quests.length; i++) {
             const quest = userData.chapter_quests[i];
             if (quest.completed) continue;
 
@@ -68,7 +76,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
         }
         if (hasChanged) interaction.client.database.saveUserData(userData);
 
-        if (command.rpgCooldown) {
+        if (command.rpgCooldown && !process.env.OWNER_IDS.split(',').includes(interaction.user.id)) {
             const cd = parseInt(await interaction.client.database.redis.client.get(`jjba:rpg_cooldown_${interaction.user.id}:${command.name}`));
             if (cd && cd > Date.now()) return interaction.reply({ content: interaction.client.translations.get("en-US")(command.rpgCooldown.i18n ?? 'base:RPG_COOLDOWN', {
                 time: Util.generateDiscordTimestamp(cd, 'FROM_NOW')
@@ -111,7 +119,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
             if (await interaction.client.database.getCooldownCache(interaction.user.id)) return;
 
             while (userData.xp >= Util.getMaxXp(userData.level)) {
-                console.log("Level up!");
+                console.log(userData.tag + " Level up!");
                 userData.xp = userData.xp - Util.getMaxXp(userData.level);
                 userData.level++;
                 ctx.followUp({
