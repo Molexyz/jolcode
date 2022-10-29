@@ -394,8 +394,10 @@ export const getRewards = (userData: UserData) => {
     return rewards;
 }
 
-export const RandomNPC = (level: number, onlyPublic?: boolean): NPC => {
-    const NPCSArray = Object.values(NPCs).filter(r => r.level <= level && (onlyPublic ? !r.private : true));
+export const RandomNPC = (level: number, onlyPublic?: boolean, noSpooky?: boolean): NPC => {
+    let NPCSArray = Object.values(NPCs).filter(r => r.level <= level && (onlyPublic ? !r.private : true));
+    if (noSpooky) NPCSArray = NPCSArray.filter(r => !r.name.toLowerCase().includes("spooky"));
+    
     const StandsArray = Object.values(Stands);
     const NPC = NPCSArray[Math.floor(Math.random() * NPCSArray.length)];
     return {
@@ -409,7 +411,7 @@ export const generateDailyQuests = (level: number): Quest[] => {
 
     for (let i = 0; i < level; i++) {
         if (RNG(80)) {
-            quests.push(Quests.Defeat(RandomNPC(level, true)));
+            quests.push(Quests.Defeat(RandomNPC(level, true, true)));
         }
     }
     quests.push(Quests.ClaimCoins(getRandomInt(1, level * 1000)));
