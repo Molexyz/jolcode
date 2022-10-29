@@ -47,15 +47,16 @@ export const execute: Event["execute"] = async (client: Client) => {
 
     if (JSON.stringify(commandsData) !== lastCommands) {
         client.log('Slash commands has changed. Loading...', 'cmd');
-        if (process.env.TEST_MODE === "true") {
+
+        //if (process.env.TEST_MODE === "true") {
             client._commands = await client._rest.put(Routes.applicationGuildCommands(client.user.id, process.env.DEV_GUILD_ID), {
                 body: commandsData
             }).then(console.log)    
-        } else {
+        //} else {
             client._commands = await client._rest.put(Routes.applicationCommands(client.user.id), {
                 body: commandsData
             })
-        }
+        //}
         client.database.redis.client.set("jolyne:commands", JSON.stringify(commandsData));
         client.log('Slash commands are up to date & have been loaded.', 'cmd');    
     } else client.log('Slash commands are already up to date.', 'cmd');
