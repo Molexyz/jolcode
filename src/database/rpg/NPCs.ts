@@ -587,16 +587,16 @@ export const Spooky_Witch: NPC = {
     max_health: 3000,
     stamina: 3000,
     skill_points: {
-        strength: 150,
-        defense: 150,
-        perception: 150,
-        stamina: 150,
-        speed: 30
+        strength: 50,
+        defense: 100,
+        perception: 50,
+        stamina: 50,
+        speed: 50
     },
     fight_rewards: {
         xp: 30000,
         money: 10000,
-        items: [Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy]
+        items: [Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy]
     },
     dialogues: {
         assault: "I'll turn you into a frog! BEAT ME IF YOU CAN HAHAHAAHAHAA",
