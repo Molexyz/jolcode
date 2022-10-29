@@ -559,7 +559,7 @@ export const Spooky_Zombie: NPC = {
     max_health: 500,
     stamina: 500,
     skill_points: {
-        strength: 20,
+        strength: 15,
         defense: 20,
         perception: 20,
         stamina: 20,
@@ -568,7 +568,7 @@ export const Spooky_Zombie: NPC = {
     fight_rewards: {
         xp: 2000,
         money: 2000,
-        items: [Items.Spooky_Candy]
+        items: [Items.Spooky_Candy, Items.Spooky_Candy]
     },
     dialogues: {
         assault: "AAAAAAAAAAAAAAAAAAAAAAAAAAA",
