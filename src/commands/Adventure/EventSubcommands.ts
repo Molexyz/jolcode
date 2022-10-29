@@ -19,7 +19,7 @@ export const Spooky_Candy_Dealer: Shop = {
         Items.Ramen_Bowl,
         Items.Pizza
     ],
-    emoji: Emojis.Tonio_Trussardi,
+    emoji: '🎃',
     color: 'ORANGE'
 }
 
