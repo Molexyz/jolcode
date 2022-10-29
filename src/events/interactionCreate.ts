@@ -42,7 +42,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
     if (command.category === "adventure") {
         const userData = await interaction.client.database.getUserData(interaction.user.id);
 
-        if (userData.skill_points.speed === undefined) userData.skill_points.speed = 0;
+        if (userData && userData.skill_points.speed === undefined) userData.skill_points.speed = 0;
         if (!userData && command.name !== "adventure" && interaction.options.getSubcommand() !== "start") return interaction.reply({ content: interaction.client.translations.get("en-US")("base:NO_ADVENTURE", {
             emojis: Emojis
         })});
