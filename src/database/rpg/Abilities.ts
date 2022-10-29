@@ -1319,7 +1319,7 @@ export const Mysterious_Gas: Ability = {
 export const Bearing_Shot: Ability = {
     name: 'Bearing Shot',
     description: 'Through a bearing at incredibly high speeds and regenerates 9% of your hp (even if you miss).',
-    cooldown: 0,
+    cooldown: 6,
     damages: 25,
     heal: '9%',
     blockable: false,

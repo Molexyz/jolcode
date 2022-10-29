@@ -165,12 +165,13 @@ ${Emojis.spooky_candy}  The only ways to get spooky candies are by: beating Spoo
 
         collector.on("collect", async (i: MessageComponentInteraction) => {
             if ((await ctx['componentAntiCheat'](i, userData)) === true) return;
+            i.deferUpdate().catch(() => {});
 
             const item = items.find(r => r.name === i.customId);
             if (!item) return;
 
             if (userData.items.filter(r => r === "spooky_candy").length < item.price) {
-                await i.reply({ content: `You don't have enough Spooky Candies to buy this item!`, ephemeral: true });
+                await i.followUp({ content: `You don't have enough Spooky Candies to buy this item!`, ephemeral: true });
                 return;
             }
 
@@ -178,7 +179,7 @@ ${Emojis.spooky_candy}  The only ways to get spooky candies are by: beating Spoo
             userData.items.splice(index, item.price);
             ctx.client.database.saveUserData(userData);
 
-            await i.reply({ content: item.trigger(), ephemeral: false });
+            await i.followUp({ content: item.trigger(), ephemeral: false });
             updMsg()
         });
     }
