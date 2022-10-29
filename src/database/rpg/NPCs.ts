@@ -596,7 +596,7 @@ export const Spooky_Witch: NPC = {
     fight_rewards: {
         xp: 30000,
         money: 10000,
-        items: [Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy]
+        items: [Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy]
     },
     dialogues: {
         assault: "I'll turn you into a frog! BEAT ME IF YOU CAN HAHAHAAHAHAA",
