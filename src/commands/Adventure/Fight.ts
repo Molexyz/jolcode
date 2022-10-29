@@ -467,7 +467,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             if (dodged) {
                 turn.lastMove = "attack";
                 return `🌬️ **${input?.username}** attacked but ${beforeTurnUsername()} dodged.`;
-            } else if (turn.lastMove === "defend" && atkcd === 0) {
+            } else if (turn.lastMove === "defend") {
                 turn.lastMove = "attack";
                 const then = attackShield(beforeTurn().id, input.damages);
                 if (then.left === 0) {
