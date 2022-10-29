@@ -53,7 +53,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 title: "🎃 Happy Halloween 🎃",
                 description: `${Emojis.spooky_candy} The goal of the event is to collect Spooky Candies.
 ${Emojis.spooky_candy}  With these candies you can buy things (use the \`/event shop\` command to see what you can buy).
-${Emojis.spooky_candy}  The only ways to get spooky candies are by: beating Spooky NPCs, using the \`/loot\` command (search in a pumpkin), voting (\`/vote\`) and by trading (\`/trade\`).
+${Emojis.spooky_candy}  The only ways to get spooky candies are by: beating Spooky NPCs, using the \`/loot\` command (search in a pumpkin), voting (\`/vote\`), by claiming your daily (\`daily claim\`), by finishing your daily quests (\`daily quests\`) and by trading (\`/trade\`).
 
 🍀 Good luck!`,
                 color: "ORANGE",
