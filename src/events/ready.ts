@@ -49,10 +49,12 @@ export const execute: Event["execute"] = async (client: Client) => {
         client.log('Slash commands has changed. Loading...', 'cmd');
 
         //if (process.env.TEST_MODE === "true") {
+            /*
             client._commands = await client._rest.put(Routes.applicationGuildCommands(client.user.id, process.env.DEV_GUILD_ID), {
                 body: commandsData
-            }).then(console.log)    
+            }).then(console.log)    */
         //} else {
+
             client._commands = await client._rest.put(Routes.applicationCommands(client.user.id), {
                 body: commandsData
             })
