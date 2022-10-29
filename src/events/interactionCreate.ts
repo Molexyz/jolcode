@@ -41,6 +41,8 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
 
     if (command.category === "adventure") {
         const userData = await interaction.client.database.getUserData(interaction.user.id);
+
+        if (userData.skill_points.speed === undefined) userData.skill_points.speed = 0;
         if (!userData && command.name !== "adventure" && interaction.options.getSubcommand() !== "start") return interaction.reply({ content: interaction.client.translations.get("en-US")("base:NO_ADVENTURE", {
             emojis: Emojis
         })});
@@ -76,7 +78,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
         }
         if (hasChanged) interaction.client.database.saveUserData(userData);
 
-        if (command.rpgCooldown && !process.env.OWNER_IDS.split(',').includes(interaction.user.id)) {
+        if (command.rpgCooldown && (process.env.DEV_MODE !== "true")) {
             const cd = parseInt(await interaction.client.database.redis.client.get(`jjba:rpg_cooldown_${interaction.user.id}:${command.name}`));
             if (cd && cd > Date.now()) return interaction.reply({ content: interaction.client.translations.get("en-US")(command.rpgCooldown.i18n ?? 'base:RPG_COOLDOWN', {
                 time: Util.generateDiscordTimestamp(cd, 'FROM_NOW')
@@ -97,7 +99,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
             rewards.money = Math.round(rewards.money / 4.5);
             rewards.xp = Math.round(rewards.money / 2);
         
-            let content = `:up: | <@${interaction.user.id}>, thanks for voting ! You got **${Util.localeNumber(rewards.xp)}** <:xp:925111121600454706> and **${Util.localeNumber(rewards.money)}** <:jocoins:927974784187392061>`;
+            let content = `:up: | <@${interaction.user.id}>, thanks for voting ! You got **${Util.localeNumber(rewards.xp)}** <:xp:925111121600454706>, **${Util.localeNumber(rewards.money)}** <:jocoins:927974784187392061> and a Spooky Candy ${Emojis.spooky_candy} !`;
             const got_myst = await interaction.client.database.redis.get(`jjba:voteTold:${interaction.user.id}`);
             if (got_myst === "m") content += " __and a **Mysterious Arrow**__ <:mysterious_arrow:924013675126358077>"
             interaction.client.database.redis.del(`jjba:voteTold:${interaction.user.id}`);

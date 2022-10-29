@@ -99,6 +99,10 @@ export const generateStandCart = async function standCart(stand: Stand): Promise
             color = "#181818";
             card_link = "https://cdn.discordapp.com/attachments/898236400195993622/959480090331316334/C_CARD.png";
             break;
+        case "T":
+            color = "#3131ac";
+            card_link = "https://cdn.discordapp.com/attachments/1028000883092508803/1035107806174511195/T_Card.png";
+            break;
         default:
             color = 0xff0000;
             card_link = "https://cdn.discordapp.com/attachments/898236400195993622/959480253175201862/SS_CARD.png"
@@ -126,7 +130,7 @@ export const generateStandCart = async function standCart(stand: Stand): Promise
         ctx.font = "20px Impact";
         let content;
         if (stand.name.length >= 15) {
-            content = stand.name.substring(0, 15 - (
+            content = stand.name.substring(0, 13 - (
                 stand.name.split("").filter(v => v === ".").length
               + stand.name.split("").filter(v => v === " ").length)) + "...";
         } else {
@@ -178,8 +182,11 @@ export const generateID = (): string => [...Array(12)].map(() => (~~(Math.random
 
 export const calcDodgeChances = (data: UserData | NPC): number => {
     const perception = isNPC(data) ? data.skill_points.perception : data.spb.perception;
-    console.log(perception)
-    if (perception === -696969) return 696969;
+    return Math.round(Math.round((data.level / 20) + (perception / 1.20)));
+};
+
+export const calcAtkChances = (data: UserData | NPC): number => {
+    const perception = isNPC(data) ? data.skill_points.speed : data.spb.speed;
     return Math.round(Math.round((data.level / 20) + (perception / 1.20)));
 };
 
@@ -249,7 +256,7 @@ export const calcAbilityDMG = function calcAbilityDMG(ability: Ability, userData
 }
 
 export const randomFood = function getRandomFood(): Item {
-    return randomArray(Object.keys(Items).map(i => Items[i as keyof typeof Items]).filter(i => i.type === "consumable" && i.usable && i.tradable));
+    return randomArray(Object.keys(Items).map(i => Items[i as keyof typeof Items]).filter(i => i.type === "consumable" && i.usable && i.tradable && i.rarity !== 'S'));
 }
 
 export const incrQuestTotal = function incrQuestTotal(userData: UserData, questId: string, locale: "chapter" | "daily"): void {
@@ -332,7 +339,8 @@ export const standPrices = {
     "S": 50000,
     "A": 25000,
     "B": 10000,
-    "C": 5000
+    "C": 5000,
+    "T": 69
 }
 
 export const getImageColor = async function getImageColor(client: JolyneClient, url: string): Promise<ColorResolvable> {

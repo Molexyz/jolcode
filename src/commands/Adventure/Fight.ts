@@ -13,6 +13,7 @@ import * as NPCs from '../../database/rpg/NPCs';
 import * as Stands from '../../database/rpg/Stands';
 import * as Emojis from '../../emojis.json';
 import { now } from 'moment-timezone';
+import { P1C1_GP } from '../../database/rpg/Mails';
 
 export const name: SlashCommand["name"] = "fight";
 export const category: SlashCommand["category"] = "adventure";
@@ -186,6 +187,9 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         if (type === "friendly") {
             opponent.health = opponent.max_health;
             userData.health = userData.max_health;
+
+            opponent.stamina = opponent.max_stamina;
+            userData.stamina = userData.max_stamina;
         } else if (type === "ranked") {
             ctx.client.database.setCooldownCache("battle", userData.id, `https://discord.com/channels/${ctx.interaction.guild.id}/${ctx.interaction.channel.id}/${ctx.interaction.id}`);
             ctx.client.database.setCooldownCache("battle", opponent.id, `https://discord.com/channels/${ctx.interaction.guild.id}/${ctx.interaction.channel.id}/${ctx.interaction.id}`);
@@ -195,6 +199,10 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         if (Util.isNPC(opponent) && type !== "custom") {
             const rawNPC = Object.keys(NPCs).map(v => NPCs[v as keyof typeof NPCs]).find(n => n.id === opponent.id) || opponent;
             opponent = {...rawNPC};
+        }
+        if (Util.isNPC(opponent)) {
+            opponent.health = 60 + Math.round(((opponent.level + opponent.skill_points.defense) * 10) + ((opponent.level + opponent.skill_points.defense) * 6 / 100) * 100);
+            opponent.max_health = opponent.health;
         }
         const attackID = Util.generateID();
         const defendID = Util.generateID();
@@ -310,12 +318,14 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
 
         const turns: Turn[] = [];
         gameOptions.trns = 0//Util.getRandomInt(0, 10);
+        if ((Util.isNPC(opponent) ? opponent.skill_points.speed : opponent.spb.speed) > userData.spb.speed) gameOptions.trns++;
         turns.push({
             lastMove: "",
             logs: [],
             lastDamage: 0
         })
         loadBaseEmbed();
+        let atkcd = 0;
         collector.on("collect", async (i: MessageComponentInteraction) => {
             if (i.customId === nextID) {
                 // ANTI-CHEAT, ANTI-DUPES, ANTI-BUG, ANTI-GLITCH
@@ -336,12 +346,39 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             if (i.user.id !== whosTurn().id) return; // If it's not the turn of the player
 
             const before = beforeTurn();
-            let dodged: boolean = false;
-            const dodges = Util.calcDodgeChances(before);
-            const dodgesNumerator = 90 + (!Util.isNPC(before) ? before.spb?.perception : before.skill_points.perception);
-            const dodgesPercent = Util.getRandomInt(0, Math.round(dodgesNumerator));
-            if (dodgesPercent < dodges || Util.calcDodgeChances(povData) === 696969) dodged = true;
+
+            // dodges
+            let dodged = true;
+            const beforeSp = Util.isNPC(before) ? before.skill_points : before.spb;
+            const povSp = Util.isNPC(povData) ? povData.skill_points : povData.spb;
+
+            const perc = Util.getRandomInt(0, 100);
             if (gameOptions.invincible) dodged = false;
+            else if ((beforeSp.perception - povSp.speed) <= 0) dodged = false 
+            else if (Util.calcDodgeChances(before) - povSp.speed < perc) {
+                dodged = false;
+            }
+
+            // attack
+            let attackAgain = true;
+            const beforeSp2 = Util.isNPC(before) ? before.skill_points : before.spb;
+            const povSp2 = Util.isNPC(povData) ? povData.skill_points : povData.spb;
+
+            const perc2 = Util.getRandomInt(0, 100);
+            if (gameOptions.invincible) attackAgain = false;
+            else if ((povSp2.speed - beforeSp2.perception) <= 0) attackAgain = false 
+            else if (Util.calcAtkChances(povData) - beforeSp2.perception < perc2) {
+                attackAgain = false;
+            }
+
+            if (attackAgain) atkcd++;
+            else atkcd = 0;
+            if (atkcd !== 1 && atkcd > povData.level/(before.level / 20)) {
+                atkcd = 0;
+                attackAgain = false;
+            }
+     
+
 
 
             const currentTurn = turns[turns.length - 1];
@@ -387,6 +424,9 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                         break;
                     } else return;
             }
+            if (turns[turns.length - 1].lastMove === "defend" && attackAgain && atkcd !== 1) attackAgain = false; 
+            if (attackAgain) gameOptions.trns++;
+
 
             if (output) currentTurn.logs.push(output);
             pushTurn();
@@ -427,7 +467,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             if (dodged) {
                 turn.lastMove = "attack";
                 return `🌬️ **${input?.username}** attacked but ${beforeTurnUsername()} dodged.`;
-            } else if (turn.lastMove === "defend") {
+            } else if (turn.lastMove === "defend" && atkcd === 0) {
                 turn.lastMove = "attack";
                 const then = attackShield(beforeTurn().id, input.damages);
                 if (then.left === 0) {
@@ -470,13 +510,42 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             }
             const choosedMove = Util.randomArray(possibleMoves);
 
-            const before = beforeTurn();
-            let dodged: boolean = false;
-            const dodges = Util.calcDodgeChances(before);
-            const dodgesNumerator = 90 + (!Util.isNPC(before) ? before.spb?.perception : before.skill_points.perception);
-            const dodgesPercent = Util.getRandomInt(0, Math.round(dodgesNumerator));
-            if (dodgesPercent < dodges) dodged = true;
+            const before = userData;
+            const povData = NPC;
+
+
+            // dodges
+            let dodged = true;
+            const beforeSp = userData.spb;
+            const povSp = povData.skill_points;
+
+            const perc = Util.getRandomInt(0, 100);
             if (gameOptions.invincible) dodged = false;
+            else if ((beforeSp.perception - povSp.speed) <= 0) dodged = false 
+            else if (Util.calcDodgeChances(before) - povSp.speed < perc) {
+                dodged = false;
+            }
+
+            // attack
+            let attackAgain = true;
+            const beforeSp2 = userData.spb;
+            const povSp2 = povData.skill_points;
+
+            const perc2 = Util.getRandomInt(0, 100);
+            if (gameOptions.invincible) attackAgain = false;
+            else if ((povSp2.speed - beforeSp2.perception) <= 0) attackAgain = false 
+            else if (Util.calcAtkChances(povData) - beforeSp2.perception < perc2) {
+                attackAgain = false;
+            }
+
+
+            if (attackAgain) atkcd++;
+            else atkcd = 0;
+            if (atkcd !== 1 && atkcd > povData.level/(before.level / 20)) {
+                atkcd = 0;
+                attackAgain = false;
+            }
+            
 
             switch (choosedMove) {
                 case "attack":
@@ -493,6 +562,9 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     break;
             }
             if (skip) return;
+            if (turns[turns.length - 1].lastMove === "defend" && attackAgain && atkcd !== 1) attackAgain = false; 
+            if (attackAgain) gameOptions.trns++;
+
             gameOptions.trns++;
             pushTurn();
             await loadBaseEmbed();
@@ -514,46 +586,52 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     user.health += ability.heal;
                 }
                 if (user.health > user.max_health) user.health = user.max_health;
-                return `**${whosTurnUsername()}** used **${ability.name}** and healed ${user.health - oldHealth} health (POV: :heart: ${user.health}/${user.max_health}).`;
+                const bt = `and healed ${user.health - oldHealth} health (POV: :heart: ${user.health}/${user.max_health}).`;
+                if (ability.damages) return `${attack().replace(" and", ", ").replace(".", "")} ${bt}`;
+                else return bt;
             }
             if (ability.trigger) {
                 if (ability.damages === 0) { // Then it's a special one
                     return ability.trigger(ctx, functions, gameOptions, user, beforeTurn(), gameOptions.trns, turns);
                 } else ability.trigger(ctx, functions, gameOptions, user, beforeTurn(), gameOptions.trns, turns);
             }
-            const damage = Util.calcAbilityDMG(ability, user);
-            const userStand = Util.getStand(user.stand);
-            if (dodged && ability.dodgeable) {
-                turn.lastMove = "attack";
-                return `🌬️ **${whosTurnUsername()}** used **${userStand.name} : ${ability.name}** but ${beforeTurnUsername()} dodged.`;
-            } else if (turn.lastMove === "defend") {
-                turn.lastMove = "attack";
-                if (ability.blockable) {
-                    const then = attackShield(beforeTurn().id, damage);
-                    if (then.left === 0) {
-                        regenerateShieldToUser(beforeTurn().id);
-                        removeHealthToLastGuy(damage * 1.75);
-                        return `**${whosTurnUsername()}** used **${userStand.name} : ${ability.name}** and broke ${beforeTurnUsername()}'s guard for ${damage * 1.75} damages (:heart: ${beforeTurn().health}/${beforeTurn().max_health}) left).`;
+            return attack();
+            function attack(): string {
+                const damage = Util.calcAbilityDMG(ability, user);
+                const userStand = Util.getStand(user.stand);
+                if (dodged && ability.dodgeable) {
+                    turn.lastMove = "attack";
+                    return `🌬️ **${whosTurnUsername()}** used **${userStand.name} : ${ability.name}** but ${beforeTurnUsername()} dodged.`;
+                } else if (turn.lastMove === "defend" && atkcd === 0) {
+                    turn.lastMove = "attack";
+                    if (ability.blockable) {
+                        const then = attackShield(beforeTurn().id, damage);
+                        if (then.left === 0) {
+                            regenerateShieldToUser(beforeTurn().id);
+                            removeHealthToLastGuy(damage * 1.75);
+                            return `**${whosTurnUsername()}** used **${userStand.name} : ${ability.name}** and broke ${beforeTurnUsername()}'s guard for ${damage * 1.75} damages (:heart: ${beforeTurn().health}/${beforeTurn().max_health}) left).`;
+                        } else {
+                            return `**${whosTurnUsername()}** used **${userStand.name} : ${ability.name}** but ${beforeTurnUsername()} blocked. (:shield: ${then.left}/${then.max} left).`;
+                        }
                     } else {
-                        return `**${whosTurnUsername()}** used **${userStand.name} : ${ability.name}** but ${beforeTurnUsername()} blocked. (:shield: ${then.left}/${then.max} left).`;
+                        // they broke their guard
+                        turn.lastMove = "attack";
+                        removeHealthToLastGuy(damage * 1.75);
+                        regenerateShieldToUser(beforeTurn().id);
+                        return `**${whosTurnUsername()}** used **${userStand.name} : ${ability.name}** and broke ${beforeTurnUsername()}'s guard for ${damage * 1.75} damages (:heart: ${beforeTurn().health}/${beforeTurn().max_health}) left).`;
                     }
                 } else {
-                    // they broke their guard
+                    removeHealthToLastGuy(damage);
                     turn.lastMove = "attack";
-                    removeHealthToLastGuy(damage * 1.75);
-                    regenerateShieldToUser(beforeTurn().id);
-                    return `**${whosTurnUsername()}** used **${userStand.name} : ${ability.name}** and broke ${beforeTurnUsername()}'s guard for ${damage * 1.75} damages (:heart: ${beforeTurn().health}/${beforeTurn().max_health}) left).`;
-                }
-            } else {
-                removeHealthToLastGuy(damage);
-                turn.lastMove = "attack";
-                return `**${whosTurnUsername()}** used **${userStand.name} : ${ability.name}** and did ${damage} damages (:heart: ${beforeTurn().health}/${beforeTurn().max_health} left).`;
+                    return `**${whosTurnUsername()}** used **${userStand.name} : ${ability.name}** and did ${damage} damages (:heart: ${beforeTurn().health}/${beforeTurn().max_health} left).`;
+                }    
             }
             
         }
         function defend() {
             turns[turns.length - 1].lastMove = "defend";
             turns[turns.length - 1].logs.push(`> :shield: ${whosTurnUsername()} is now defending.`);
+            if (atkcd !== 0) atkcd = 9999;
         }
         function timeoutClt() {
             clearTimeout(timeoutCollector);

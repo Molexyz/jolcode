@@ -99,13 +99,15 @@ export default class DatabaseHandler {
                     strength: 0,
                     defense: 0,
                     perception: 0,
-                    stamina: 0
+                    stamina: 0,
+                    speed: 0
                 },
                 spb: {
                     strength: 0,
                     defense: 0,
                     perception: 0,
-                    stamina: 0
+                    stamina: 0,
+                    speed: 0
                 },
                 items: ["pizza", "pizza", "pizza", "mysterious_arrow"],
                 chapter_quests: Chapters.C1.quests,
@@ -205,7 +207,7 @@ export default class DatabaseHandler {
     }
     fixStats(userData: UserData) {
         const stand: Stand["skill_points"] = userData.stand ? Util.getStand(userData.stand)?.skill_points : null;
-        userData.spb = { strength: userData.skill_points.strength, stamina: userData.skill_points.stamina, perception: userData.skill_points.perception, defense: userData.skill_points.defense };
+        userData.spb = { strength: userData.skill_points.strength, stamina: userData.skill_points.stamina, perception: userData.skill_points.perception, defense: userData.skill_points.defense, speed: userData.skill_points.speed };
         if (stand) Object.keys(stand).filter(r => r!== "total").forEach(async (e: any) => {
             userData.spb[e as keyof SkillPoints] = userData.skill_points[e as keyof SkillPoints] + stand[e as keyof SkillPoints];
         });

@@ -16,11 +16,12 @@ export const data: SlashCommand["data"] = {
 
 
 export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandContext, userData?: UserData) => {
-    let pointsLeft = (userData.level * 4) - (userData.skill_points["stamina"] + userData.skill_points["defense"] + userData.skill_points["strength"] + userData.skill_points["perception"]);
+    let pointsLeft = (userData.level * 4) - (userData.skill_points["stamina"] + userData.skill_points["defense"] + userData.skill_points["strength"] + userData.skill_points["perception"] + userData.skill_points["speed"]);
     const staminaID = Util.generateID();
     const strengthID = Util.generateID();
     const defenseID = Util.generateID();
     const perceptionID = Util.generateID();
+    const speedID = Util.generateID();
 
 
     async function updateMessage(userData: UserData) {
@@ -48,16 +49,23 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             .setEmoji('➕')
             .setStyle(pointsLeft <= 0 ? "DANGER" : "SUCCESS")
             .setDisabled(pointsLeft <= 0 ? true : false);
+        const speedButton = new MessageButton()
+            .setCustomId(speedID)
+            .setLabel('Speed')
+            .setEmoji('➕')
+            .setStyle(pointsLeft <= 0 ? "DANGER" : "SUCCESS")
+            .setDisabled(pointsLeft <= 0 ? true : false);
+
         await ctx.sendT("skill-points:BASE_MESSAGE", {
             userData: userData,
             pointsLeft: pointsLeft,
-            components: [Util.actionRow([staminaButton, defenseButton, strengthButton, perceptionButton])]
+            components: [Util.actionRow([staminaButton, defenseButton, strengthButton, perceptionButton, speedButton])]
         });
     }
     await updateMessage(userData);
     const filter = async (i: MessageComponentInteraction) => {
         i.deferUpdate().catch(() => {});
-        return (i.user.id === ctx.interaction.user.id) && (i.customId === perceptionID || i.customId === defenseID || i.customId === strengthID || i.customId === staminaID);// removing this cuz try it and you'll see what happens when you use this command 2 times || && i.message.interaction.id === ctx.interaction.id;
+        return (i.user.id === ctx.interaction.user.id) && (i.customId === perceptionID || i.customId === defenseID || i.customId === strengthID || i.customId === staminaID || i.customId === speedID);// removing this cuz try it and you'll see what happens when you use this command 2 times || && i.message.interaction.id === ctx.interaction.id;
     }
     const collector = ctx.interaction.channel.createMessageComponentCollector({ filter });
     ctx.timeoutCollector(collector);
@@ -66,11 +74,14 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         // Anti-cheat
         if (await ctx.client.database.getCooldownCache(userData.id)) return collector.stop("User probably tried to glitch the system.");
         userData = await ctx.client.database.getUserData(userData.id);
-        pointsLeft = (Number(userData.level) * 4) - (userData.skill_points["stamina"] + userData.skill_points["defense"] + userData.skill_points["strength"] + userData.skill_points["perception"]);
+        pointsLeft = (Number(userData.level) * 4) - (userData.skill_points["stamina"] + userData.skill_points["defense"] + userData.skill_points["strength"] + userData.skill_points["perception"] + userData.skill_points["speed"]);
         if (pointsLeft <= 0) return collector.stop("No more points left.");
 
         ctx.timeoutCollector(collector);
         switch (i.customId) {
+            case speedID:
+                userData.skill_points.speed++;
+                break;
             case staminaID:
                 userData.skill_points.stamina++;
                 break;

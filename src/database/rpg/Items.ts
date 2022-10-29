@@ -489,7 +489,8 @@ export const Skill_Points_Reset_Potion: Item = {
       defense: 0,
       strength: 0,
       perception: 0,
-      stamina: 0
+      stamina: 0,
+      speed: 0
     }
     ctx.makeMessage({
       content: 'Your skill-points have been reset.'
@@ -527,4 +528,18 @@ export const Tonio_Special_Recipe: Item = {
     stamina: 250
   },
   emoji: '🥣'
+}
+
+export const Spooky_Candy: Item = {
+  id: 'spooky_candy',
+  name: 'Spooky Candy',
+  description: 'A spooky candy',
+  type: 'consumable',
+  price: 17000,
+  tradable: true,
+  storable: true,
+  rarity: 'S',
+  usable: true,
+  benefits: Candy.benefits,
+  emoji: Emojis.spooky_candy
 }

@@ -50,10 +50,10 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         npc: Util.RandomNPC(userData.level, true),
         luck: 100
     }, {
-        npc: Util.RandomNPC(userData.level, true),
+        npc: NPCs.Spooky_Skeleton,//Util.RandomNPC(userData.level, true),
         luck: 60
     }, {
-        npc: NPCs.Bandit_Boss,
+        npc: NPCs.Spooky_Zombie,//NPCs.Bandit_Boss,
         luck: 40
     }];
 
@@ -64,7 +64,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     await ctx.client.database.saveUserData(userData);
 
     const luck = Util.getRandomInt(1, 10000);
-    const NPC = rng.filter(l => (l.luck * 100) >= luck).sort((a, b) => a.luck - b.luck)[0].npc;
+    const NPC =  rng.filter(l => (l.luck * 100) >= luck).sort((a, b) => a.luck - b.luck)[0].npc;
 
     let protectedNPC: NPC = {
         ...NPC

@@ -1211,8 +1211,6 @@ export const Wall: Ability = {
                 if (caller.health !== callerHp) turns[turns.length - 1].logs.push(`:skull:${victimUsername} somehow dodged...`);
                 Util.isNPC(victim) ? victim.skill_points.perception = oldVictim : victim.spb.perception = oldVictim
                 Util.isNPC(caller) ? caller.skill_points.perception = oldCaller : caller.spb.perception = oldCaller
-                        // @ts-ignore
-                console.log(victim.spb, caller.spb)
             }
         });
         promises.push(func);
@@ -1221,10 +1219,107 @@ export const Wall: Ability = {
 
 }
 
+export const Scythe_Slash: Ability = {
+    name: 'Scythe Slash',
+    description: 'Slash your opponent with your scythe.',
+    cooldown: 5,
+    damages: 25,
+    blockable: false,
+    dodgeable: true,
+    stamina: 10
+}
+
+export const Injection: Ability = {
+    name: 'Injection',
+    description: 'Inject yourself. Boosts your damages by 100% for 5 turns',
+    cooldown: 9,
+    damages: 0,
+    blockable: false,
+    dodgeable: false,
+    stamina: 20,
+    trigger: (ctx: CommandInteractionContext, promises: Array<Function>, gameOptions: any, caller: UserData | NPC, victim: UserData | NPC, trns: number, turns: Turn[]) => {
+        const tsID = Util.generateID();
+        gameOptions[tsID] = {
+            cd: 5,
+        };
+        const callerUsername = Util.isNPC(caller) ? caller.name : ctx.client.users.cache.get(caller.id)?.username;
+
+
+        turns[turns.length - 1].logs.push(`💉 ${callerUsername} injected themselves.`);
+        function addSkillPointsToCaller(amout: number) {
+            if (Util.isNPC(caller)) {
+                caller.skill_points["strength"] += amout;
+            } else caller.spb["strength"] += amout;
+        }
+        function removeSkillPointsFromCaller(amout: number) {
+            if (Util.isNPC(caller)) {
+                caller.skill_points["strength"] -= amout;
+            } else caller.spb["strength"] -= amout;
+        }
+        const oldCaller = Util.isNPC(caller) ? caller.skill_points.strength : caller.spb.strength
+
+        addSkillPointsToCaller(oldCaller);
+
+
+        const func = (async () => {
+            if (gameOptions[tsID].cd === 0) return;
+            gameOptions[tsID].cd--;
+
+            if (gameOptions[tsID].cd === 0) {
+                turns[trns].logs.push(`💉 ${callerUsername} is no longer boosted.`);
+                removeSkillPointsFromCaller(oldCaller);
+            }
+        });
+        promises.push(func);
+
+    },
+}
+
+export const Mysterious_Gas: Ability = {
+    name: 'Mysterious Gas',
+    description: 'Release a mysterious gas that will confuse your opponent for 3 turns.',
+    cooldown: 10,
+    damages: 0,
+    blockable: false,
+    dodgeable: false,
+    stamina: 20,
+    trigger: (ctx: CommandInteractionContext, promises: Array<Function>, gameOptions: any, caller: UserData | NPC, victim: UserData | NPC, trns: number, turns: Turn[]) => {
+        const tsID = Util.generateID();
+        gameOptions[tsID] = {
+            cd: 3,
+        };
+        const callerUsername = Util.isNPC(caller) ? caller.name : ctx.client.users.cache.get(caller.id)?.username;
+        const victimUsername = Util.isNPC(victim) ? victim.name : ctx.client.users.cache.get(victim.id)?.username;
+
+        turns[turns.length - 1].logs.push(`😴 **${victimUsername}** is now sleeping.`);
+        gameOptions.invincible = true;
+        turns[turns.length - 1].lastMove = "attack";
+
+        const func = (async () => {
+            if (gameOptions[tsID].cd === 0) return;
+            gameOptions[tsID].cd--;
+            gameOptions.trns--;
+            if (gameOptions[tsID].cd === 0) {
+                gameOptions.invincible = false;
+                gameOptions.trns--;
+                turns[turns.length - 1].logs.push(`**${victimUsername}** woke up!!!!`);
+            }
+        });
+        if (gameOptions.opponentNPC === caller.id) {
+            for (let i = 0; i < gameOptions[tsID].cd; i++) {
+                gameOptions.NPCAttack(true);
+            }
+            turns[turns.length - 1].logs.push(`**${victimUsername}** woke up!!!!`);
+        } else promises.push(func);
+    }
+}
+        
+
+            
 export const Bearing_Shot: Ability = {
     name: 'Bearing Shot',
     description: 'Through a bearing at incredibly high speeds and regenerates 9% of your hp (even if you miss).',
-    cooldown: 7,
+    cooldown: 0,
     damages: 25,
     heal: '9%',
     blockable: false,
@@ -1247,6 +1342,7 @@ export const YO_Angelo: Ability = {
         gameOptions[tsID] = {
             cd: 4,
         };
+        turns[turns.length - 1].lastMove = "attack";
         turns[turns.length - 1].logs.push(`🪨🪨🪨 YO ANGELO! ${victimUsername} has been transformed into a rock for 4 TURNS🪨🪨🪨 :joy: rip bozo. take this L 🪨🪨🪨`);
 
         const func = (async () => {
@@ -1309,7 +1405,18 @@ export const Several_Minor_Scratches: Ability = {
     ...Stand_Barrage,
     name: "Several Minor Scratches",
 }
-/*
-export const Dino_Morph: Ability = {
 
-}*/
+export const Dino_Morph: Ability = {
+    name: 'Dino Morph.',
+    description: "Changes into a dinosaur for 4 turns increasing all stats by 50%",
+    cooldown: 0, //8
+    damages: 0,
+    blockable: false,
+    dodgeable: false,
+    stamina: 25,
+    trigger: (ctx: CommandInteractionContext, promises: Array<Function>, gameOptions: any, caller: UserData | NPC, victim: UserData | NPC, trns: number, turns: Turn[]) => {
+        const callerUsername = Util.isNPC(caller) ? caller.name : ctx.client.users.cache.get(caller.id)?.username;
+    }
+
+}
+

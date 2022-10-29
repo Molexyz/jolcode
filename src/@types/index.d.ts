@@ -395,7 +395,7 @@ interface Stand {
   /**
    * The stand's rarity.
    */
-  readonly rarity: "C" | "B" | "A" | "S" | "SS";
+  readonly rarity: "C" | "B" | "A" | "S" | "SS" | "T";
   /**
    * The stand's description.
    */
@@ -448,6 +448,7 @@ interface SkillPoints {
   strength: number;
   defense: number;
   stamina: number;
+  speed: number;
 }
 
 /**

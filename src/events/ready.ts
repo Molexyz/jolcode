@@ -48,17 +48,18 @@ export const execute: Event["execute"] = async (client: Client) => {
     if (JSON.stringify(commandsData) !== lastCommands) {
         client.log('Slash commands has changed. Loading...', 'cmd');
         if (process.env.TEST_MODE === "true") {
-            await client._rest.put(Routes.applicationGuildCommands(client.user.id, process.env.DEV_GUILD_ID), {
+            client._commands = await client._rest.put(Routes.applicationGuildCommands(client.user.id, process.env.DEV_GUILD_ID), {
                 body: commandsData
-            });    
+            }).then(console.log)    
         } else {
-            await client._rest.put(Routes.applicationCommands(client.user.id), {
+            client._commands = await client._rest.put(Routes.applicationCommands(client.user.id), {
                 body: commandsData
-            });    
+            })
         }
         client.database.redis.client.set("jolyne:commands", JSON.stringify(commandsData));
         client.log('Slash commands are up to date & have been loaded.', 'cmd');    
     } else client.log('Slash commands are already up to date.', 'cmd');
+
     if (JSON.stringify(privateCommandsData) !== lastPrivateCommands) {
         client.log('Private slash commands has changed. Loading...', 'cmd');
         await client._rest.put(Routes.applicationGuildCommands(client.user.id, process.env.PRIVATE_SERVER_ID), {
@@ -120,4 +121,26 @@ export const execute: Event["execute"] = async (client: Client) => {
     client._ready = true;
     client.user.setActivity({ name: "The Way To Heaven", type: "WATCHING" });
     client.log(`Ready! Logged in as ${client.user.tag} (${client.user.id})`);
+
+    /*
+
+        // temporairly
+        const hasSpeed = await client.database.redis.client.get("jolyne:has_speed");
+        if (hasSpeed) {
+            await client.database.redis.client.set("jolyne:has_speed", "true");
+            const users = await client.database.redis.client.keys("cachedUser:*");
+            for (const user of users) {
+                const userData: UserData = JSON.parse(await client.database.redis.client.get(user));
+                if (userData.skill_points.speed === 0) {
+                    console.log(`User ${userData.id} got speed, continuing...`);
+                    continue;
+                } 
+    
+                userData.skill_points.speed = 0;
+                await client.database.saveUserData(userData);
+                console.log(`[REDIS] Updated ${user} speed skill points to 0`);
+            }
+        }*/
+    
+    
 };

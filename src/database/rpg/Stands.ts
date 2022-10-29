@@ -7,7 +7,7 @@ export const Star_Platinum: Stand = {
     rarity: "S",
     description: "Star Platinum is a very strong humanoid Stand. It was designed to look like a guardian spirit. It was used by [Jotaro Kujo](https://jojo.fandom.com/wiki/Jotaro_Kujo)",
     color: "#985ca3",
-    image: "https://i.pinimg.com/originals/c8/a7/ed/c8a7edf03bcce4b74a24345bb1a109b7.jpg",
+    image: "https://static.fandomspot.com/images/07/7837/25-starplatinum-stand-jojo-anime.jpg",
     abilities: [
         Abilities.Stand_Barrage,
         Abilities.Kick_Barrage,
@@ -20,6 +20,7 @@ export const Star_Platinum: Stand = {
         defense: 5,
         perception: 5,
         stamina: 0,
+        speed: 0,
     },
     text: {
         awakening_text: "OrRrr.. OrrRrRRrRrR... RrrRQRrR....",
@@ -42,12 +43,13 @@ export const The_World: Stand = {
         Abilities.Time_Stop,
     ],
     color: "YELLOW",
-    image: "https://pbs.twimg.com/media/EiN6WPVWoAAAODC?format=jpg&name=large",
+    image: "https://naniwallpaper.com/files/wallpapers/za-warudo/2-za%20warudo-1080x1920.jpg",
     skill_points: {
         strength: 10,
         defense: 5,
         perception: 5,
         stamina: 0,
+        speed: 0,
     },
     text: {
         awakening_text: "WrRrR3.. WrRrrR WRYYRrR...",
@@ -76,6 +78,7 @@ export const The_World__Over_Heaven: Stand = {
         defense: 5,
         perception: 5,
         stamina: 0,
+        speed: 0,
     },
     text: {
         awakening_text: "WrRrR3.. WrRrrR WRYYRrR...",
@@ -103,6 +106,7 @@ export const Hierophant_Green: Stand = {
         defense: 1,
         perception: 1,
         stamina: 0,
+        speed: 0,
     },
     text: {
         awakening_text: "[awakening in you...]",
@@ -127,6 +131,7 @@ export const Aerosmith: Stand = {
         defense: 1,
         perception: 3,
         stamina: 0,
+        speed: 0,
     },
     text: {
         awakening_text: "[awakening in you... :airplane_small:]",
@@ -151,6 +156,7 @@ export const The_Hand: Stand = {
         defense: 0,
         perception: 0,
         stamina: 0,
+        speed: 0,
     },
     text: {
         awakening_text: "[awakening in you...]",
@@ -176,6 +182,7 @@ export const Hermit_Purple: Stand = {
         defense: 3,
         perception: 2,
         stamina: 0,
+        speed: 0,
     },
     text: {
         awakening_text: "[awakening in you...]",
@@ -199,7 +206,8 @@ export const Silver_Chariot: Stand = {
         strength: 3,
         defense: 1,
         perception: 1,
-        stamina: 0
+        stamina: 0,
+        speed: 0
     },
     text: {
         awakening_text: "[awakening in you...]",
@@ -224,7 +232,8 @@ export const Magicians_Red: Stand = {
         strength: 10,
         defense: 0,
         perception: 0,
-        stamina: 0
+        stamina: 0,
+        speed: 0
     },
     text: {
         awakening_text: "[awakening in you...]",
@@ -247,7 +256,8 @@ export const Ebony_Devil: Stand = { // This is a private stand, not available in
         strength: 0,
         defense: 0,
         perception: 0,
-        stamina: 0
+        stamina: 0,
+        speed: 0
     },
     text: Hierophant_Green.text,
     emoji: '\uD83D\uDC7F',
@@ -270,7 +280,8 @@ export const Whitesnake: Stand = {
         strength: 3,
         defense: 7,
         perception: 10,
-        stamina: 0
+        stamina: 0,
+        speed: 0
     },
     text: {
         awakening_text: "[awakening in you...]",
@@ -296,7 +307,8 @@ export const Gold_Experience: Stand = {
         strength: 5,
         defense: 15,
         perception: 0,
-        stamina: 0
+        stamina: 0,
+        speed: 0
     },
     text: {
         awakening_text: "[awakening in you...]",
@@ -322,7 +334,8 @@ export const Purple_Haze: Stand = {
         strength: 10,
         defense: 0,
         perception: 0,
-        stamina: 0
+        stamina: 0,
+        speed: 0
     },
     text: {
         awakening_text: "[awakening in you...]",
@@ -345,7 +358,8 @@ export const Tower_Of_Gray: Stand = {
         strength: 0,
         defense: 0,
         perception: 0,
-        stamina: 0
+        stamina: 0,
+        speed: 0
     },
     text: {
         awakening_text: "[awakening in you...]",
@@ -393,7 +407,8 @@ export const Killer_Queen: Stand = {
         strength: 10,
         defense: 5,
         perception: 2,
-        stamina: 3
+        stamina: 3,
+        speed: 0
     },
     text: {
         awakening_text: "[awakening in you...]",
@@ -417,7 +432,8 @@ export const Yellow_Temperance: Stand = {
         strength: 0,
         defense: 0,
         perception: 0,
-        stamina: 0
+        stamina: 0,
+        speed: 0
     },
     text: {
         awakening_text: "[awakening in you...]",
@@ -443,7 +459,8 @@ export const Crazy_Diamond: Stand = {
         strength: 10,
         defense: 10,
         perception: 0,
-        stamina: 0
+        stamina: 0,
+        speed: 0
     },
     text: {
         awakening_text: "[awakening in you...]",
@@ -464,12 +481,40 @@ export const Scary_Monsters: Stand = {
         strength: 10,
         defense: 5,
         perception: 0,
-        stamina: 0
+        stamina: 0,
+        speed: 0
     },
     text: {
         awakening_text: "[awakening in you...]",
         awaken_text: "ROARRRR ROARRRR"
     },
     emoji: Emojis.scary_monsters,
+    available: false
+};
+
+export const Halloween_Spooks: Stand = {
+    name: "Halloween Spooks",
+    rarity: "T",
+    description: "Halloween Spooks is a limited stand, available during the Halloween event (2022).",
+    abilities: [
+        Abilities["Rage"],
+        Abilities["Scythe_Slash"],
+        Abilities["Injection"],
+        Abilities["Mysterious_Gas"],
+    ],
+    color: 'ORANGE',
+    image: 'https://media.discordapp.net/attachments/1028000883092508803/1031942138717556856/Screenshot_20221007-1101012.png?width=412&height=676',
+    skill_points: {
+        strength: 0,
+        defense: 0,
+        perception: 0,
+        stamina: 0,
+        speed: 0
+    },
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: "HaaaHaaaHaaaa HALLOWEEEEN"
+    },
+    emoji: '🎃',
     available: false
 };

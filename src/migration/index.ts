@@ -25,7 +25,8 @@ Object.keys(Stands).forEach((v) => {
             "S": 100000,
             "A": 50000,
             "B": 10000,
-            "C": 5000
+            "C": 5000,
+            "T": 69
         }[stand.rarity],
         tradable: true,
         storable: true,
@@ -95,7 +96,8 @@ async function init() {
                 perception: user.skill_points.perceptibility,
                 strength: user.skill_points.strength,
                 defense: user.skill_points.defense,
-                stamina: user.skill_points.stamina
+                stamina: user.skill_points.stamina,
+                speed: user.skill_points.speed
             },
             adventureat: Number(user.adventureat),
             stats: {},
@@ -227,7 +229,7 @@ init()
 
 function fixStats(userData: UserData) {
     const stand: Stand["skill_points"] = userData.stand ? Util.getStand(userData.stand)?.skill_points : null;
-    if (!userData.spb) userData.spb = { strength: 0, stamina: 0, perception: 0, defense: 0 };
+    if (!userData.spb) userData.spb = { strength: 0, stamina: 0, perception: 0, defense: 0, speed: 0 };
     if (stand) Object.keys(stand).filter(r => r!== "total").forEach(async (e) => {
         userData.spb[e as keyof SkillPoints] = userData.skill_points[e as keyof SkillPoints] + stand[e as keyof SkillPoints];
     });

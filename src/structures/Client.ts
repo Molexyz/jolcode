@@ -10,6 +10,7 @@ export default class Jolyne extends Client {
     _ready: boolean;
     _emojis: object = emojis;
     _rest: REST;
+    _commands: unknown;
     commands: Collection<string, SlashCommand> = new Collection();
     cooldowns: Collection<string, any> = new Collection();
     log: Function;

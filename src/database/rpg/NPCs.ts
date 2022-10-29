@@ -41,9 +41,10 @@ export const Kakyoin: NPC = {
     stamina: 60,
     skill_points: {
         strength: 2,
-        defense: 2,
+        defense: 1,
         perception: 2,
-        stamina: 2
+        stamina: 2,
+        speed: 0
     },
     fight_rewards: {
         xp: 1000,
@@ -65,7 +66,8 @@ export const Security_Guard: NPC = {
         strength: 10,
         defense: 2,
         perception: 2,
-        stamina: 2
+        stamina: 2,
+        speed: 0
     },
     fight_rewards: {
         xp: 1500,
@@ -82,10 +84,11 @@ export const Star_Platinum_User: NPC = {
     max_health: 300,
     stamina: 200,
     skill_points: {
-        strength: 2,
-        defense: 2,
-        perception: 5,
-        stamina: 2
+        strength: 20,
+        defense: 20,
+        perception: 10,
+        stamina: 2,
+        speed: 5
     },
     stand: Stands.Star_Platinum["name"],
     fight_rewards: {
@@ -102,12 +105,7 @@ export const The_World_User: NPC = {
     health: 300,
     max_health: 300,
     stamina: 200,
-    skill_points: {
-        strength: 2,
-        defense: 2,
-        perception: 2,
-        stamina: 2
-    },
+    skill_points: Star_Platinum_User.skill_points,
     fight_rewards: {
         xp: 4000,
         money: 1000
@@ -127,7 +125,8 @@ export const Weak_Bandit: NPC = {
         strength: 2,
         defense: 2,
         perception: 5,
-        stamina: 2
+        stamina: 2,
+        speed: 0
     },
     fight_rewards: {
         xp: 100,
@@ -144,10 +143,11 @@ export const Strong_Bandit: NPC = {
     max_health: 150,
     stamina: 60,
     skill_points: {
-        strength: 2,
-        defense: 2,
+        strength: 10,
+        defense: 10,
         perception: 5,
-        stamina: 2
+        stamina: 2,
+        speed: 5
     },
     fight_rewards: {
         xp: 500,
@@ -167,7 +167,8 @@ export const Bandit_Boss: NPC = {
         strength: 2,
         defense: 2,
         perception: 2,
-        stamina: 2
+        stamina: 2,
+        speed: 0
     },
     fight_rewards: {
         xp: 4000,
@@ -194,7 +195,8 @@ export const Mohammed_Avdol: NPC = {
         strength: 40,
         defense: 20,
         perception: 20,
-        stamina: 20
+        stamina: 20,
+        speed: 0
     },
     fight_rewards: {
         xp: 10000,
@@ -222,7 +224,8 @@ export const Polnareff: NPC = {
         strength: 20,
         defense: 20,
         perception: 10,
-        stamina: 20
+        stamina: 20,
+        speed: 0
     },
     fight_rewards: {
         xp: 10000,
@@ -237,15 +240,16 @@ export const Devo: NPC = {
     id: 'devo',
     name: 'Devo',
     emoji: Stands.Ebony_Devil["emoji"],
-    level: 2,
+    level: 5,
     health: 120,
     max_health: 120,
     stamina: 120,
     skill_points: {
-        strength: 2,
-        defense: 2,
+        strength: 20,
+        defense: 20,
         perception: 2,
-        stamina: 2
+        stamina: 2,
+        speed: 0
     },
     fight_rewards: {
         xp: 1000,
@@ -275,7 +279,8 @@ export const Jotaro: NPC = {
         strength: 200,
         defense: 200,
         perception: 200,
-        stamina: 200
+        stamina: 200,
+        speed: 50
     },
     fight_rewards: {
         xp: 1000000,
@@ -302,7 +307,8 @@ export const Dio: NPC = {
         strength: 200,
         defense: 200,
         perception: 200,
-        stamina: 200
+        stamina: 200,
+        speed: 50
     },
     fight_rewards: {
         xp: 100000,
@@ -329,7 +335,8 @@ export const Normal_Citizen: NPC = {
         strength: 1,
         defense: 1,
         perception: 1,
-        stamina: 1
+        stamina: 1,
+        speed: 0
     },
     fight_rewards: {
         xp: 100,
@@ -354,7 +361,8 @@ export const Police_Officer: NPC = {
         strength: 1,
         defense: 1,
         perception: 1,
-        stamina: 1
+        stamina: 1,
+        speed: 0
     },
     fight_rewards: {
         xp: 100,
@@ -379,7 +387,8 @@ export const Mysterious_Stand_User: NPC = {
         strength: 10,
         defense: 10,
         perception: 10,
-        stamina: 10
+        stamina: 10,
+        speed: 0
     },
     fight_rewards: {
         xp: 1200,
@@ -409,7 +418,8 @@ export const Pucci: NPC = {
         strength: 200,
         defense: 200,
         perception: 200,
-        stamina: 200
+        stamina: 200,
+        speed: 50
     },
     fight_rewards: {
         xp: 1000000,
@@ -430,7 +440,8 @@ export const Gray_Fly: NPC = {
         strength: 40,
         defense: 30,
         perception: 30,
-        stamina: 30
+        stamina: 30,
+        speed: 0
     },
     fight_rewards: {
         xp: 25000,
@@ -452,7 +463,8 @@ export const Rubber_Soul: NPC = {
         strength: 40,
         defense: 30,
         perception: 30,
-        stamina: 30
+        stamina: 30,
+        speed: 0
     },
     fight_rewards: {
         xp: 50000,
@@ -474,7 +486,8 @@ export const Beggar: NPC = {
         strength: 40,
         defense: 1,
         perception: 1,
-        stamina: 1
+        stamina: 1,
+        speed: 0
     },
     fight_rewards: {
         xp: 100,
@@ -508,3 +521,87 @@ export const J_Geil: NPC = {
     },
     stand: Stands.Star_Platinum["name"]
 }*/
+
+export const Spooky_Skeleton: NPC = {
+    id: 'spooky_skeleton',
+    name: 'Spooky Skeleton',
+    emoji: '💀',
+    level: 5,
+    health: 200,
+    max_health: 200,
+    stamina: 200,
+    skill_points: {
+        strength: 10,
+        defense: 10,
+        perception: 10,
+        stamina: 10,
+        speed: 0
+    },
+    fight_rewards: {
+        xp: 1000,
+        money: 1000,
+        items: [Items.Spooky_Candy]
+    },
+    dialogues: {
+        assault: "KEKEKEKEEKEKEKE",
+        lose: "Why'd you do that?",
+        win: "Beware!"
+    },
+    stand: Stands["Halloween_Spooks"]["name"]
+}
+
+export const Spooky_Zombie: NPC = {
+    id: 'spooky_zombie',
+    name: 'Spooky Zombie',
+    emoji: '🧟',
+    level: 10,
+    health: 500,
+    max_health: 500,
+    stamina: 500,
+    skill_points: {
+        strength: 20,
+        defense: 20,
+        perception: 20,
+        stamina: 20,
+        speed: 0
+    },
+    fight_rewards: {
+        xp: 2000,
+        money: 2000,
+        items: [Items.Spooky_Candy]
+    },
+    dialogues: {
+        assault: "AAAAAAAAAAAAAAAAAAAAAAAAAAA",
+        lose: "Why'd you do that?",
+        win: "Beware!"
+    },
+    stand: Stands["Halloween_Spooks"]["name"]
+}
+
+export const Spooky_Witch: NPC = {
+    id: 'spooky_witch',
+    name: 'Spooky Witch',
+    emoji: '🧙‍♀️',
+    level: 50,
+    health: 3000,
+    max_health: 3000,
+    stamina: 3000,
+    skill_points: {
+        strength: 150,
+        defense: 150,
+        perception: 150,
+        stamina: 150,
+        speed: 30
+    },
+    fight_rewards: {
+        xp: 30000,
+        money: 10000,
+        items: [Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy, Items.Spooky_Candy]
+    },
+    dialogues: {
+        assault: "I'll turn you into a frog! BEAT ME IF YOU CAN HAHAHAAHAHAA",
+        lose: "Why'd you do that?",
+        win: "Beware!"
+    },
+    stand: Stands["Halloween_Spooks"]["name"]
+}
