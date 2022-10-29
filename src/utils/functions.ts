@@ -409,7 +409,9 @@ export const RandomNPC = (level: number, onlyPublic?: boolean, noSpooky?: boolea
 export const generateDailyQuests = (level: number): Quest[] => {
     const quests: Quest[] = [Quests.ClaimDaily(1)];
 
-    for (let i = 0; i < level; i++) {
+    let mxlevel = level > 50 ? 50 : level;
+
+    for (let i = 0; i < mxlevel; i++) {
         if (RNG(80)) {
             quests.push(Quests.Defeat(RandomNPC(level, true, true)));
         }
