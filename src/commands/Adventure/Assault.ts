@@ -44,7 +44,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         npc: NPCs.Police_Officer,
         luck: 20
     }, {
-        npc: NPCs["Mysterious_Stand_User"],
+        npc: NPCs.Spooky_Witch,//NPCs["Mysterious_Stand_User"],
         luck: 10
     }, {
         npc: Util.RandomNPC(userData.level, true),
