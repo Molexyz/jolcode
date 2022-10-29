@@ -203,7 +203,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             xpRewards = Math.round(xpRewards);
             cRewards = Math.round(cRewards);
             ctx.makeMessage({
-                content: `:scroll: **__Daily Quests:__** (${(percent / userData.daily.quests.length).toFixed(2)}%)\n${content}\n<:timerIcon:944286216688369754> Resets <t:${((new Date(`${new Date().getMonth()+1}-${new Date().getDate()}-${new Date().getUTCFullYear()}`).getTime() + 86400000)/1000).toFixed(0)}:R>\n<:arrowRight:943187898495303720> You'll get **${Util.localeNumber(xpRewards)}** <:xp:925111121600454706>, **${Util.localeNumber(cRewards)}** <:jocoins:927974784187392061> and 1 **Spooky Candy** ${Emojis.spooky_candy} if you complete all your daily quests`,
+                content: `:scroll: **__Daily Quests:__** (${(percent / userData.daily.quests.length).toFixed(2)}%)\n${content}\n<:timerIcon:944286216688369754> Resets <t:${((new Date(`${new Date().getMonth()+1}-${new Date().getDate()}-${new Date().getUTCFullYear()}`).getTime() + 86400000)/1000).toFixed(0)}:R>\n<:arrowRight:943187898495303720> You'll get **${Util.localeNumber(xpRewards)}** <:xp:925111121600454706>, **${Util.localeNumber(cRewards)}** <:jocoins:927974784187392061> and 3 **Spooky Candy** ${Emojis.spooky_candy} if you complete all your daily quests`,
                 components: components
             });
             if (components.length !== 0) {
@@ -223,11 +223,13 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     userData.money += cRewards;
                     userData.xp += xpRewards;
                     userData.items.push(Items.Spooky_Candy.id);
+                    userData.items.push(Items.Spooky_Candy.id);
+                    userData.items.push(Items.Spooky_Candy.id);
                     await ctx.client.database.redis.set(`jjba:finishedQ:${userData.id}`, 'indeed');
                     ctx.client.database.saveUserData(userData);
 
                     ctx.followUp({
-                        content: `GG! You got **${Util.localeNumber(cRewards)}** <:jocoins:927974784187392061>, **${Util.localeNumber(xpRewards)}** <:xp:925111121600454706> and **1** <:spookyCandy:944286216688369754>`,
+                        content: `GG! You got **${Util.localeNumber(cRewards)}** <:jocoins:927974784187392061>, **${Util.localeNumber(xpRewards)}** <:xp:925111121600454706> and **3** <:spookyCandy:944286216688369754>`,
                     })
                 });
     
