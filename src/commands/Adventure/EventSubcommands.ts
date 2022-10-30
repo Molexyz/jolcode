@@ -175,8 +175,9 @@ ${Emojis.spooky_candy}  The only ways to get spooky candies are by: beating Spoo
                 return;
             }
 
-            const index = userData.items.findIndex(r => r === "spooky_candy");
-            userData.items.splice(index, item.price);
+            for (let i = 0; i < item.price; i++) {
+                Util.removeItem(userData.items, "spooky_candy");
+            }
             ctx.client.database.saveUserData(userData);
 
             ctx.interaction.followUp({ content: item.trigger(), ephemeral: false }).catch(() => {});
