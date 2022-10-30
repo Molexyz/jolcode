@@ -468,9 +468,11 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 turn.lastMove = "attack";
                 return `🌬️ **${input?.username}** attacked but ${beforeTurnUsername()} dodged.`;
             } else if (turn.lastMove === "defend") {
-                turn.lastMove = "attack";
+                console.log(atkcd)
+                if (atkcd === 0) turn.lastMove = "attack";
                 const then = attackShield(beforeTurn().id, input.damages);
                 if (then.left === 0) {
+                    turn.lastMove = "attack";
                     regenerateShieldToUser(beforeTurn().id);
                     removeHealthToLastGuy(input.damages * 1.75);
                     return `**${input?.username}** attacked and broke ${beforeTurnUsername()}'s guard for ${input.damages * 1.75} damages (:heart: ${beforeTurn().health}/${beforeTurn().max_health}) left).`;
@@ -602,11 +604,12 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 if (dodged && ability.dodgeable) {
                     turn.lastMove = "attack";
                     return `🌬️ **${whosTurnUsername()}** used **${userStand.name} : ${ability.name}** but ${beforeTurnUsername()} dodged.`;
-                } else if (turn.lastMove === "defend" && atkcd === 0) {
-                    turn.lastMove = "attack";
+                } else if (turn.lastMove === "defend") {
+                    if (atkcd === 0) turn.lastMove = "attack";
                     if (ability.blockable) {
                         const then = attackShield(beforeTurn().id, damage);
                         if (then.left === 0) {
+                            turn.lastMove = "attack";
                             regenerateShieldToUser(beforeTurn().id);
                             removeHealthToLastGuy(damage * 1.75);
                             return `**${whosTurnUsername()}** used **${userStand.name} : ${ability.name}** and broke ${beforeTurnUsername()}'s guard for ${damage * 1.75} damages (:heart: ${beforeTurn().health}/${beforeTurn().max_health}) left).`;

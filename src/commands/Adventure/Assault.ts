@@ -69,10 +69,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     let protectedNPC: NPC = {
         ...NPC
     }
-    protectedNPC.health += Math.round(userData.max_health / 10.5);
-    protectedNPC.max_health += Math.round(userData.max_health / 10.5);
-
- 
+     
     await ctx.defer();
     await ctx.followUp({
         content: `${NPC.dialogues?.assault ? Util.makeNPCString(NPC) + " " + NPC.dialogues.assault : `You assaulted ${Util.makeNPCString(NPC)}`}`,
