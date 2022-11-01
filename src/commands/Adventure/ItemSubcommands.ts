@@ -221,7 +221,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             if (item.type === "consumable") {
                 const changed: any = {};
                 for (let i = 0; i < quantity; i ++) {
-                    Util.removeItem(userData.items, ctx.interaction.options.data[0].options.find(r => r.name === 'item').value as string);
+                    Util.removeItem(userData.items, item.id);
                     Object.keys(item.benefits).forEach((v) => {
                         const oldValue = userData[v as keyof typeof userData];
                         // We add the value to the user data

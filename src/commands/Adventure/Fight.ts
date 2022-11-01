@@ -71,6 +71,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     });
 
     const selectMenuID = Util.generateID();
+    let fixWitch = { isbot: false, oldstrength: 0 };
 
     const user = ctx.interaction.options.getUser("user");
     if (user && user.id === userData.id) return ctx.makeMessage({
@@ -203,6 +204,8 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         if (Util.isNPC(opponent)) {
             opponent.health = 60 + Math.round(((opponent.level + opponent.skill_points.defense) * 10) + ((opponent.level + opponent.skill_points.defense) * 6 / 100) * 100);
             opponent.max_health = opponent.health;
+
+            fixWitch = { isbot: true, oldstrength: opponent.skill_points.strength };
         }
         const attackID = Util.generateID();
         const defendID = Util.generateID();
@@ -792,6 +795,9 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             }
         }
         async function end() {
+            if (fixWitch.isbot) {
+                opponent.skill_points.strength = fixWitch.oldstrength;
+            }
             console.log(`${userData.tag} ended battle against ${opponent.id}`)
             if (opponent.id !== userData.id && !Util.isNPC(opponent)) {
                 let oldOpp = opponent;
