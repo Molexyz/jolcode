@@ -196,7 +196,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         } else {
             ctx.client.database.setCooldownCache("battle", userData.id, `https://discord.com/channels/${ctx.interaction.guild.id}/${ctx.interaction.channel.id}/${ctx.interaction.id}`);
         }
-        if (Util.isNPC(opponent) && type !== "custom") {
+        if (Util.isNPC(opponent)) {
             const rawNPC = Object.keys(NPCs).map(v => NPCs[v as keyof typeof NPCs]).find(n => n.id === opponent.id) || opponent;
             opponent = {...rawNPC};
         }

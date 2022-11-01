@@ -104,6 +104,8 @@ export const execute: Event["execute"] = async (client: Client) => {
                 await client.database.redis.del(`jjba:finishedQ:${user.id}`);
                 user.daily.quests = Util.generateDailyQuests(user.level);
                 client.database.saveUserData(user);
+                await client.database.redis.del(`jjba:finishedQ:${user.id}`);
+
 
             }
             // client.database.redis.keys('*finishedQ*').then(r=>{ r.forEach(f=>client.database.redis.del(f))});

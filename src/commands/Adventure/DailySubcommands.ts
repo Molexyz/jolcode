@@ -229,7 +229,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     ctx.client.database.saveUserData(userData);
 
                     ctx.followUp({
-                        content: `GG! You got **${Util.localeNumber(cRewards)}** <:jocoins:927974784187392061>, **${Util.localeNumber(xpRewards)}** <:xp:925111121600454706> and **3** <:spookyCandy:944286216688369754>`,
+                        content: `GG! You got **${Util.localeNumber(cRewards)}** <:jocoins:927974784187392061>, **${Util.localeNumber(xpRewards)}** <:xp:925111121600454706> and **3** Spooky Candies ${Emojis.spooky_candy}`,
                     })
                 });
     
