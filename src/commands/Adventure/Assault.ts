@@ -44,17 +44,8 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         npc: NPCs.Police_Officer,
         luck: 20
     }, {
-        npc: NPCs.Spooky_Witch,//NPCs["Mysterious_Stand_User"],
-        luck: 10
-    }, {
         npc: Util.RandomNPC(userData.level, true),
         luck: 100
-    }, {
-        npc: NPCs.Spooky_Skeleton,//Util.RandomNPC(userData.level, true),
-        luck: 60
-    }, {
-        npc: NPCs.Spooky_Zombie,//NPCs.Bandit_Boss,
-        luck: 40
     }];
 
     Util.forEveryQuests(userData, (q: Quest) => q.id.startsWith("assault") && (parseInt(q.id.split(":")[1]) > q.total), (quest: Quest) => {

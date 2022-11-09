@@ -131,23 +131,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             percent: 20,
             loot: Items.Ancient_Scroll
         }]
-    }, {
-        pr: "in a",
-        name: "pumpkin",
-        emoji: "🎃",
-        loots: [{
-            percent: 10,
-            loot: Items.Mysterious_Arrow
-        }, {
-            percent: 10,
-            loot: Items.Money_Box
-        }, {
-            percent: 20,
-            loot: Items.Box
-        }, {
-            percent: 50,
-            loot: Items.Spooky_Candy
-        }]
     }];
     const shuffledLoots: Loot[] = Util.shuffle(rng);
     const choice1ID = Util.generateID();

@@ -533,13 +533,16 @@ export const Tonio_Special_Recipe: Item = {
 export const Spooky_Candy: Item = {
   id: 'spooky_candy',
   name: 'Spooky Candy',
-  description: 'A spooky candy',
+  description: 'A spooky candy... was available during the Halloween 2022 event.',
   type: 'consumable',
-  price: 17000,
+  price: 50000,
   tradable: true,
   storable: true,
   rarity: 'S',
   usable: true,
-  benefits: Candy.benefits,
+  benefits: {
+    stamina: 9 * 10^100,
+    health: 9 * 10^100
+  },
   emoji: Emojis.spooky_candy
 }
