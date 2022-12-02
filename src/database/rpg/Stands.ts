@@ -172,7 +172,6 @@ export const Hermit_Purple: Stand = {
     description: "Hermit Purple is the Stand of [Joseph Joestar](https://jojo.fandom.com/wiki/Joseph_Joestar), featured in Stardust Crusaders, and occasionally in Diamond is Unbreakable. The Hermit Hermit Purple manifests itself as multiple, purple, thorn-covered vines that spawn from its handler's hand.",
     abilities: [
         Abilities.Vine_Slap,
-        Abilities.The_Joestar_Technique,
         Abilities.OhMyGod
     ],
     color: "PURPLE",
