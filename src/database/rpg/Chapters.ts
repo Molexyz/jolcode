@@ -228,6 +228,7 @@ export const C3_P4: Chapter = {
     parent: C3_P1
 }
 
+const protectedGrayFly = { ...NPCs.Gray_Fly };
 export const C3_P5: Chapter = {
     id: 7,
     description: {
@@ -239,10 +240,12 @@ export const C3_P5: Chapter = {
     title: C3_P1.title,
     quests: [
         Quests.ClaimCoins(35_000),
-        Quests.Defeat(Util.AttributeChapterQuestToNPC(NPCs.Gray_Fly, [Quests.Drive_Airplane_To_Hongkong]))
+        Quests.Defeat(Util.AttributeChapterQuestToNPC({...protectedGrayFly}, [Quests.Drive_Airplane_To_Hongkong]))
     ],
     parent: C3_P1
 }
+
+const protectedRubberSoul = { ...NPCs.Rubber_Soul };
 export const C3_P6: Chapter = {
     id: 8,
     description: {
@@ -253,7 +256,7 @@ export const C3_P6: Chapter = {
     },
     title: C3_P1.title,
     quests: [
-        Quests.Defeat(Util.AttributeChapterQuestToNPC(NPCs.Rubber_Soul, [Quests.Throw_Rubber_Soul_Body_To_The_Sea])),
+        Quests.Defeat(Util.AttributeChapterQuestToNPC({ ...protectedRubberSoul }, [Quests.Throw_Rubber_Soul_Body_To_The_Sea])),
         Quests.ClaimCoins(35_000),
         Quests.UseLoot(5),
         Quests.Assault(10)
@@ -293,3 +296,41 @@ export const C3_P6: Chapter = {
     },
 }
 */
+
+export const C3_P7: Chapter = {
+    id: 9,
+    description: {
+        'en-US': "As you continue your journey, after you defeated Rubber Soul The User of Yellow Temperance you head to India in search of a man named Centerfold (J. Geil), the man with two right hands 🖐️. Sadly, Avdol died...",
+        'fr-FR': "En continuant votre voyage, après avoir vaincu Rubber Soul, l'utilisateur de Yellow Temperance, vous vous dirigez vers l'Inde à la recherche d'un homme nommé Centerfold, l'homme aux deux mains droites 🖐️",
+        'es-ES': "Mientras continuas tu viaje, después de haber derrotado a Rubber Soul, el usuario de Yellow Temperance, te diriges a India en busca de un hombre llamado Centerfold, el hombre con dos manos derechas 🖐️",
+        'de-DE': "Als Sie und Ihre Freunde Ihre Reise fortsetzen, nachdem Sie Rubber Soul, den Benutzer von Yellow Temperance, besiegt haben, reisen Sie nach Indien, um nach einem Mann namens Centerfold zu suchen, dem Mann mit zwei rechten Händen 🖐️"
+    },
+    title: C3_P1.title,
+    dialogues: {
+        'en-US': [ "Avdol died... He got shot by Emperor (Hol Horse's Stand)", "https://tenor.com/view/pol-lol-crying-jojos-bizarre-adventure-manga-series-gif-15636765" ],
+        'fr-FR': [ "Avdol est mort... Il a été tué par Emperor (le stand de Hol Horse)" ],
+        'es-ES': [ "Avdol murió... Fue asesinado por Emperor (el stand de Hol Horse)" ],
+        'de-DE': [ "Avdol ist gestorben... Er wurde von Emperor (Hol Horse's Stand) erschossen" ]
+    },
+    quests: [
+        Quests.Defeat(NPCs.Beggar),
+        Quests.Defeat(NPCs.Beggar),
+        Quests.Defeat(NPCs.Beggar),
+        Quests.Defeat(NPCs.Beggar),
+        Quests.Defeat(NPCs.Beggar),
+        Quests.Defeat(NPCs.J_Geil),
+        Quests.Defeat(NPCs.Hol_Horse),
+        Quests.ClaimCoins(100000),
+        Quests.ClaimDaily(1),
+        Quests.UseLoot(10),
+        Quests.Assault(10)
+
+    ],
+    parent: C3_P1,
+    tips: {
+        'en-US': 'You may need the `/action` command in order to complete some of your quests',
+        'fr-FR': 'Tu peux avoir besoin de la commande `/action` pour compléter certaines de tes quêtes',
+        'es-ES': 'Puedes necesitar la `/action` para completar algunas de tus misiones',
+        'de-DE': 'Du kannst das `/action`-Kommando benutzen, um einige deiner Aufgaben zu erfüllen'
+    },
+}

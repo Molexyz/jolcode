@@ -15,7 +15,7 @@ export const data: SlashCommand["data"] = {
     options: [
         {
             name: "user",
-            description: "The user whose profile you want to trade",
+            description: "The user you want to trade with",
             required: true,
             type: 6
         }

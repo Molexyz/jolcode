@@ -363,7 +363,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             }
 
             // attack
-            let attackAgain = true;
+            let attackAgain = false; // temp, should be true
             const beforeSp2 = Util.isNPC(before) ? before.skill_points : before.spb;
             const povSp2 = Util.isNPC(povData) ? povData.skill_points : povData.spb;
 
@@ -435,6 +435,27 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             pushTurn();
             functions.forEach(f => f());
             gameOptions.trns++;
+
+            if (opponent.id === NPCs.Hol_Horse.id) {
+                if (opponent.health === 0) opponent.health = 1;
+                if (opponent.health <= 300) {
+                    gameOptions.trns++;
+                    loadBaseEmbed();
+                    collector.stop('forfeit');
+                    ended = true;
+                    if (!user) {
+                        ctx.client.database.delCooldownCache("battle", ctx.interaction.user.id);
+                        ctx.client.database.saveUserData(userData);    
+                    }
+                    ctx.interaction.followUp({
+                        content: `${Emojis.happyjolyne}${NPCs.Hol_Horse.emoji} **HOL HORSE** was too afraid and ran away LMAO SMH`
+                    });
+                    const data = userData.chapter_quests.find(r => r.npc.id === NPCs.Hol_Horse.id);
+                    data.completed = true;
+                    data.npc.health = 0;
+                    ctx.client.database.saveUserData(userData);
+                }
+            }
             await loadBaseEmbed();
             //if (whosTurn().health <= 0) return end();
             //if (beforeTurn().health <= 0) return end();
@@ -532,7 +553,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             }
 
             // attack
-            let attackAgain = true;
+            let attackAgain = false; // temp, should be true
             const beforeSp2 = userData.spb;
             const povSp2 = povData.skill_points;
 
@@ -795,6 +816,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             }
         }
         async function end() {
+            if (opponent.id.includes(NPCs.Hol_Horse.id)) return;
             if (fixWitch.isbot) {
                 opponent.skill_points.strength = fixWitch.oldstrength;
             }
@@ -859,6 +881,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 }
                 const rewardsArr: string[] = [];
                 Object.keys(opponent.fight_rewards).map((r) => {
+                    console.log((opponent as NPC).fight_rewards, "ez")
                     if (!Util.isNPC(opponent)) return;
                     const reward = opponent.fight_rewards[r as keyof typeof opponent.fight_rewards];
                     if (typeof reward === "number") {

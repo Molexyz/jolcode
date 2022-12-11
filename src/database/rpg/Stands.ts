@@ -517,3 +517,52 @@ export const Halloween_Spooks: Stand = {
     emoji: '🎃',
     available: false
 };
+
+export const Emperor: Stand = {
+    name: "Emperor",
+    rarity: "S",
+    description: "Emperor is a gun. It is an S-tier stand because its only ability is extremely powerful and has a 2 turns cooldown.",
+    abilities: [
+        Abilities.Homing_Bullets
+    ],
+    color: 'GREY',
+    image: 'https://static.wikia.nocookie.net/jjba/images/c/c5/Emperor.png/revision/latest?cb=20140807090322',
+    skill_points: {
+        speed: 10,
+        defense: 0,
+        perception: 0,
+        stamina: 0,
+        strength: 5
+    },
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: "ok"
+    },
+    emoji: Emojis.emperor,
+    available: true
+};
+
+export const Hanged_Man: Stand = {
+    name: "Hanged Man",
+    rarity: "B",
+    description: "Hanged Man is a Stand that attacks via reflections",
+    abilities: [
+        Abilities["Light_Manifestation"],
+        Abilities.Wrist_Knives
+    ],
+    color: 'WHITE',
+    image: "http://myanimeshelf.com//upload/dynamic/2015-08/07/jjba-stardust-crusaders-hanged-man-72.png",
+    skill_points: {
+        speed: 0,
+        defense: 0,
+        perception: 0,
+        stamina: 0,
+        strength: 0
+    },
+    text: {
+        awakening_text: "[awakening in you...]",
+        awaken_text: "ok"
+    },
+    emoji: "<:hangedman:1051526743925739593>",
+    available: true
+};

@@ -156,7 +156,7 @@ export const validate = function validateQuest(quests: Quest[], id: string) {
     });
 };
 
-export const adapt = function adaptQuest(userData: UserData, UserChapter: Chapter): object {
+export const adapt = function adaptQuest(userData: UserData, UserChapter: Chapter): { [key: number]: string } {
     return {
         1: `**:trident: Chapter \`${Util.romanize(userData.chapter)}\`**: ${UserChapter.title[userData.language]}`,
         2: `**:trident: Chapter \`${Util.romanize(userData.chapter)}\`**: ${UserChapter.title[userData.language]}`,
@@ -165,7 +165,8 @@ export const adapt = function adaptQuest(userData: UserData, UserChapter: Chapte
         5: `**:trident: Chapter \`${Util.romanize(3)} - Part ${Util.romanize(3)}\`**: ${UserChapter.title[userData.language]}`,
         6: `**:trident: Chapter \`${Util.romanize(3)} - Part ${Util.romanize(4)}\`**: ${UserChapter.title[userData.language]}`,    
         7: `**:trident: Chapter \`${Util.romanize(3)} - Part ${Util.romanize(5)}\`**: ${UserChapter.title[userData.language]}`,  
-        //8: `**:trident: Chapter \`${Util.romanize(3)} - Part ${Util.romanize(6)}\`**: ${UserChapter.title[userData.language]}`,  
+        8: `**:trident: Chapter \`${Util.romanize(3)} - Part ${Util.romanize(6)}\`**: ${UserChapter.title[userData.language]}`,
+        9: `**:trident: Chapter \`${Util.romanize(3)} - Part ${Util.romanize(7)}\`**: ${UserChapter.title[userData.language]}`,
     }
 
 }

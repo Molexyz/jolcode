@@ -1,4 +1,4 @@
-import type { UserData, Quest, NPC, Stand, Item, Ability, Mail } from '../@types';
+import type { UserData, Quest, NPC, Stand, Item, Ability, Mail, SideQuest } from '../@types';
 import { Collection, MessageEmbed, MessageActionRowComponentResolvable, MessageActionRow, ColorResolvable } from 'discord.js';
 import moment from 'moment-timezone';
 import * as Items from '../database/rpg/Items';
@@ -51,7 +51,7 @@ export const romanize = function romanize(num: number) {
 
 export const getMaxXp = function getMaxXP(level: number): number {
     return (level / 5 * 1000) * 13;
-}
+} // 
 
 export const getATKDMG = function getATKDMG(userData: UserData): number {
     return Math.round(5 + Math.round((userData.spb.strength * 0.675) + ((Number(userData.level) * 1.50) + ((5 / 100) * 15)) / 2));
@@ -322,8 +322,9 @@ export const isMailArray = function isMailArray(item: any): item is Mail[] {
 }
 
 export const AttributeChapterQuestToNPC = function AttributeChapterQuestToNPC(npc: NPC, quests: Quest[]): NPC {
-    npc.fight_rewards.chapter_quests = quests;
-    return npc;
+    const protectedNPC = { ...npc };
+    protectedNPC.fight_rewards.chapter_quests = quests;
+    return { ...protectedNPC };
 }
 
 export const generateDiscordTimestamp = function generateDiscordTimestamp(date: Date | number, type: 'FROM_NOW' | 'DATE' | 'FULL_DATE'): string {
@@ -462,6 +463,12 @@ export const forEveryQuests = (userData: UserData, filter: (q: Quest) => boolean
         }
 
     }
+
+    for (const sideQuest of userData.side_quests) {
+        for (const quest of sideQuest.quests.filter(q => filter(q))) {
+            callback(quest)
+        }
+    }
     
 }
 
@@ -473,4 +480,13 @@ export const getStandDiscLimit = (ctx: InteractionCommandContext, aid?: string):
     if (tier === 2) return 15;
     if (tier === 3) return 20;
     else return Infinity;
+}
+
+export const MeetReqsForSideQuest = (sideQuest: SideQuest, userData: UserData): boolean => {
+    if (sideQuest.requirements?.money > userData.money) return false;
+    if (sideQuest.requirements?.level > userData.level) return false;
+
+    if (sideQuest.requirements?.stand && getStand(sideQuest.requirements?.stand) !== getStand(userData.stand)) return false;
+
+    return true
 }

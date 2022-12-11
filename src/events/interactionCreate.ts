@@ -1,9 +1,10 @@
-import type { Event, InteractionCommand } from '../@types';
+import type { Event, InteractionCommand, Quest } from '../@types';
 import * as Util from '../utils/functions';
 import * as Items from '../database/rpg/Items';
 import * as NPCs from '../database/rpg/NPCs';
 import * as Chapters from '../database/rpg/Chapters';
 import * as Emojis from '../emojis.json';
+import * as SideQuests from '../database/rpg/SideQuests';
 import InteractionCommandContext from '../structures/Interaction';
 import { LogWebhook } from '../structures/Webhook';
 import { ContextMenuInteraction } from 'discord.js';
@@ -42,6 +43,20 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
     if (command.category === "adventure") {
         const userData = await interaction.client.database.getUserData(interaction.user.id);
 
+        // side quests checker
+        if (userData.side_quests) {
+            const eff = userData.side_quests.length;
+
+            for (const sq of userData.side_quests) {
+                const SideQuest = Object.values(SideQuests).find(sq2 => sq2.id === sq.id);
+                if (!Util.MeetReqsForSideQuest(SideQuest, userData)) userData.side_quests = userData.side_quests.filter(sq2 => sq2.id !== sq.id);
+
+            }
+            if (eff !== userData.side_quests.length) {
+                await interaction.client.database.saveUserData(userData)
+            }
+        }
+
         if (userData && userData.skill_points.speed === undefined) userData.skill_points.speed = 0;
         if (!userData && command.name !== "adventure" && interaction.options.getSubcommand() !== "start") return interaction.reply({ content: interaction.client.translations.get("en-US")("base:NO_ADVENTURE", {
             emojis: Emojis
@@ -51,30 +66,40 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
 
         // Quests checker
         let hasChanged: boolean = false;
-        if (userData) for (let i = 0; i < userData.chapter_quests.length; i++) {
-            const quest = userData.chapter_quests[i];
-            if (quest.completed) continue;
-
-            if (quest.id.startsWith("wait")) {
-                if (quest.timeout < Date.now()) {
-                    hasChanged = true;
-                    quest.completed = true;
-                    if (quest.mails_push_timeout) {
-                        for (const mail of quest.mails_push_timeout) {
-                            userData.mails.push(mail);
-                            if (quest.mustRead) {
-                                userData.chapter_quests.push({
-                                    id: `rdem+${mail.id}`,
-                                    completed: false
-                                });
+        if (userData) {
+            function checkWait(quests: Quest[]) {
+                for (let i = 0; i < quests.length; i++) {
+                    const quest = quests[i];
+                    if (quest.completed) continue;
+        
+                    if (quest.id.startsWith("wait")) {
+                        if (quest.timeout < Date.now()) {
+                            hasChanged = true;
+                            quest.completed = true;
+                            if (quest.mails_push_timeout) {
+                                for (const mail of quest.mails_push_timeout) {
+                                    userData.mails.push(mail);
+                                    if (quest.mustRead) {
+                                        quests.push({
+                                            id: `rdem+${mail.id}`,
+                                            completed: false
+                                        });
+                                    }
+                                }
                             }
+                            quests[i] = quest;
                         }
+                        continue;
                     }
-                    userData.chapter_quests[i] = quest;
+        
                 }
-                continue;
+                return quests;
             }
-
+            userData.chapter_quests = checkWait(userData.chapter_quests);
+            
+            for (const side_quests of userData.side_quests) {
+                side_quests.quests = checkWait(side_quests.quests);
+            }
         }
         if (hasChanged) interaction.client.database.saveUserData(userData);
 

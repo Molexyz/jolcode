@@ -181,7 +181,7 @@ export const Light_Speed_Barrage: Ability = {
     name: 'Light-Speed Barrage',
     description: 'erases matter to jump on the enemies and assault them with rapid punches.',
     cooldown: 4,
-    damages: 25,
+    damages: 19,
     blockable: false,
     dodgeable: false,
     stamina: 40
@@ -191,7 +191,7 @@ export const Deadly_Erasure: Ability = {
     name: 'Deadly Erasure',
     description: 'uses their right hand to erase space and jump one you and use the effect of surprise to erase you and make you discover where thing he erase go..',
     cooldown: 10,
-    damages: 30,
+    damages: 25,
     blockable: false,
     dodgeable: false,
     stamina: 100
@@ -1420,3 +1420,28 @@ export const Dino_Morph: Ability = {
 
 }
 
+export const Homing_Bullets: Ability = {
+    name: "Homing Bullets",
+    description: "Shoots a bullet that will follow the enemy and hit him. This bullet can change its trajectory and cannot be dodged",
+    cooldown: 2,
+    damages: 13.89,
+    blockable: false,
+    dodgeable: false,
+    stamina: 30
+}
+
+export const Light_Manifestation: Ability = {
+    ...Stand_Barrage,
+    name: 'Light Manifestation',
+    description: 'strong ability too lazy to write description',
+}
+
+export const Wrist_Knives: Ability = {
+    name: 'Wrist Knives',
+    description: 'Shoots knives from your wrists. 2 knives per turn.',
+    cooldown: 6,
+    damages: 15,
+    blockable: false,
+    dodgeable: true,
+    stamina: 15
+}

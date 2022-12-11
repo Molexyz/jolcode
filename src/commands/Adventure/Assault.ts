@@ -60,6 +60,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     let protectedNPC: NPC = {
         ...NPC
     }
+
      
     await ctx.defer();
     await ctx.followUp({

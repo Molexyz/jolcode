@@ -107,11 +107,11 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         const components: MessageActionRow[] = 100 === (percent / userData.chapter_quests.length) ? [Util.actionRow([nextChapterBTN])] : [];
         if (followUp) {
             return ctx.followUp({
-                content: `${Quests.adapt(userData, UserChapter)[userData.chapter as keyof typeof Quests.adapt]}\n\`\`\`\n${UserChapter.description[userData.language]}\n\`\`\`\n\n:scroll: **__Quests:__** (${(percent / userData.chapter_quests.length).toFixed(2)}%)\n${content}`,
+                content: `${Quests.adapt(userData, UserChapter)[userData.chapter]}\n\`\`\`\n${UserChapter.description[userData.language]}\n\`\`\`\n\n:scroll: **__Quests:__** (${(percent / userData.chapter_quests.length).toFixed(2)}%)\n${content}`,
             });
         }
         ctx.makeMessage({
-            content: `${Quests.adapt(userData, UserChapter)[userData.chapter as keyof typeof Quests.adapt]}\n\`\`\`\n${UserChapter.description[userData.language]}\n\`\`\`\n\n:scroll: **__Quests:__** (${(percent / userData.chapter_quests.length).toFixed(2)}%)\n${content}`,
+            content: `${Quests.adapt(userData, UserChapter)[userData.chapter]}\n\`\`\`\n${UserChapter.description[userData.language]}\n\`\`\`\n\n:scroll: **__Quests:__** (${(percent / userData.chapter_quests.length).toFixed(2)}%)\n${content}`,
             components: components
         });
         if (components.length !== 0) {
@@ -138,7 +138,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 })
                 return collector.stop()*/
                 const currentChapter = getUserChapter();
-                if (!currentChapter || userData.chapter >= 9) { // This chapter was the last developed chapter
+                if (!currentChapter || userData.chapter >= 10) { // This chapter was the last developed chapter
                     ctx.followUp({
                         content: "This chapter is currently the last, the developers are working hard to add more chapters.",
                         ephemeral: true

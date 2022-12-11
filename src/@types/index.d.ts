@@ -2,6 +2,9 @@ import Client from "../structures/Client";
 import CommandInteractionContext from "../structures/Interaction";
 import type { CommandInteraction, Interaction, ColorResolvable, AutocompleteInteraction, Snowflake } from "discord.js";
 
+type supportedLanguages = "en-US" | "fr-FR" | "es-ES" | "de-DE";
+type i18n_key = string;
+
 /**
  * Discord Slash Command Interaction.
  */
@@ -220,7 +223,10 @@ interface UserData {
   /**
    * The user's side quests.
    */
-  side_quests: Quest[];
+  side_quests: {
+    id: string,
+    quests: Quest[]
+  }[];
   /**
    * The date when the user started their adventure.
    */
@@ -709,5 +715,22 @@ interface Languages {
     "es-ES": string | string[];
     "de-DE": string | string[];
 }
-
-type supportedLanguages = "en-US" | "fr-FR" | "es-ES" | "de-DE";
+interface SideQuest {
+  readonly id: string;
+  readonly i18n: i18n_key;
+  readonly emoji: string;
+  readonly quests: Quest[];
+  requirements?: {
+    level?: number;
+    items?: Item[];
+    money?: number;
+    stand?: string;
+    side_quests?: SideQuest[];
+  };
+  rewards: {
+    stand?: string;
+    items?: Item[];
+    money?: number;
+    xp?: number | `${number}%`;
+  };
+}

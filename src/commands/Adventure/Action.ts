@@ -26,7 +26,8 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         emoji?: Quest["emoji"]
     }> = [];
 
-    for (const quest of userData.chapter_quests.filter(q => q.id.startsWith("action") && !q.completed)) {
+    // show chapter_quests no duplicates
+    for (const quest of userData.chapter_quests.filter((v, i, a) => a.findIndex(t => (t.id === v.id)) === i).filter(q => q.id.startsWith("action") && !q.completed)) {
         const questData = Object.keys(Quests).map(v => Quests[v as keyof typeof Quests]).find(v => (v as Quest).id === quest.id) as Quest;
         options.push({
             label: ctx.translate(`quest:${quest.i18n}.TITLE`),

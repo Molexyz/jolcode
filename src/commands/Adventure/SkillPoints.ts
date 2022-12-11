@@ -51,10 +51,10 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             .setDisabled(pointsLeft <= 0 ? true : false);
         const speedButton = new MessageButton()
             .setCustomId(speedID)
-            .setLabel('Speed')
+            .setLabel('Speed [CURRENTLY BROKEN]')
             .setEmoji('➕')
             .setStyle(pointsLeft <= 0 ? "DANGER" : "SUCCESS")
-            .setDisabled(pointsLeft <= 0 ? true : false);
+            .setDisabled(true)//setDisabled(pointsLeft <= 0 ? true : false);
 
         await ctx.sendT("skill-points:BASE_MESSAGE", {
             userData: userData,

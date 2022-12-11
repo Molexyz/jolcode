@@ -61,7 +61,10 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     if (ratio === Infinity && userData.stats.rankedBattle.wins < 3) ratio = 'Not enough ranked.';
     const badges: string[] = [];
 
-    if (ctx.client.testers.find(t => t === userData.id)) badges.push(Emojis["a_"] + " Tester");
+    // copilot, do if userData.id is in guild 923608916540145694 and has role id 978041345245597818 then badges.push(Emojis["a_"] + " Tester");
+    // if (ctx.client.guilds.cache.get("923608916540145694")?.members.cache.get(userData.id)?.roles.cache.has("978041345245597818")) badges.push(Emojis["a_"] + " Tester");
+
+    //if (ctx.client.testers.find(t => t === userData.id)) badges.push(Emojis["a_"] + " Tester");
     if (ctx.client.patreons.find(t => t.id === userData.id)) badges.push(`💎 Premium (tier ${ctx.client.patreons.find(t => t.id === userData.id)?.level})`);
     if (ctx.client.boosters.find(t => t === userData.id)) badges.push(`🚀 Booster`);
     if (process.env.OWNER_IDS?.split(",").find(t => t === userData.id) || process.env.ADMIN_IDS?.split(',').find(t => t === userData.id)) badges.push("🛠️ Jolyne Staff");

@@ -500,24 +500,48 @@ export const Beggar: NPC = {
     }
 }
 
-/*
 export const J_Geil: NPC = {
     id: 'j_geil',
     name: 'J. Geil',
-    emoji: Emojis.J_Geil,
-    level: 350,
+    emoji: "<:centerfold:1051527757215047770>",
+    level: 20,
     health: 5000,
     max_health: 5000,
     stamina: 5000,
     skill_points: {
-        strength: 200,
-        defense: 200,
-        perception: 200,
-        stamina: 200
+        strength: 50,
+        defense: 20,
+        perception: 20,
+        stamina: 20,
+        speed: 0
     },
     fight_rewards: {
-        xp: 1000000,
-        money: 1000000
+        xp: 10000,
+        money: 10000
     },
-    stand: Stands.Star_Platinum["name"]
-}*/
+    stand: Stands.Hanged_Man["name"],
+    private: true
+}
+
+export const Hol_Horse: NPC = {
+    id: 'hol_horse',
+    name: 'Hol Horse',
+    emoji: Emojis.HolHorse,
+    level: 30,
+    health: 700,
+    max_health: 700,
+    stamina: 700,
+    skill_points: {
+        strength: 40,
+        defense: 30,
+        perception: 30,
+        stamina: 30,
+        speed: 0
+    },
+    fight_rewards: {
+        xp: 50000,
+        money: 20000,
+    },
+    stand: Stands.Emperor["name"],
+    private: true
+}

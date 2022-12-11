@@ -11,6 +11,30 @@ export const once: Event["once"] = true;
 
 export const execute: Event["execute"] = async (client: Client) => {
     client.user.setActivity({ name: "loading..."});
+
+    if (client.user.id === "942778655384408124") { // if is jolyne beta
+        const members = await client.guilds.cache.get("923608916540145694").members.fetch();
+        const beta_testers = members.filter(v => v.roles.cache.has("978041345245597818"));
+
+        // check if beta testers are in guild 923608916540145694
+        for (const beta_tester of beta_testers) {
+            const guild = await client.guilds.cache.get("923608916540145694").members.fetch(beta_tester[0]);
+            if (!guild) {
+                beta_tester[1].roles.remove("978041345245597818");
+            }
+        }
+
+        // fetch members in guild 965210362418982942, checks if they have role id 1028372494685577277 or 971384118560587776, if yes gives them role ID 978041345245597818 in guild id 923608916540145694
+        const members2 = await client.guilds.cache.get("965210362418982942").members.fetch();
+        const beta_testers2 = members2.filter(v => v.roles.cache.has("1028372494685577277") || v.roles.cache.has("971384118560587776"));
+        // give beta testers2 role id 978041345245597818 in guild id 923608916540145694
+        for (const beta_tester of beta_testers2) {
+            const guild = await client.guilds.cache.get("923608916540145694").members.fetch(beta_tester[0]);
+            if (guild) {
+                guild.roles.add("978041345245597818");
+            }
+        }
+    }
     
     const lastCommands = await client.database.redis.client.get("jolyne:commands");
     const lastPrivateCommands = await client.database.redis.client.get("jolyne:private_commands");
@@ -25,6 +49,7 @@ export const execute: Event["execute"] = async (client: Client) => {
         const testers = (await testerMembers).filter(v => v.roles.cache.has(process.env.TESTER_ROLE_ID));
         client.testers = testers.map(v => v.id);
     }
+
 
     if (supportMembers) {
         const patreons = (await supportMembers).filter((m) => m.roles.cache.has(process.env.PATREON_ROLE_ID));
@@ -145,7 +170,6 @@ export const execute: Event["execute"] = async (client: Client) => {
                 await client.database.saveUserData(userData);
                 console.log(`[REDIS] Updated ${user} speed skill points to 0`);
             }
-        }*/
-    
+        }*/    
     
 };
