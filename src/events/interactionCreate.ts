@@ -44,7 +44,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
         const userData = await interaction.client.database.getUserData(interaction.user.id);
 
         // side quests checker
-        if (userData.side_quests) {
+        if (command.name !== "adventure" && userData?.side_quests) {
             const eff = userData.side_quests.length;
 
             for (const sq of userData.side_quests) {
