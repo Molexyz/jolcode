@@ -52,6 +52,7 @@ export default (client: JolyneClient) => {
         await client.database.redis.set(`jjba:voteCount:${vote.user}`, String(count));
         userData.xp += rewards.xp;
         userData.money += rewards.money
+        userData.items.push("candy_cane");userData.items.push("candy_cane");userData.items.push("candy_cane");userData.items.push("candy_cane");userData.items.push("candy_cane");
         client.database.saveUserData(userData);
     
     }));

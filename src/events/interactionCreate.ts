@@ -14,6 +14,7 @@ export const name: Event["name"] = "interactionCreate";
 export const execute: Event["execute"] = async (interaction: InteractionCommand) => {
     if (!interaction.isCommand()) return;
     if (!interaction.client._ready) return interaction.reply({ content: "Hey, I'm still loading. Try again once my status is set to 'Watching **The Way To Heaven**'"});
+    if (!interaction.guild) return interaction.reply({ content: "You can't use commands in DMs.", ephemeral: true });
 
     const command = interaction.client.commands.get(interaction.commandName);
     if (!command) return;
@@ -148,7 +149,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
             rewards.money = Math.round(rewards.money / 4.5);
             rewards.xp = Math.round(rewards.money / 2);
         
-            let content = `:up: | <@${interaction.user.id}>, thanks for voting ! You got **${Util.localeNumber(rewards.xp)}** <:xp:925111121600454706>, **${Util.localeNumber(rewards.money)}** <:jocoins:927974784187392061> !`;
+            let content = `:up: | <@${interaction.user.id}>, thanks for voting ! You got **${Util.localeNumber(rewards.xp)}** <:xp:925111121600454706>, **${Util.localeNumber(rewards.money)}** <:jocoins:927974784187392061> AND **5 CANDY CANES** ${Items.Candy_Cane.emoji} !`;
             const got_myst = await interaction.client.database.redis.get(`jjba:voteTold:${interaction.user.id}`);
             if (got_myst === "m") {
                 content.replace("4187392061> !", "4187392061>")

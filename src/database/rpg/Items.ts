@@ -331,6 +331,18 @@ const UseBox = async (ctx: CommandInteractionContext, userData: UserData, box: s
     for (let i = 0; i < Util.getRandomInt(5, 15); i++) win.push(Util.randomArray(Object.keys(Items).filter(v => Items[v as keyof typeof Items].name === "Candy Cane")));
     for (let i = 0; i < Util.getRandomInt(5, 15); i++) win.push(Util.randomArray(Object.keys(Items).filter(v => Items[v as keyof typeof Items].id === "mysterious_arrow")));
 
+  } else if (box === "Patron Box") {
+    superator = "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
+    emoji = {
+      shaking: Emojis.patronbox_shake,
+      emoji: Emojis.patronbox
+    }
+    const s_tier_stand_discs = Object.keys(Items).filter(v => Items[v as keyof typeof Items].type === 'disc' && Items[v as keyof typeof Items].rarity === "S" && Util.getStand(Items[v as keyof typeof Items].name.replace(" Disc", "")).available);
+    for (let i = 0; i < 30; i++) win.push("mysterious_arrow");
+    for (let i = 0; i < 1; i++) win.push(Util.randomArray(s_tier_stand_discs));
+    win.push("sup");
+    win.push("coins:100000");
+    win.push(`xp:${Util.getMaxXp(userData.level) - userData.xp + (Util.getMaxXp(userData.level) * 4)}`);
   } else {
     emoji = {
       shaking: Emojis.box_shaking,
@@ -338,6 +350,7 @@ const UseBox = async (ctx: CommandInteractionContext, userData: UserData, box: s
     }
     win.push(`coins:${Util.getRandomInt(500, 3000)}`)
     win.push(`xp:${Util.getRandomInt(50, 400)}`);
+    win.push("sup");
     for (let i = 0; i < 10; i++) {
       if (Util.randomArray([true, false])) {
           win.push(Util.randomArray(common_items))
@@ -383,7 +396,6 @@ const UseBox = async (ctx: CommandInteractionContext, userData: UserData, box: s
       } else if (i.startsWith("xp")) {
         const xp = parseInt(i.split(":")[1]);
         userData.xp += xp;
-        win_content+=superator+"\n";
       }
     }
   }
@@ -603,3 +615,22 @@ export const Christmas_Gift: Item = {
     return response;
   }
 }
+
+export const Patron_Box: Item = {
+  id: "patron_box",
+  name: "Patron Box",
+  description: "A box for patrons",
+  rarity: 'S',
+  type: "box",
+  price: 5000,
+  tradable: true,
+  storable: true,
+  usable: true,
+  emoji: Emojis.patronbox,
+  use: async (ctx: CommandInteractionContext, userData: UserData, skip?: boolean, left?: number) => {
+    const response: boolean = await UseBox(ctx, userData, 'Patron Box', skip, left);
+    return response;
+  }
+}
+
+

@@ -12,6 +12,19 @@ import * as Items from './database/rpg/Items';
 import * as Emojis from './emojis.json';
 import * as Util from './utils/functions';
 
+const http = require('http').createServer();
+const io = require('socket.io')(http, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+        transports: ["websocket", "polling"],
+        credentials: true
+    },
+    allowEIO3: true
+});
+
+
+
 // Import types
 import type { SlashCommand, Event } from './@types';
 const intents = [
@@ -48,6 +61,11 @@ const client = new JolyneClient({
         UserManager: Infinity, // client.users
         VoiceStateManager: 0 // guild.voiceStates
     }),
+});
+
+http.listen(5000, () => {
+    client.log('Socket.io listening on port 5000');
+    client.io = io;
 });
 
 async function init() {

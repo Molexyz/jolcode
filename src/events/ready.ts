@@ -3,7 +3,10 @@ import Client from '../structures/Client';
 import { Routes } from 'discord-api-types/v9'
 import { CronJob } from 'cron';
 import * as Util from '../utils/functions';
+import io from 'socket.io';
 import TopGG from '../utils/TopGGAPI'
+import * as Items from '../database/rpg/Items';
+import { Mysterious_Arrow } from '../database/rpg/Items';
 
 
 export const name: Event["name"] = "ready";
@@ -11,6 +14,26 @@ export const once: Event["once"] = true;
 
 export const execute: Event["execute"] = async (client: Client) => {
     client.user.setActivity({ name: "loading..."});
+
+    // socket.io
+    client.io.on("connection", (socket: any) => {
+        socket.on("shards", () => {
+            let shards: any = []
+            const update_shards = () => {
+                for (let i = 0; i < 10; i++) {
+                    shards[i] = {
+                        id: i,
+                        status: Math.random() > 0.1 ? "online" : "offline",
+                        mrg: "ff"
+                    }
+                }
+            }
+    
+            update_shards()
+            socket.emit("shards", shards)
+        })
+    });
+        
 
     if (client.user.id === "942778655384408124") { // if is jolyne beta
         const members = await client.guilds.cache.get("923608916540145694").members.fetch();
@@ -41,7 +64,9 @@ export const execute: Event["execute"] = async (client: Client) => {
     const commandsData = client.commands.filter(v => !v.isPrivate).map((v) => v.data);
     const privateCommandsData = client.commands.filter(v => v.isPrivate).map((v) => v.data);
 
-    // fetch patreons
+
+    async function fetchTestersBoostersAndPatreons() {
+            // fetch testers & patreons
     const supportMembers = client.guilds.cache.get(process.env.SUPPORT_SERVER_ID)?.members.fetch();
     const testerMembers = client.guilds.cache.get(process.env.TESTER_SERVER_ID)?.members.fetch();
 
@@ -69,6 +94,108 @@ export const execute: Event["execute"] = async (client: Client) => {
         console.log(`[Boosters] Fetched ${boosters.size} boosters`, boostersArray);
         // JSON.parse(await client.database.redis.get("jolyne:patreons"));
     }
+    }
+
+    function getPatronReward(level: number) {
+        if (level === 1) return [ Items.Patron_Box ]
+        else if (level === 2) return [ Items.Patron_Box, Items.Patron_Box ]
+        else if (level === 3) return [ Items.Patron_Box, Items.Patron_Box, Items.Patron_Box, Items.Patron_Box, Items.Patron_Box ]
+        else return [ Items.Patron_Box, Items.Patron_Box, Items.Patron_Box, Items.Patron_Box, Items.Patron_Box, Items.Patron_Box, Items.Patron_Box ]
+    }
+
+    fetchTestersBoostersAndPatreons();
+    setInterval(fetchTestersBoostersAndPatreons, 1000 * 60 * 30);
+
+    client.on("guildMemberUpdate", async (oldMember, newMember) => {
+        if (oldMember.guild.id !== "923608916540145694") return;
+
+        let oldRoleIDs = [];
+        oldMember.roles.cache.each(role => {
+            oldRoleIDs.push(role.id);
+        });
+
+        let newRoleIDs = [];
+        newMember.roles.cache.each(role => {
+            newRoleIDs.push(role.id);
+        });
+        
+        if (newRoleIDs.length !== oldRoleIDs.length) {
+            const oldBoosters = client.boosters;
+            const oldPatrons = client.patreons;
+            await fetchTestersBoostersAndPatreons();
+
+            // check who is a new booster
+            const newBooster = client.boosters.filter(v => !oldBoosters.includes(v));
+            const newPatron = client.patreons.filter(v => !oldPatrons.find(x => x.id === v.id));
+            newPatron.push(...oldPatrons.filter(v => v.level !== client.patreons.find(x => x.id === v.id).level))
+            for (const booster of newBooster) {
+                const data = await client.database.getUserData(booster);
+                if (!data) continue;
+
+                for (let i = 0; i < 30; i++) data.items.push(Mysterious_Arrow.id);
+                await client.database.saveUserData(data);
+
+                client.users.fetch(booster).then(async (user) => {
+                    user.send({
+                        content: ":heart: Thank you for boosting my support server! You have been given 30 Mysterious Arrows and you'll get 30 Mysterious Arrows every months (if you're still boosting).",
+                    }).catch(() => {});
+                });
+            }
+            for (let patron of newPatron) {
+                patron = client.patreons.find(v => v.id === patron.id);
+                if (!patron) continue;
+                const data = await client.database.getUserData(patron.id);
+                if (!data) continue;
+
+                for (let i = 0; i < 30; i++) data.items.push(Mysterious_Arrow.id);
+                for (const item of getPatronReward(patron.level)) data.items.push(item.id);
+                await client.database.saveUserData(data);
+
+                client.users.fetch(patron.id).then(async (user) => {
+                    user.send({
+                        content: `:heart: Thank you for supporting me on Patreon! You have been given 30 Mysterious Arrows and ${getPatronReward(patron.level).map(v => v.name).join(", ")} and you'll get 30 Mysterious Arrows and ${getPatronReward(patron.level).map(v => v.name).join(", ")} every months (if you're still supporting me).`,
+                    }).catch(() => {});
+                });
+
+            }
+
+        }
+    });
+
+    const job2 = new CronJob('0 0 0 * * *', async () => {
+        const boosters = client.boosters;
+        const patreons = client.patreons;
+
+        for (const booster of boosters) {
+            const data = await client.database.getUserData(booster);
+            if (!data) continue;
+
+            for (let i = 0; i < 30; i++) data.items.push(Mysterious_Arrow.id);
+            await client.database.saveUserData(data);
+
+            client.users.fetch(booster).then(async (user) => {
+                user.send({
+                    content: ":heart: [MONTHY REWARDS] Thank you for boosting my support server! You have been given 30 Mysterious Arrows and you'll get 30 Mysterious Arrows every months (if you're still boosting).",
+                }).catch(() => {});
+            });
+        }
+        for (const patron of patreons) {
+            const data = await client.database.getUserData(patron.id);
+            if (!data) continue;
+
+            for (let i = 0; i < 30; i++) data.items.push(Mysterious_Arrow.id);
+            for (const item of getPatronReward(patron.level)) data.items.push(item.id);
+            await client.database.saveUserData(data);
+
+            client.users.fetch(patron.id).then(async (user) => {
+                user.send({
+                    content: `:heart: [MONTHY REWARDS] Thank you for supporting me on Patreon!!!! You have been given 30 Mysterious Arrows and ${getPatronReward(patron.level).map(v => v.name).join(", ")} and you'll get 30 Mysterious Arrows and ${getPatronReward(patron.level).map(v => v.name).join(", ")} every months (if you're still supporting me).`,
+                }).catch(() => {});
+            });
+
+        }
+    }, null, true, 'Europe/Paris');
+    job2.start();
 
     if (JSON.stringify(commandsData) !== lastCommands) {
         client.log('Slash commands has changed. Loading...', 'cmd');

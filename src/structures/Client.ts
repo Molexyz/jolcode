@@ -5,6 +5,7 @@ import emojis from '../emojis.json';
 import log from '../utils/logger';
 import database from '../database';
 import Cluster from 'discord-hybrid-sharding';
+import io from 'socket.io';
 
 export default class Jolyne extends Client {
     _ready: boolean;
@@ -20,7 +21,8 @@ export default class Jolyne extends Client {
     patreons: { id: string, level: number }[] = [];
     boosters: string[] = [];
     testers: string[] = [];
-
+    io: io.Server;
+    
     constructor(options?: ClientOptions) {
       super(options);
       this._ready = false;

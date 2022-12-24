@@ -98,6 +98,8 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         Util.forEveryQuests(userData, (q: Quest) => q.id.startsWith("cdaily") && (parseInt(q.id.split(":")[1]) > q.total), (quest: Quest) => {
             quest.total++;
         });
+        userData.items.push(Items.Candy_Cane.id);
+        userData.items.push(Items.Candy_Cane.id);        
         await ctx.client.database.saveUserData(userData);
         await ctx.interaction.reply({ embeds: [embed] });
     } else {
@@ -198,7 +200,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             xpRewards = Math.round(xpRewards);
             cRewards = Math.round(cRewards);
             ctx.makeMessage({
-                content: `:scroll: **__Daily Quests:__** (${(percent / userData.daily.quests.length).toFixed(2)}%)\n${content}\n<:timerIcon:944286216688369754> Resets <t:${((new Date(`${new Date().getMonth()+1}-${new Date().getDate()}-${new Date().getUTCFullYear()}`).getTime() + 86400000)/1000).toFixed(0)}:R>\n<:arrowRight:943187898495303720> You'll get **${Util.localeNumber(xpRewards)}** <:xp:925111121600454706> and **${Util.localeNumber(cRewards)}** <:jocoins:927974784187392061> if you complete all your daily quests`,
+                content: `:scroll: **__Daily Quests:__** (${(percent / userData.daily.quests.length).toFixed(2)}%)\n${content}\n<:timerIcon:944286216688369754> Resets <t:${((new Date(`${new Date().getMonth()+1}-${new Date().getDate()}-${new Date().getUTCFullYear()}`).getTime() + 86400000)/1000).toFixed(0)}:R>\n<:arrowRight:943187898495303720> You'll get **${Util.localeNumber(xpRewards)}** <:xp:925111121600454706>, **${Util.localeNumber(cRewards)}** <:jocoins:927974784187392061> and **2 Candy Canes** ${Items.Candy_Cane.emoji} if you complete all your daily quests`,
                 components: components
             });
             if (components.length !== 0) {
@@ -217,6 +219,8 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     if (await ctx.client.database.redis.get(`jjba:finishedQ:${userData.id}`)) return;
                     userData.money += cRewards;
                     userData.xp += xpRewards;
+                    userData.items.push(Items.Candy_Cane.id);
+                    userData.items.push(Items.Candy_Cane.id);
                     await ctx.client.database.redis.set(`jjba:finishedQ:${userData.id}`, 'indeed');
                     ctx.client.database.saveUserData(userData);
 

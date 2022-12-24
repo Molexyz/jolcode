@@ -106,8 +106,8 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         for (let i = 0; i < 30; i++) trades[3].give.push(Items.Candy_Cane);
         for (let i = 0; i < 10; i++) trades[3].give.push(Items.Mysterious_Arrow);
 
-        for (let i = 0; i < 50; i++) trades[5].give.push(Items.Candy_Cane);
-        for (let i = 0; i < 50; i++) trades[5].give.push(Items.Mysterious_Arrow);
+        for (let i = 0; i < 350; i++) trades[5].give.push(Items.Candy_Cane);
+        for (let i = 0; i < 250; i++) trades[5].give.push(Items.Mysterious_Arrow);
 
         userData.items = userData.items.map(v => Util.getItem(v)?.id  || v);
 
