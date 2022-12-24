@@ -5,6 +5,8 @@ import * as Stands from '../../database/rpg/Stands';
 import * as Util from '../../utils/functions';
 import * as Emojis from '../../emojis.json';
 import * as Items from '../../database/rpg/Items';
+import * as NPCs from '../../database/rpg/NPCs';
+import * as Mails from '../../database/rpg/Mails';
 
 export const name: SlashCommand["name"] = "e-mails";
 export const category: SlashCommand["category"] = "adventure";
@@ -71,19 +73,31 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             const mail = userData.mails.find(m => m.id === currentMail);
             if (!mail) return collector.stop();
             if (i.customId === deleteID) {
-                userData.mails = userData.mails.filter(m => m.id !== currentMail);
-                ctx.interaction.followUp({
-                    content: `🗑️ | The email from **${mail.author.name}** (${mail.author.email}) has been deleted.`,
-                })
-            } else if (i.customId === actionID) {
-                for (let i = 0; i < userData.mails.length; i++) {
-                    if (userData.mails[i].id === currentMail) {
-                        userData.mails[i].archived = !userData.mails[i].archived;
-                    }
+                if (mail.id === Mails.CHRISTMAS_2022.id) {
+                    ctx.interaction.followUp({
+                        content: "🎄 | You can" + "n't do that.",
+                    });
+                } else {
+                    userData.mails = userData.mails.filter(m => m.id !== currentMail);
+                    ctx.interaction.followUp({
+                        content: `🗑️ | The email from **${mail.author.name}** (${mail.author.email}) has been deleted.`,
+                    });    
                 }
-                ctx.interaction.followUp({
-                    content: `${!mail.archived ? "📤" : "📥"} | The email from **${mail.author.name}** (${mail.author.email}) has been ${mail.archived ? "archived" : "unarchived"}.`,
-                });
+            } else if (i.customId === actionID) {
+                if (mail.id === Mails.CHRISTMAS_2022.id) {
+                    ctx.interaction.followUp({
+                        content: "🎄 | You can" + "n't do that.",
+                    });
+                } else {
+                    for (let i = 0; i < userData.mails.length; i++) {
+                        if (userData.mails[i].id === currentMail) {
+                            userData.mails[i].archived = !userData.mails[i].archived;
+                        }
+                    }
+                    ctx.interaction.followUp({
+                        content: `${!mail.archived ? "📤" : "📥"} | The email from **${mail.author.name}** (${mail.author.email}) has been ${mail.archived ? "archived" : "unarchived"}.`,
+                    });    
+                }
             }
             ctx.client.database.saveUserData(userData);
             menuEmbed();
@@ -102,7 +116,13 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         mailsSelection.options = [];
         const mails = [...new Set(userData.mails.filter(mail => mail.archived === showOnlyArchived))];
         const fields: { name: string, value: string, inline?: boolean }[] = [];
+
         for (const mail of mails) {
+            const realMail = Object.values(Mails).find(m => m.id === mail.id);
+
+            if (realMail.author) {
+                mail.author = Object.values(NPCs).find(e => e.name === realMail.author.name) ?? realMail.author;
+            }
             fields.push({
                 name: (mail.emoji ?? mail.author.emoji) + " | " + mail.object,
                 value: `<:reply:936903236395360256> From: \`${mail.author.name} (${mail.author.email ?? "Anonymous"})\`\n<:replyEnd:936903465941217301> Date: \`${Util.formatDate(mail.date)}\` (<t:${(mail.date / 1000).toFixed(0)}:R>)`
@@ -128,6 +148,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
 
     }
     function showMail(mail: Mail) {
+        const realMail = Object.values(Mails).find(m => m.id === mail.id);
         currentMail = mail.id;
         const fields: { name: string, value: string, inline?: boolean }[] = [];
         let saveData: boolean = false;
@@ -147,13 +168,13 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 money: Emojis.jocoins,
                 xp: Emojis.xp
             }
-            Object.keys(mail.prize).forEach((key) => {
-                if (typeof mail.prize[key as keyof typeof mail.prize] === "number") {
+            Object.keys(realMail.prize).forEach((key) => {
+                if (typeof realMail.prize[key as keyof typeof realMail.prize] === "number") {
                     // @ts-expect-error
-                    userData[key as keyof typeof userData] += mail.prize[key as keyof typeof mail.prize];
-                    prize.push(`${Util.localeNumber((mail.prize[key as keyof typeof mail.prize]) as number)} ${emoji[key as keyof typeof emoji]} `);
+                    userData[key as keyof typeof userData] += realMail.prize[key as keyof typeof mail.prize];
+                    prize.push(`${Util.localeNumber((realMail.prize[key as keyof typeof realMail.prize]) as number)} ${emoji[key as keyof typeof emoji]} `);
                 } else if (key === "items") { // prize is item
-                    for (const item of mail.prize.items) {
+                    for (const item of realMail.prize.items) {
                         userData.items.push(item.id);
                         prize.push(`${item.name} ${item.emoji}`);
                     }
@@ -170,7 +191,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         if (mail.chapter_quests) {
             fields.push({
                 name: ":scroll: Chapter quests",
-                value: `${mail.chapter_quests.map(quest => {
+                value: `${realMail.chapter_quests.map(quest => {
                     let bar = ctx.translate(`quest:${quest.i18n}.DESCRIPTION`, {
                         cc: Util.localeNumber(Number(quest.id.split(":")[1])),
                         s: Util.s(Number(quest.id.split(":")[1]))
@@ -181,7 +202,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     return bar;
                 }).join("\n")}`
             });
-            for (const quest of mail.chapter_quests) {
+            for (const quest of realMail.chapter_quests) {
                 userData.chapter_quests.push(quest)
             }
             mail.chapter_quests = null;
@@ -202,13 +223,13 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 Util.actionRow([ goBackBTN ])
             ],
             embeds: [{
-                title: mail.object,
+                title: realMail.object,
                 fields: fields,
-                image: { url: mail.image },
+                image: { url: realMail.image },
                 color: "#70926c",
-                description: `<:reply:936903236395360256> From: \`${mail.author.name} (${mail.author.email})\`\n<:replyEnd:936903465941217301> Date: \`${Util.formatDate(mail.date)}\`\n\n${mail.content.replace(/{{userName}}/gi, ctx.interaction.user.username)}`,
+                description: `<:reply:936903236395360256> From: \`${realMail.author.name} (${realMail.author.email})\`\n<:replyEnd:936903465941217301> Date: \`${Util.formatDate(mail.date)}\`\n\n${realMail.content.replace(/{{userName}}/gi, ctx.interaction.user.username)}`,
                 footer: {
-                    text: mail.footer
+                    text: realMail.footer
                 }
             }]
         });

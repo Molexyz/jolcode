@@ -132,3 +132,38 @@ Well, at least you're okay. We have to do something as soon as possible, humanit
     footer: "DONT DIE!!!!",
     chapter_quests: [Go_To_Airport]
 }
+
+export const CHRISTMAS_2022: Mail = {
+    author: NPCs.Santa_Claus,
+    id: "christmas:2022",
+    object: "🦌 Ho ho ho...",
+    content: `As I was getting ready to come to Morioh and distribute gifts to all the inhabitants, someone stole all my Candy Canes and threw them everywhere. Please bring me back my Candy Canes and I'll give you some rewards in exchange! Without my Candy Canes, my reindeer will refuse to fly, so I won't be able to give you presents on Christmas Eve. I ask all of you, inhabitants of Morioh, to help me find all my Candy Canes and eventually beat my brother, Liam O'Platinum, who stole all my Candy Canes
+Use the \`/event trade\` command to trade your Candy Canes with me.
+
+*Event ends <t:1672527600:R>*`,
+    archived: false,
+    date: Date.now(),
+    footer: "Merry Christmas!",
+    prize: {
+        items: [
+            Items.Candy_Cane,
+            Items.Candy_Cane
+        ]
+    },
+    image: "https://cdn.discordapp.com/attachments/1026886547460591647/1055878867572760626/Napalm_Christmas_Time_ZA_WARUDO_c48342ea-e045-4a08-8070-96947caed9ed.png"
+}
+
+export const MERRY_CHRISTMAS_2022: Mail = {
+    author: NPCs.Santa_Claus,
+    id: "merry_christmas:2022",
+    object: "🦌 Merry Christmas!",
+    content: `Thank you for helping me find my Candy Canes! I got enough to make my reindeer fly again. Here are your rewards, I hope you like them!`,
+    archived: false,
+    date: 1671922800000,
+    footer: "Merry Christmas!",
+    prize: {
+        items: [
+            Items.Christmas_Gift
+        ]
+    },
+}

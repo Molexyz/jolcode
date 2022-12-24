@@ -476,7 +476,7 @@ interface Item {
   /**
    * The item's rarity
    */
-  readonly rarity?: "C" | "B" | "A" | "S" | "SS";
+  readonly rarity?: "C" | "B" | "A" | "S" | "SS" | "T";
   /**
    * The item's type.
    */
@@ -575,7 +575,7 @@ interface Mail {
   /**
    * The mail's author
    */
-  readonly author: NPC;
+  author: NPC;
   /**
    * The mail's obejct.
    */
@@ -640,7 +640,7 @@ interface NPC {
    * @type {number}
    * @memberof Quest
    */
-  readonly level?: number;
+  level?: number;
   /**
    * The NPC's max health.
    * @type {number}
@@ -658,7 +658,7 @@ interface NPC {
    * @memberof Quest
    * @readonly
    */
-  readonly skill_points?: SkillPoints;
+  skill_points?: SkillPoints;
   /**
    * The NPC's stand.
    * @type {string}

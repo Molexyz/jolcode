@@ -31,7 +31,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     const rng: {
         npc: NPC,
         luck: number
-    }[] = [{
+    }[] = /*[{
         npc: NPCs.Jotaro,
         luck: 0.25
     }, {
@@ -46,6 +46,19 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     }, {
         npc: Util.RandomNPC(userData.level, true),
         luck: 100
+    }];*/
+    [{
+        npc: NPCs.Liam_OPlatinum,
+        luck: 7
+    }, {
+        npc: NPCs.Liam_OPlatinum_Elf,
+        luck: 20
+    }, {
+        npc: NPCs.Liam_OPlatinum_Goblin,
+        luck: 40
+    }, {
+        npc: Util.RandomNPC(userData.level, true),
+        luck: 100
     }];
 
     Util.forEveryQuests(userData, (q: Quest) => q.id.startsWith("assault") && (parseInt(q.id.split(":")[1]) > q.total), (quest: Quest) => {
@@ -55,12 +68,11 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     await ctx.client.database.saveUserData(userData);
 
     const luck = Util.getRandomInt(1, 10000);
-    const NPC =  rng.filter(l => (l.luck * 100) >= luck).sort((a, b) => a.luck - b.luck)[0].npc;
+    const NPC = rng.filter(l => (l.luck * 100) >= luck).sort((a, b) => a.luck - b.luck)[0].npc;
 
     let protectedNPC: NPC = {
         ...NPC
     }
-
      
     await ctx.defer();
     await ctx.followUp({

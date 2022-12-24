@@ -319,6 +319,18 @@ const UseBox = async (ctx: CommandInteractionContext, userData: UserData, box: s
       shaking: "<a:money_box_shaking:962388845540823100>",
       emoji: Emojis.moneyBox
     }
+  } else if (box === 'Christmas Gift') {
+    superator = "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬";
+    emoji = {
+      shaking: "<a:xmasgift_shake:1055916746613211216>",
+      emoji: "<:xmasgift:1055916688568229938>"
+    }
+    const disc_items = Object.keys(Items).filter(v => Items[v as keyof typeof Items].type === 'disc' && Items[v as keyof typeof Items].rarity !== "T" && Util.getStand(Items[v as keyof typeof Items].name.replace(" Disc", "")).available);
+    for (let i = 0; i < Util.getRandomInt(2, 5); i++) win.push(Util.randomArray(disc_items));
+    win.push("sup"); // superator
+    for (let i = 0; i < Util.getRandomInt(5, 15); i++) win.push(Util.randomArray(Object.keys(Items).filter(v => Items[v as keyof typeof Items].name === "Candy Cane")));
+    for (let i = 0; i < Util.getRandomInt(5, 15); i++) win.push(Util.randomArray(Object.keys(Items).filter(v => Items[v as keyof typeof Items].id === "mysterious_arrow")));
+
   } else {
     emoji = {
       shaking: Emojis.box_shaking,
@@ -350,23 +362,32 @@ const UseBox = async (ctx: CommandInteractionContext, userData: UserData, box: s
 
   }
   const unitems = [...new Set(win)];
-  for (let i = 0; i < unitems.length; i++) {
-      const item_value = win[i];
-      if (!item_value.startsWith("xp") && !item_value.startsWith("coins")) {
-          const item = Items[item_value as keyof typeof Items];
-          if (item && !win_content.includes(item.name)) {
-              win_content += `+ **${win.filter(r => r === item_value).length}** ${item.emoji} ${item.name}\n`;
-              for (let i = 0; i < win.filter(r => r === item_value).length; i ++) userData.items.push(item_value);
-          }
-      } else {
-          let togive: string = item_value.startsWith("xp") ? "xp" : "coins";
-          let emoji = item_value.startsWith("xp") ? Emojis.xp : Emojis.jocoins;
-          win_content += `+ **${Util.localeNumber(Number(item_value.split(":")[1]))}** ${emoji} ${item_value.split(":")[0].toUpperCase().replace("COINS", "coins")}\n`;
-          if (emoji === Emojis.xp) win_content+=superator+"\n";
-          // @ts-expect-error
-          userData[togive.replace('coins', 'money') as keyof typeof userData] = Number(item_value.split(":")[1]) + Number(userData[togive.replace('coins', 'money') as keyof typeof userData]);
+  for (const i of unitems) {
+    if (i === "sup") win_content+=superator+"\n";
+    else if (Util.getItem(i)) { 
+      const item = Util.getItem(i);
+      if (item && !win_content.includes(item.name)) {
+        win_content += `+ **${win.filter(r => r === i).length}** ${item.emoji} ${item.name}\n`;
+        for (let i = 0; i < win.filter(r => r === i).length; i++) {
+          userData.items.push(item.id);
+        }
       }
+
+    } else {
+      let emoji = i.startsWith("xp") ? Emojis.xp : Emojis.jocoins;
+      win_content += `+ **${Util.localeNumber(Number(i.split(":")[1]))}** ${emoji} ${i.split(":")[0].toUpperCase().replace("COINS", "coins")}\n`;
+
+      if (i.startsWith("coins")) {
+        const coins = parseInt(i.split(":")[1]);
+        userData.money += coins;
+      } else if (i.startsWith("xp")) {
+        const xp = parseInt(i.split(":")[1]);
+        userData.xp += xp;
+        win_content+=superator+"\n";
+      }
+    }
   }
+  if (win_content.length === 0) win_content = "Nothing";
   await ctx.makeMessage({ content: `${emoji.shaking} Your ${box.split("_").map(v => Util.capitalize(v)).join(" ")} is shaking...`, components: [] });
   await Util.wait(3000);
   let content = `▬▬▬▬▬「${emoji.emoji} **${box.split("_").map(v => v.toUpperCase()).join(" ")}**」▬▬▬▬▬▬\n`;
@@ -541,8 +562,42 @@ export const Spooky_Candy: Item = {
   rarity: 'S',
   usable: true,
   benefits: {
-    stamina: 9 * 10^100,
-    health: 9 * 10^100
+    stamina: 9 * 10**100,
+    health: 9 * 10**100
   },
   emoji: Emojis.spooky_candy
+}
+
+export const Candy_Cane: Item = {
+  id: 'candy_cane',
+  name: 'Candy Cane',
+  description: 'A candy cane... was available during the Christmas 2022 event.',
+  type: 'consumable',
+  price: 50000,
+  tradable: true,
+  storable: true,
+  rarity: 'S',
+  usable: true,
+  benefits: {
+    stamina: 9 * 10**100,
+    health: 9 * 10**100
+  },
+  emoji: "<:candy_cane:1055876219251466330>"
+}
+
+export const Christmas_Gift: Item = {
+  id: "christmas_gift",
+  name: "Christmas Gift",
+  description: "A christmas gift",
+  rarity: 'T',
+  type: "box",
+  price: 5000,
+  tradable: true,
+  storable: true,
+  usable: true,
+  emoji: '<:xmasgift:1055916688568229938>',
+  use: async (ctx: CommandInteractionContext, userData: UserData, skip?: boolean, left?: number) => {
+    const response: boolean = await UseBox(ctx, userData, 'Christmas Gift', skip, left);
+    return response;
+  }
 }

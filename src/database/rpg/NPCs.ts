@@ -545,3 +545,131 @@ export const Hol_Horse: NPC = {
     stand: Stands.Emperor["name"],
     private: true
 }
+
+export const Santa_Claus: NPC = {
+    id: 'santa_claus',
+    name: 'Santa Claus',
+    email: "jack_oplatinum@mori.oh",
+    avatarURL: "https://cdn.discordapp.com/attachments/1026886547460591647/1055878456442892378/Napalm_Christmas_Time_ZA_WARUDO_c48342ea-e045-4a08-8070-96947caed9ed.png",
+    emoji: '🎅',
+    level: 30,
+    health: 700,
+    max_health: 700,
+    stamina: 700,
+    skill_points: {
+        strength: 40,
+        defense: 30,
+        perception: 30,
+        stamina: 30,
+        speed: 0
+    },
+    fight_rewards: {
+        xp: 50000,
+        money: 20000,
+    },
+    stand: Stands.Buff_OPlatinum["name"],
+    private: true
+}
+
+export const Liam_OPlatinum: NPC = {
+    id: 'liam_oplatinum',
+    name: 'Liam O\'Platinum',
+    email: "liam_oplatinum@mori.oh",
+    avatarURL: "https://cdn.discordapp.com/attachments/1026886547460591647/1055874489851846736/Napalm_Christmas_Time_Jotaro_Kujo_61d51d99-b5ef-4ce3-9692-b16aa24572ee.png",
+    emoji: '<:liamoplatinum:1055884626620596285>',
+    level: 100,
+    health: 1000,
+    max_health: 1000,
+    stamina: 1000,
+    skill_points: {
+        strength: 100,
+        defense: 100,
+        perception: 100,
+        stamina: 100,
+        speed: 0
+    },
+    fight_rewards: {
+        xp: 1000,
+        money: 20000,
+        items: [
+            Items.Candy_Cane,
+            Items.Candy_Cane,
+            Items.Candy_Cane,
+            Items.Candy_Cane,
+            Items.Candy_Cane,
+        ]
+    },
+    dialogues: {
+        assault: "I'm better than you.",
+        lose: "I'll be back!",
+        win: "... Too easy."
+    },
+    stand: Stands.Buff_OPlatinum["name"],
+    private: true
+}
+
+export const Liam_OPlatinum_Elf: NPC = {
+    id: 'liam_oplatinum_elf',
+    name: 'Liam O\'Platinum\'s Elf',
+    avatarURL: "https://cdn.discordapp.com/attachments/1026886547460591647/1055877928551993384/Napalm_Christmas_Time_Star_Platinum_Elf_6e4de851-c25e-4f2f-a634-d011e380d114.png",
+    level: 100,
+    health: 1000,
+    max_health: 1000,
+    stamina: 1000,
+    skill_points: {
+        strength: 100,
+        defense: 100,
+        perception: 100,
+        stamina: 100,
+        speed: 0
+    },
+    fight_rewards: {
+        xp: 1000,
+        money: 10000,
+        items: [
+            Items.Candy_Cane,
+            Items.Candy_Cane,
+            Items.Candy_Cane
+        ]
+    },
+    dialogues: {
+        assault: "I'm you, but better.",
+        lose: "I'll be back!",
+        win: "... Too easy."
+    },
+    stand: Stands.Buff_OPlatinum["name"],
+    private: true,
+    emoji: "<:elf:1055896484551327906>"
+}
+
+export const Liam_OPlatinum_Goblin: NPC = {
+    id: 'liam_oplatinum_goblin',
+    name: 'Liam O\'Platinum\'s Goblin',
+    avatarURL: "https://cdn.discordapp.com/attachments/1026886547460591647/1055878063621144636/Napalm_Christmas_Monster_28ff9f50-6b84-4510-832e-fdb253a73c30.png",
+    level: 100,
+    health: 1000,
+    max_health: 1000,
+    stamina: 1000,
+    skill_points: {
+        strength: 100,
+        defense: 100,
+        perception: 100,
+        stamina: 100,
+        speed: 0
+    },
+    fight_rewards: {
+        xp: 1000,
+        money: 5000,
+        items: [
+            Items.Candy_Cane
+        ]
+    },
+    dialogues: {
+        assault: "HEHEHEHA!!",
+        lose: "I'll be back!",
+        win: "... Too easy."
+    },
+    stand: Stands.Buff_OPlatinum["name"],
+    private: true,
+    emoji: "<:goblin:1055896535264661534>"
+}

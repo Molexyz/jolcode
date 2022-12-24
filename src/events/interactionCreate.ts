@@ -2,6 +2,7 @@ import type { Event, InteractionCommand, Quest } from '../@types';
 import * as Util from '../utils/functions';
 import * as Items from '../database/rpg/Items';
 import * as NPCs from '../database/rpg/NPCs';
+import * as Mails from '../database/rpg/Mails';
 import * as Chapters from '../database/rpg/Chapters';
 import * as Emojis from '../emojis.json';
 import * as SideQuests from '../database/rpg/SideQuests';
@@ -12,7 +13,7 @@ import { ContextMenuInteraction } from 'discord.js';
 export const name: Event["name"] = "interactionCreate";
 export const execute: Event["execute"] = async (interaction: InteractionCommand) => {
     if (!interaction.isCommand()) return;
-    if (!interaction.client._ready) return interaction.reply({ content: "The bot is still loading, please wait a few seconds and try again."});
+    if (!interaction.client._ready) return interaction.reply({ content: "Hey, I'm still loading. Try again once my status is set to 'Watching **The Way To Heaven**'"});
 
     const command = interaction.client.commands.get(interaction.commandName);
     if (!command) return;
@@ -113,6 +114,29 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
             
     
         const ctx = new InteractionCommandContext(interaction)
+        if (userData) {
+            if (userData.mails) {
+                if (!userData.mails.find(mail => mail.id === Mails.MERRY_CHRISTMAS_2022.id)) {
+                    if (Date.now() > 1671922800000) {
+                        userData.mails.push(Mails.MERRY_CHRISTMAS_2022);
+                        await interaction.client.database.saveUserData(userData);
+                    }
+                }
+                if (userData.mails.find(mail => mail.id === Mails.CHRISTMAS_2022.id)) {
+                    // if date now has passed 1672527600000 then delete mail
+                    if (Date.now() > 1672527600000) {
+                        userData.mails = userData.mails.filter(mail => mail.id !== Mails.CHRISTMAS_2022.id);
+                        await interaction.client.database.saveUserData(userData);
+                    }
+                } else {
+                    if (Date.now() < 1672527600000) {
+                        userData.mails.push(Mails.CHRISTMAS_2022);
+                        await interaction.client.database.saveUserData(userData);
+                    }
+                }
+                
+            }
+        }
         await command.execute(ctx, userData);
 
         await Util.wait(2000);

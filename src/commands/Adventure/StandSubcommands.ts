@@ -216,7 +216,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
 **\`Stamina Cost:\`** ${ability.stamina}
 **\`Cooldown:\`** ${ability.cooldown} turns
                         
-*${ability.description}*
+*${ability.description.replace(/{standName}/gi, Util.getStand(userData.stand).name)}*
 ${ability.ultimate ? "▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬" : "▬▬▬▬▬▬▬▬▬"}`
             });
         }

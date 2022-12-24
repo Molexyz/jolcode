@@ -25,7 +25,7 @@ export const Kick_Barrage: Ability = {
 
 export const Star_Finger: Ability = {
     name: 'Star Finger',
-    description: 'Extends Star Platinum\'s finger and stabs the target in the eyes',
+    description: 'Extends {standName}\'s finger and stabs the target in the eyes',
     cooldown: 7,
     damages: 25,
     blockable: false,
