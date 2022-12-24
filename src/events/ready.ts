@@ -16,25 +16,6 @@ export const execute: Event["execute"] = async (client: Client) => {
     client.user.setActivity({ name: "loading..."});
 
     // socket.io
-    client.io.on("connection", (socket: any) => {
-        socket.on("shards", () => {
-            let shards: any = []
-            const update_shards = () => {
-                for (let i = 0; i < 10; i++) {
-                    shards[i] = {
-                        id: i,
-                        status: Math.random() > 0.1 ? "online" : "offline",
-                        mrg: "ff"
-                    }
-                }
-            }
-    
-            update_shards()
-            socket.emit("shards", shards)
-        })
-    });
-        
-
     if (client.user.id === "942778655384408124") { // if is jolyne beta
         const members = await client.guilds.cache.get("923608916540145694").members.fetch();
         const beta_testers = members.filter(v => v.roles.cache.has("978041345245597818"));
