@@ -73,7 +73,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             const mail = userData.mails.find(m => m.id === currentMail);
             if (!mail) return collector.stop();
             if (i.customId === deleteID) {
-                if (mail.id === Mails.CHRISTMAS_2022.id) {
+                if (mail.id === Mails.CHRISTMAS_2022.id || mail.id === Mails.MERRY_CHRISTMAS_2022.id) {
                     ctx.interaction.followUp({
                         content: "🎄 | You can" + "n't do that.",
                     });
@@ -84,7 +84,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     });    
                 }
             } else if (i.customId === actionID) {
-                if (mail.id === Mails.CHRISTMAS_2022.id) {
+                if (mail.id === Mails.CHRISTMAS_2022.id || mail.id === Mails.MERRY_CHRISTMAS_2022.id) {
                     ctx.interaction.followUp({
                         content: "🎄 | You can" + "n't do that.",
                     });
@@ -118,7 +118,8 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         const fields: { name: string, value: string, inline?: boolean }[] = [];
 
         for (const mail of mails) {
-            const realMail = Object.values(Mails).find(m => m.id === mail.id);
+            const realMail = {...Object.values(Mails).find(m => m.id === mail.id) };
+
 
             if (realMail.author) {
                 mail.author = Object.values(NPCs).find(e => e.name === realMail.author.name) ?? realMail.author;
@@ -148,7 +149,8 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
 
     }
     function showMail(mail: Mail) {
-        const realMail = Object.values(Mails).find(m => m.id === mail.id);
+        const realMail = {...Object.values(Mails).find(m => m.id === mail.id) };
+        ;
         currentMail = mail.id;
         const fields: { name: string, value: string, inline?: boolean }[] = [];
         let saveData: boolean = false;

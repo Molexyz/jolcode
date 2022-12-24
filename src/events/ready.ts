@@ -143,7 +143,7 @@ export const execute: Event["execute"] = async (client: Client) => {
         }
     });
 
-    const job2 = new CronJob('0 0 0 * * *', async () => {
+    const job2 = new CronJob('0 0 0 1 * *', async () => {
         const boosters = client.boosters;
         const patreons = client.patreons;
 
@@ -156,7 +156,7 @@ export const execute: Event["execute"] = async (client: Client) => {
 
             client.users.fetch(booster).then(async (user) => {
                 user.send({
-                    content: ":heart: [MONTHY REWARDS] Thank you for boosting my support server! You have been given 30 Mysterious Arrows and you'll get 30 Mysterious Arrows every months (if you're still boosting).",
+                    content: ":heart: [MONTHLY REWARDS] Thank you for boosting my support server! You have been given 30 Mysterious Arrows and you'll get 30 Mysterious Arrows every months (if you're still boosting).",
                 }).catch(() => {});
             });
         }
@@ -170,7 +170,7 @@ export const execute: Event["execute"] = async (client: Client) => {
 
             client.users.fetch(patron.id).then(async (user) => {
                 user.send({
-                    content: `:heart: [MONTHY REWARDS] Thank you for supporting me on Patreon!!!! You have been given 30 Mysterious Arrows and ${getPatronReward(patron.level).map(v => v.name).join(", ")} and you'll get 30 Mysterious Arrows and ${getPatronReward(patron.level).map(v => v.name).join(", ")} every months (if you're still supporting me).`,
+                    content: `:heart: [MONTHLY REWARDS] Thank you for supporting me on Patreon!!!! You have been given 30 Mysterious Arrows and ${getPatronReward(patron.level).map(v => v.name).join(", ")} and you'll get 30 Mysterious Arrows and ${getPatronReward(patron.level).map(v => v.name).join(", ")} every months (if you're still supporting me).`,
                 }).catch(() => {});
             });
 
