@@ -99,15 +99,15 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, 
                     Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, 
                     Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, Items.Mysterious_Arrow, 
-                    Items["Buff_O'Platinum_Disc" as keyof typeof Items], Items["Buff_O'Platinum_Disc" as keyof typeof Items], Items["Buff_O'Platinum_Disc" as keyof typeof Items]
+                    Items["Buff_O'Platinum_Disc" as keyof typeof Items], Items["Buff_O'Platinum_Disc" as keyof typeof Items], Items["Buff_O'Platinum_Disc" as keyof typeof Items], Items["Buff_O'Platinum_Disc" as keyof typeof Items]
                 ],
             receive: Items.Requiem_Arrow
         }];
         for (let i = 0; i < 30; i++) trades[3].give.push(Items.Candy_Cane);
         for (let i = 0; i < 10; i++) trades[3].give.push(Items.Mysterious_Arrow);
 
-        for (let i = 0; i < 350; i++) trades[5].give.push(Items.Candy_Cane);
-        for (let i = 0; i < 250; i++) trades[5].give.push(Items.Mysterious_Arrow);
+        for (let i = 0; i < 500; i++) trades[5].give.push(Items.Candy_Cane);
+        for (let i = 0; i < 350; i++) trades[5].give.push(Items.Mysterious_Arrow);
 
         userData.items = userData.items.map(v => Util.getItem(v)?.id  || v);
 
