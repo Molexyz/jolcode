@@ -105,6 +105,10 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         }];
         for (let i = 0; i < 30; i++) trades[3].give.push(Items.Candy_Cane);
         for (let i = 0; i < 10; i++) trades[3].give.push(Items.Mysterious_Arrow);
+
+        for (let i = 0; i < 50; i++) trades[5].give.push(Items.Candy_Cane);
+        for (let i = 0; i < 50; i++) trades[5].give.push(Items.Mysterious_Arrow);
+
         userData.items = userData.items.map(v => Util.getItem(v)?.id  || v);
 
         function makeMessage() {
@@ -119,7 +123,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                     emoji: emojis[i + 1]
                 });
                 const uniquegive = [...new Set(trade.give)];
-                content += `「${emojis[i + 1]}」You give ${uniquegive.map(v => `${v.emoji} \`x${trade.give.filter(r => r.id === v.id).length} ${v.name}\``).join(", ")}\n        ${Emojis.arrowRight} You get ${trade.receive.emoji} \`x1 ${trade.receive.name}\`\n`;
+                content += `「${emojis[i + 1]}」You give ${uniquegive.map(v => `${v.emoji} \`x${trade.give.filter(r => r.id === v.id).length} ${v.name}\``).join(", ")}\n        ${Emojis.arrowRight} You get  ${trade.receive.emoji} \`x1 ${trade.receive.name}\`\n`;
             }
             content+="\n" + Util.makeNPCString(NPCs.Santa_Claus) + ` you currently have ${Items.Candy_Cane.emoji} **${userData.items.filter(r => r === Items.Candy_Cane.id).length}** Candy Cane(s).\n\n▬▬▬▬▬▬▬▬▬▬**「SELECT MENU」**▬▬▬▬▬▬▬▬▬▬▬`;
 
