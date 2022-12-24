@@ -150,7 +150,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     }
     function showMail(mail: Mail) {
         const realMail = {...Object.values(Mails).find(m => m.id === mail.id) };
-        ;
         currentMail = mail.id;
         const fields: { name: string, value: string, inline?: boolean }[] = [];
         let saveData: boolean = false;
@@ -173,7 +172,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             Object.keys(realMail.prize).forEach((key) => {
                 if (typeof realMail.prize[key as keyof typeof realMail.prize] === "number") {
                     // @ts-expect-error
-                    userData[key as keyof typeof userData] += realMail.prize[key as keyof typeof mail.prize];
+                    userData[key as keyof typeof userData] += realMail.prize[key as keyof typeof realMail.prize];
                     prize.push(`${Util.localeNumber((realMail.prize[key as keyof typeof realMail.prize]) as number)} ${emoji[key as keyof typeof emoji]} `);
                 } else if (key === "items") { // prize is item
                     for (const item of realMail.prize.items) {
