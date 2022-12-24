@@ -1,6 +1,16 @@
 import type { SlashCommand, UserData, Item, NPC } from '../../@types';
 import InteractionCommandContext from '../../structures/Interaction';
 
+import * as Stands from '../../database/rpg/Stands';
+import * as Util from '../../utils/functions';
+import * as NPCs from '../../database/rpg/NPCs';
+import * as Quests from '../../database/rpg/Quests';
+import * as Items from '../../database/rpg/Items';
+import * as Abilities from '../../database/rpg/Abilities';
+import * as Mails from '../../database/rpg/Mails';
+import * as Emojis from '../../emojis.json';
+
+
 export const name: SlashCommand["name"] = "eval";
 export const category: SlashCommand["category"] = "private";
 export const cooldown: SlashCommand["cooldown"] = 0;

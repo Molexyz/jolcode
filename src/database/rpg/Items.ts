@@ -368,7 +368,7 @@ const UseBox = async (ctx: CommandInteractionContext, userData: UserData, box: s
       const item = Util.getItem(i);
       if (item && !win_content.includes(item.name)) {
         win_content += `+ **${win.filter(r => r === i).length}** ${item.emoji} ${item.name}\n`;
-        for (let i = 0; i < win.filter(r => r === i).length; i++) {
+        for (let x = 0; x < win.filter(r => r === i).length; x++) {
           userData.items.push(item.id);
         }
       }
@@ -400,6 +400,8 @@ const UseBox = async (ctx: CommandInteractionContext, userData: UserData, box: s
       if (!skip) await ctx.makeMessage({ content: content })
   }
   if (skip) await ctx.makeMessage({ content: content });
+  await ctx.client.database.saveUserData(userData);
+
   if (skip) {
     if (left <= 1) ctx.client.database.delCooldownCache("action", userData.id);
   } else ctx.client.database.delCooldownCache("action", userData.id);
