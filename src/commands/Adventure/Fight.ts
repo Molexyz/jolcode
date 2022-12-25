@@ -869,8 +869,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             }
         }
         async function end() {
-            if (ended) return;
-            ended = true;
             if (opponent.id.includes(NPCs.Hol_Horse.id)) return;
             if (fixWitch.isbot) {
                 opponent.skill_points.strength = fixWitch.oldstrength;
