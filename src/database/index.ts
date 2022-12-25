@@ -236,7 +236,7 @@ export default class DatabaseHandler {
         const health = userData.spb?.defense ?? 0;
         const perception = userData.spb?.perception ?? 0;
 
-        userData.max_health = 100;
+        userData.max_health = 100 + Math.trunc(userData.level / 2);
         userData.max_stamina = 60;
         userData.max_health += Math.round(((userData.skill_points.defense / 4 + health) * 10) + ((userData.skill_points.defense / 4 + health) * 6 / 100) * 100);
         userData.max_stamina += Math.round((stamina * 2.25) + ((stamina * 2.25) * 5 / 100) * ((userData.skill_points.stamina / 4 + stamina) * 30));

@@ -167,3 +167,24 @@ export const MERRY_CHRISTMAS_2022: Mail = {
         ]
     },
 }
+
+export const STAMINA_HEALTH_NERF_INFO: Mail = {
+    author: NPCs.Jolyne_Team,
+    id: "jolyne:nerf_skill_points",
+    object: "Stamina & Health nerf",
+    content: `Hello,
+In order to make the RPG more balanced, we decided to nerf stamina & health for everyone. Before, your stamina & health were depending 30% on your level 70% on your skill points (the % are not accurate, just an estimation).
+Now, it mostly depends on the amount of skill points you've put.
+Everytime you level up, you will get +2 health.
+Your stamina will 100% depend on your skill points (stamina skill tree).
+
+If you have any questions, feel free to ask them in the [support server](https://discord.gg/jolyne).`,
+    archived: false,
+    date: Date.now(),
+    footer: "Jolyne Team",
+    prize: {
+        items: [
+            Items.Skill_Points_Reset_Potion
+        ]
+    }
+} 
