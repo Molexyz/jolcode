@@ -233,8 +233,8 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             opponent.skill_points = {
                 strength: Math.floor((userData.skill_points.strength)),
                 defense: Math.floor(userData.skill_points.defense),
-                speed: userData.skill_points.speed - 1,
-                perception: userData.skill_points.perception - 1,
+                speed: userData.skill_points.speed + 1,
+                perception: userData.skill_points.perception + 1,
                 stamina: Math.floor(userData.skill_points.stamina + (userData.skill_points.stamina * 1.1)),
             };
             (opponent as NPC).fight_rewards.xp = opponent.health * 10 + ((opponent.level * 10) * 20);
