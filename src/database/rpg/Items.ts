@@ -326,7 +326,7 @@ const UseBox = async (ctx: CommandInteractionContext, userData: UserData, box: s
       emoji: "<:xmasgift:1055916688568229938>"
     }
     const disc_items = Object.keys(Items).filter(v => Items[v as keyof typeof Items].type === 'disc' && Items[v as keyof typeof Items].rarity !== "T" && Util.getStand(Items[v as keyof typeof Items].name.replace(" Disc", "")).available);
-    for (let i = 0; i < Util.getRandomInt(2, 5); i++) win.push(Util.randomArray(disc_items));
+    for (let i = 0; i < Util.getRandomInt(2, 4); i++) win.push(Util.randomArray(disc_items));
     win.push("sup"); // superator
     for (let i = 0; i < Util.getRandomInt(5, 15); i++) win.push(Util.randomArray(Object.keys(Items).filter(v => Items[v as keyof typeof Items].name === "Candy Cane")));
     for (let i = 0; i < Util.getRandomInt(5, 15); i++) win.push(Util.randomArray(Object.keys(Items).filter(v => Items[v as keyof typeof Items].id === "mysterious_arrow")));
