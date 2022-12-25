@@ -75,7 +75,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         case "items":
             let itemsList: { [key: string]: number } = {};
             let itemsTotal: number = 0;
-            for (const user of rows) {
+            for (const user of rows as UserData[]) {
                 for (const item of user.items) {
                     const xItem = Util.getItem(item);
                     if (xItem) {

@@ -140,6 +140,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
         }
         await command.execute(ctx, userData);
 
+
         await Util.wait(2000);
 
         // Vote

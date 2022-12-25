@@ -1427,7 +1427,7 @@ export const Homing_Bullets: Ability = {
     damages: 13.89,
     blockable: false,
     dodgeable: false,
-    stamina: 30
+    stamina: 80
 }
 
 export const Light_Manifestation: Ability = {

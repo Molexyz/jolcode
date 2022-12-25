@@ -572,5 +572,6 @@ export const Buff_OPlatinum: Stand = {
     name: "Buff O'Platinum",
     image: "https://media.discordapp.net/attachments/1026886547460591647/1055873607726796820/Napalm_Christmas_Time_Star_Platinum_678444c9-593c-49d6-bfc9-b20ca76d8dce.png",
     rarity: "T",
+    emoji: "<:buffoplatinum:1055875166812524554>",
     description: "Buff O'Platinum is a a variant of Star Platinum. Was obtainable during the Christmas event (2022)."
 };

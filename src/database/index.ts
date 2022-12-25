@@ -238,8 +238,8 @@ export default class DatabaseHandler {
 
         userData.max_health = 100;
         userData.max_stamina = 60;
-        userData.max_health += Math.round(((userData.level + health) * 10) + ((userData.level + health) * 6 / 100) * 100);
-        userData.max_stamina += Math.round((stamina * 2.25) + ((stamina * 2.25) * 5 / 100) * ((userData.level + stamina) * 30));
+        userData.max_health += Math.round(((userData.skill_points.defense / 4 + health) * 10) + ((userData.skill_points.defense / 4 + health) * 6 / 100) * 100);
+        userData.max_stamina += Math.round((stamina * 2.25) + ((stamina * 2.25) * 5 / 100) * ((userData.skill_points.stamina / 4 + stamina) * 30));
         userData.dodge_chances = Math.round(Math.round((userData.level / 2) + (perception / 1.15)));
         if (userData.stamina > userData.max_stamina) userData.stamina = userData.max_stamina;
         if (userData.health > userData.max_health) userData.health = userData.max_health;
