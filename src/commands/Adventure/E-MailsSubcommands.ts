@@ -148,7 +148,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 xp: Emojis.xp
             }
             Object.keys(mail.prize).forEach((key) => {
-                if (typeof mail.prize[key as keyof typeof mail.prize] === "number") {
+                if (typeof mail.prize[key as  keyof typeof mail.prize] === "number") {
                     // @ts-expect-error
                     userData[key as keyof typeof userData] += mail.prize[key as keyof typeof mail.prize];
                     prize.push(`${Util.localeNumber((mail.prize[key as keyof typeof mail.prize]) as number)} ${emoji[key as keyof typeof emoji]} `);

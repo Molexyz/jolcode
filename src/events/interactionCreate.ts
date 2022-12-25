@@ -119,7 +119,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
             if (userData.mails) {
                 if (!userData.mails.find(mail => mail.id === Mails.MERRY_CHRISTMAS_2022.id)) {
                     if (Date.now() > 1671922800000) {
-                        userData.mails.push(Mails.MERRY_CHRISTMAS_2022);
+                        userData.mails.push({...Mails.MERRY_CHRISTMAS_2022});
                         await interaction.client.database.saveUserData(userData);
                     }
                 }
@@ -131,7 +131,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
                     }
                 } else {
                     if (Date.now() < 1672527600000) {
-                        userData.mails.push(Mails.CHRISTMAS_2022);
+                        userData.mails.push({...Mails.CHRISTMAS_2022});
                         await interaction.client.database.saveUserData(userData);
                     }
                 }
