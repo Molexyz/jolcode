@@ -116,30 +116,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
     
         const ctx = new InteractionCommandContext(interaction)
         if (userData) {
-            if (userData.mails) {
-                if (!userData.mails.find(mail => mail.id === Mails["SERVER_PROBLEM"].id)) {
-                    userData.mails.push({...Mails["SERVER_PROBLEM"]});
-                    await interaction.client.database.saveUserData(userData);
-                }
-                if (!userData.mails.find(mail => mail.id === Mails.MERRY_CHRISTMAS_2022.id)) {
-                    if (Date.now() > 1671922800000) {
-                        userData.mails.push({...Mails.MERRY_CHRISTMAS_2022});
-                        await interaction.client.database.saveUserData(userData);
-                    }
-                }
-                if (userData.mails.find(mail => mail.id === Mails.CHRISTMAS_2022.id)) {
-                    // if date now has passed 1672527600000 then delete mail
-                    if (Date.now() > 1672527600000) {
-                        userData.mails = userData.mails.filter(mail => mail.id !== Mails.CHRISTMAS_2022.id);
-                        await interaction.client.database.saveUserData(userData);
-                    }
-                } else {
-                    if (Date.now() < 1672527600000) {
-                        userData.mails.push({...Mails.CHRISTMAS_2022});
-                        await interaction.client.database.saveUserData(userData);
-                    }
-                }
-                
+            if (userData.mails) { // nothing
             }
         }
         await command.execute(ctx, userData);

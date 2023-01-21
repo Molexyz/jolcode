@@ -39,9 +39,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         loots: [{
             percent: 70, // 90 before xmas event
             loot: Util.getRandomInt(1, 1000)
-        }, {
-            percent: 100,
-            loot: Items.Candy_Cane
         }]
     }, {
         pr: "in the",
@@ -59,9 +56,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         }, {
             percent: 60,
             loot: Util.randomFood()
-        }, {
-            percent: 100,
-            loot: Items.Candy_Cane
         }]
 
     }, {
@@ -83,9 +77,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         }, {
             percent: 40,
             loot: Items.Slice_Of_Pizza
-        }, {
-            percent: 60,
-            loot: Items.Candy_Cane
         }]
     }, {
         pr: 'in an',
@@ -112,9 +103,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             percent: 30,
             loot: Items.Diamond
         }, {
-            percent: 50,
-            loot: Items.Candy_Cane
-        }, {
             percent: 100,
             loot: Util.randomFood()
         }]
@@ -128,9 +116,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         }, {
             percent: 20,
             loot: Items.Ancient_Scroll
-        }, {
-            percent: 50,
-            loot: Items.Candy_Cane
         }]
     }, {
         pr: 'behind a',
@@ -142,9 +127,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         }, {
             percent: 20,
             loot: Items.Ancient_Scroll
-        }, {
-            percent: 40,
-            loot: Items.Candy_Cane
         }]
     }];
     const shuffledLoots: Loot[] = Util.shuffle(rng);

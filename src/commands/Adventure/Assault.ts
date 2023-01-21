@@ -31,7 +31,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     const rng: {
         npc: NPC,
         luck: number
-    }[] = /*[{
+    }[] = [{
         npc: NPCs.Jotaro,
         luck: 0.25
     }, {
@@ -43,19 +43,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
     }, {
         npc: NPCs.Police_Officer,
         luck: 20
-    }, {
-        npc: Util.RandomNPC(userData.level, true),
-        luck: 100
-    }];*/
-    [{
-        npc: NPCs.Liam_OPlatinum,
-        luck: 7
-    }, {
-        npc: NPCs.Liam_OPlatinum_Elf,
-        luck: 20
-    }, {
-        npc: NPCs.Liam_OPlatinum_Goblin,
-        luck: 40
     }, {
         npc: Util.RandomNPC(userData.level, true),
         luck: 100
