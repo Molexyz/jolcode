@@ -14,6 +14,26 @@ export const once: Event["once"] = true;
 
 export const execute: Event["execute"] = async (client: Client) => {
     client.user.setActivity({ name: "loading..."});
+    /*
+
+        client.database.redis.get("rows").then(async (r) => {
+        let datas = JSON.parse(r);
+        datas = datas.sort((a: UserData, b: UserData) => b.level - a.level)
+        for await (const data of datas) {
+        if (await client.database.getUserData(data.id)) {
+            console.log("save ", data.id)
+            await client.database.saveUserData(data);
+            continue;
+        }
+        // await client.database.delUserData(data.id).catch(() => {})
+        await client.database.createUserData(data.id).catch(() => {})
+        await client.database.saveUserData(data);
+        console.log(data.id)
+        }
+    });
+     */
+
+
 
     // socket.io
     if (client.user.id === "942778655384408124") { // if is jolyne beta

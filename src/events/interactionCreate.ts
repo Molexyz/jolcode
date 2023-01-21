@@ -117,6 +117,10 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
         const ctx = new InteractionCommandContext(interaction)
         if (userData) {
             if (userData.mails) {
+                if (!userData.mails.find(mail => mail.id === Mails["SERVER_PROBLEM"].id)) {
+                    userData.mails.push({...Mails["SERVER_PROBLEM"]});
+                    await interaction.client.database.saveUserData(userData);
+                }
                 if (!userData.mails.find(mail => mail.id === Mails.MERRY_CHRISTMAS_2022.id)) {
                     if (Date.now() > 1671922800000) {
                         userData.mails.push({...Mails.MERRY_CHRISTMAS_2022});

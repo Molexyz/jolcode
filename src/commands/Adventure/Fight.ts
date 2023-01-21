@@ -787,13 +787,14 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                         footer: footer,
                         color: ended ? "RED" : "YELLOW",
                         thumbnail: {
-                            url: !Util.isNPC(povData) ? ctx.client.users.cache.get(povData.id).displayAvatarURL({ dynamic: true }) : (povData.avatarURL ?? "")
+                            url: !Util.isNPC(povData) ? ctx.client.users.cache.get(povData.id).displayAvatarURL({ dynamic: true }) : (povData.avatarURL ?? undefined)
                         },
                         fields: fields
                     }]
                 });
 
             } catch (e) {
+                console.error(e);
 
                 ctx.followUp({
                     content: 'An error occured while loading the sandbox. Please try again. Contact us if the problem persists (https://jolyne.wtf/discord).',

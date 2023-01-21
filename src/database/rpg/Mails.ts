@@ -188,3 +188,24 @@ If you have any questions, feel free to ask them in the [support server](https:/
         ]
     }
 } 
+
+export const SERVER_PROBLEM: Mail = {
+    id: "jolyne_server_problem",
+    author: NPCs.Jolyne_Team,
+    object: "Server problem",
+    content: `Hello,
+
+Due to some problems with the old server, we had to move to a new one. This means that all your data after the 01/01/2023 13:02:00 UTC+1 have been lost. We are sorry for the inconvenience, but we had no choice.
+We also decided to extend the Christmas event until the 07/01/2023 13:00:00 UTC+1 (<t:1673046000:R>).
+
+If you have any questions, feel free to ask them in the [support server](https://discord.gg/jolyne).
+Again, we are sorry for the inconvenience.`,
+    archived: false,
+    prize: {
+        items: [
+            Items.Christmas_Gift
+        ]
+    },
+    date: Date.now(),
+    footer: "Jolyne Team",
+}
