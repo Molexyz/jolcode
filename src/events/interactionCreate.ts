@@ -131,7 +131,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
             rewards.money = Math.round(rewards.money / 4.5);
             rewards.xp = Math.round(rewards.money / 2);
         
-            let content = `:up: | <@${interaction.user.id}>, thanks for voting ! You got **${Util.localeNumber(rewards.xp)}** <:xp:925111121600454706>, **${Util.localeNumber(rewards.money)}** <:jocoins:927974784187392061> AND **5 CANDY CANES** ${Items.Candy_Cane.emoji} !`;
+            let content = `:up: | <@${interaction.user.id}>, thanks for voting ! You got **${Util.localeNumber(rewards.xp)}** <:xp:925111121600454706>, **${Util.localeNumber(rewards.money)}** <:jocoins:927974784187392061>.`;
             const got_myst = await interaction.client.database.redis.get(`jjba:voteTold:${interaction.user.id}`);
             if (got_myst === "m") {
                 content.replace("4187392061> !", "4187392061>")
