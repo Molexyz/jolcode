@@ -42,7 +42,7 @@ const emojis: { [key: number]: string } = {
 
 
 export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandContext, userData?: UserData) => {
-    if (Date.now() > 1674301200000) return ctx.makeMessage({
+    if (Date.now() > 1674306000000) return ctx.makeMessage({
         content: Util.makeNPCString(NPCs.Santa_Claus) + " the event is over, boo-yah."
     });
 
