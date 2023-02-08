@@ -30,7 +30,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
 
     let content = `By [voting](https://top.gg/bot/923619190831730698/vote), you get **${Util.localeNumber(rewards.xp)}** <:xp:925111121600454706>, **${Util.localeNumber(rewards.money)}** <:jocoins:927974784187392061> and perhaps a **Mysterious Arrow** <:mysterious_arrow:924013675126358077> (10%) **AND 5 CANDY CANES** ${Items.Candy_Cane.emoji}`;
 
-    return await ctx.interaction.reply({embeds: [{
+    return await ctx.makeMessage({embeds: [{
         author: { name: ctx.interaction.user.tag, iconURL: ctx.interaction.user.displayAvatarURL({ dynamic: true}) },
         description: `You [voted](https://top.gg/bot/923619190831730698/vote) **${votedTotalMonth}** time(s) this month and **${votedTotal}** in total.\nThe last time you voted was ${voteCooldown}\n\nℹ️ | ${content}`,
         timestamp: new Date(),

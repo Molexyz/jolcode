@@ -119,6 +119,7 @@ export const execute: Event["execute"] = async (interaction: InteractionCommand)
             if (userData.mails) { // nothing
             }
         }
+        await ctx.interaction.deferReply();
         await command.execute(ctx, userData);
 
 

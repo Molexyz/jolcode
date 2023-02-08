@@ -160,7 +160,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             break;
         }        
         case "delete": {
-            if (userData.chapter === 1) return ctx.interaction.reply({ content: "You can't do that right now. Use that command once you complete the Chapter I (`/chapter`)"})
+            if (userData.chapter === 1) return ctx.makeMessage({ content: "You can't do that right now. Use that command once you complete the Chapter I (`/chapter`)"})
             if (!userData.stand) return ctx.sendT('base:NO_STAND');
             const stand = Util.getStand(userData.stand);
             const price = 1000;

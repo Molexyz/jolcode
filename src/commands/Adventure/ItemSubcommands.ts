@@ -164,7 +164,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
                 .setLabel('Decline')
                 .setStyle('DANGER');
         
-            ctx.interaction.reply({
+            ctx.makeMessage({
                 content: `${Util.makeNPCString(NPCs.Pucci)} You want to sell ${quantity} ${item.emoji} ${item.name} for **${Util.localeNumber(price)}** ${Emojis.jocoins}. Deal?`,
                 components: [
                     Util.actionRow([ acceptBTN, declineBTN ])
@@ -205,7 +205,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             if (quantity > userData.items.filter((r: string) => Util.getItem(r)?.name === item.name).length) return ctx.makeMessage({ content: `You don't have ${quantity} ${item.emoji} ${item.name}, but ${userData.items.filter((r: string) => Util.getItem(r)?.name === item.name).length}` });
     
         
-            ctx.interaction.reply({
+            ctx.makeMessage({
                 content: `You threw x${quantity} ${item.emoji} ${item.name}`,
             });
             for (let i = 0; i < quantity; i ++) Util.removeItem(userData.items, item.id);

@@ -99,7 +99,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             quest.total++;
         });
         await ctx.client.database.saveUserData(userData);
-        await ctx.interaction.reply({ embeds: [embed] });
+        await ctx.makeMessage({ embeds: [embed] });
     } else {
         const nextChapterID = Util.generateID();
         const nextChapterBTN = new MessageButton()
