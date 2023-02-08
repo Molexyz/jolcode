@@ -61,7 +61,6 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         ...NPC
     }
      
-    await ctx.defer();
     await ctx.followUp({
         content: `${NPC.dialogues?.assault ? Util.makeNPCString(NPC) + " " + NPC.dialogues.assault : `You assaulted ${Util.makeNPCString(NPC)}`}`,
     });
