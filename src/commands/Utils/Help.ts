@@ -69,7 +69,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
 
     if (ctx.interaction.options.getString("command")) {
         const command: command = commands.filter((r: any) => r.name.toLowerCase().includes(ctx.interaction.options.getString("command")))[0];
-        if (!command) ctx.interaction.reply(`Command not found`);
+        if (!command) ctx.makeMessage(`Command not found`);
 
         const embed = new MessageEmbed().addField("Description", command.description);
         
@@ -82,7 +82,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
         embed.setTitle(`Command: ${command.name}`);
         embed.setColor("#70926c");
         embed.setTimestamp();
-        return ctx.interaction.reply({
+        return ctx.makeMessage({
             embeds: [embed]
         });
     } else {
@@ -112,7 +112,7 @@ export const execute: SlashCommand["execute"] = async (ctx: InteractionCommandCo
             .setEmoji('◀️')
             .setStyle("SECONDARY")
         );
-        await ctx.interaction.reply({ embeds: [{
+        await ctx.makeMessage({ embeds: [{
             author: {
                 name: "Jolyne Help",
                 icon_url: ctx.client.user.displayAvatarURL()
