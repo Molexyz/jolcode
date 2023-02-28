@@ -575,3 +575,27 @@ export const Buff_OPlatinum: Stand = {
     emoji: "<:buffoplatinum:1055875166812524554>",
     description: "Buff O'Platinum is a a variant of Star Platinum. Was obtainable during the Christmas event (2022)."
 };
+
+export const StickyFingers: Stand = {
+    name: "Sticky Fingers",
+    rarity: "A",
+    description: "Sticky Fingers is the Stand of Bruno Bucciarati, featured in the fifth part of the JoJo's Bizarre Adventure series, Vento Aureo. Sticky Fingers is a short-range humanoid Stand that can create zippers on any surface.\n\n:warning: Developer's note: THIS STAND WILL GET REWORKED IN V3.0.0 OF JOLYNE",
+    abilities: [
+        Abilities["Stand_Barrage"],
+        Abilities["ZipperHeal"],
+        Abilities["ExtendedPunch"],
+        Abilities["Arrivederci"]
+    ],
+    color: 'BLUE',
+    image: "https://static.jojowiki.com/images/thumb/7/78/latest/20221006032155/Sticky_Fingers_Infobox_Anime.png/400px-Sticky_Fingers_Infobox_Anime.png",
+    skill_points: {
+        strength: 5,
+        defense: 5,
+        stamina: 5,
+        speed: 0,
+        perception: 0
+    },
+    text: Hanged_Man.text,
+    emoji: Emojis.sticky_fingers,
+    available: true
+};

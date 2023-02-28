@@ -1445,3 +1445,37 @@ export const Wrist_Knives: Ability = {
     dodgeable: true,
     stamina: 15
 }
+
+export const ExtendedPunch: Ability = {
+    name: 'Extended Punch',
+    description: 'Punches the enemy with your extended arm.',
+    cooldown: 7,
+    damages: 18,
+    blockable: false,
+    dodgeable: true,
+    stamina: 20
+}
+
+export const Arrivederci: Ability = {
+    name: 'Arrivederci',
+    description: 'Extremely powerful finisher. [WILL BE REWORKED IN V3]',
+    cooldown: 10,
+    damages: 25,
+    blockable: false,
+    dodgeable: false,
+    stamina: 30,
+    ultimate: true
+
+}
+
+export const ZipperHeal: Ability = {
+    name: 'Zipper Heal',
+    description: 'Heals 5% of your MAX health.',
+    heal: '5%',
+    cooldown: 5,
+    damages: 0,
+    blockable: false,
+    dodgeable: false,
+    stamina: 20,
+}
+    
