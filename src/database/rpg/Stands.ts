@@ -597,5 +597,5 @@ export const StickyFingers: Stand = {
     },
     text: Hanged_Man.text,
     emoji: Emojis.sticky_fingers,
-    available: false
+    available: true
 };
